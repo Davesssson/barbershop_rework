@@ -9,11 +9,10 @@ enum ItemListFilter {
   obtained,
 }
 
-final itemListFilterProvider =
-    StateProvider<ItemListFilter>((_) => ItemListFilter.all);
+final itemListFilterProvider = StateProvider<ItemListFilter>((_) => ItemListFilter.all);
 
 final filteredItemListProvider = Provider<List<Item>>((ref) {
-  final itemListFilterState = ref.watch(itemListFilterProvider).state;
+  final itemListFilterState = ref.watch(itemListFilterProvider);
   final itemListState = ref.watch(itemListControllerProvider);
   return itemListState.maybeWhen(
     data: (items) {
@@ -31,8 +30,7 @@ final filteredItemListProvider = Provider<List<Item>>((ref) {
 final itemListExceptionProvider = StateProvider<CustomException?>((_) => null);
 
 final itemListControllerProvider =
-    StateNotifierProvider<ItemListController, AsyncValue<List<Item>>>(
-  (ref) {
+    StateNotifierProvider<ItemListController, AsyncValue<List<Item>>>((ref) {
     final user = ref.watch(authControllerProvider);
     return ItemListController(ref.read, user?.uid);
   },
@@ -56,8 +54,8 @@ class ItemListController extends StateNotifier<AsyncValue<List<Item>>> {
       if (mounted) {
         state = AsyncValue.data(items);
       }
-    } on CustomException catch (e, st) {
-      state = AsyncValue.error(e, st);
+    } on CustomException catch (e) {
+      state = AsyncValue.error(e);
     }
   }
 
@@ -71,7 +69,7 @@ class ItemListController extends StateNotifier<AsyncValue<List<Item>>> {
       state.whenData((items) =>
           state = AsyncValue.data(items..add(item.copyWith(id: itemId))));
     } on CustomException catch (e) {
-      _read(itemListExceptionProvider).state = e;
+      //_read(itemListExceptionProvider).state = e;
     }
   }
 
@@ -86,7 +84,7 @@ class ItemListController extends StateNotifier<AsyncValue<List<Item>>> {
         ]);
       });
     } on CustomException catch (e) {
-      _read(itemListExceptionProvider).state = e;
+     // _read(itemListExceptionProvider).state = e;
     }
   }
 
@@ -99,7 +97,7 @@ class ItemListController extends StateNotifier<AsyncValue<List<Item>>> {
       state.whenData((items) => state =
           AsyncValue.data(items..removeWhere((item) => item.id == itemId)));
     } on CustomException catch (e) {
-      _read(itemListExceptionProvider).state = e;
+     // _read(itemListExceptionProvider).state = e;
     }
   }
 }

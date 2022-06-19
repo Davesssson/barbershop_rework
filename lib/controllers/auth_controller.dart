@@ -5,7 +5,7 @@ import 'package:flutter_shopping_list/repositories/auth_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final authControllerProvider = StateNotifierProvider<AuthController, User?>(
-  (ref) => AuthController(ref.read)..appStarted(),
+  (ref) => AuthController(ref.read)/*..appStarted()*/,
 );
 
 class AuthController extends StateNotifier<User?> {
@@ -26,14 +26,27 @@ class AuthController extends StateNotifier<User?> {
     super.dispose();
   }
 
-  void appStarted() async {
-    final user = _read(authRepositoryProvider).getCurrentUser();
-    if (user == null) {
-      await _read(authRepositoryProvider).signInAnonymously();
-    }
+ // void appStarted() async {
+ //   final user = _read(authRepositoryProvider).getCurrentUser();
+ //   if (user == null) {
+ //     await _read(authRepositoryProvider).signInAnonymously();
+ //   }
+ // }
+
+  void signInAnonymously() async{
+    await _read(authRepositoryProvider).signInAnonymously();
   }
 
   void signOut() async {
     await _read(authRepositoryProvider).signOut();
   }
+
+  void singInViaEmailAndPassword(String email, String password) async{
+    await _read(authRepositoryProvider).singInViaEmailAndPassword(email,password);
+  }
+
+  void createUserWithEmailAndPassword(String email, String password) async{
+    await _read(authRepositoryProvider).createUserWithEmailAndPassword(email,password);
+}
+
 }

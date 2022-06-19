@@ -4,7 +4,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_shopping_list/controllers/auth_controller.dart';
 import 'package:flutter_shopping_list/controllers/item_list_controller.dart';
 import 'package:flutter_shopping_list/models/item_model.dart';
+import 'package:flutter_shopping_list/repositories/auth_repository.dart';
 import 'package:flutter_shopping_list/repositories/custom_exception.dart';
+import 'package:flutter_shopping_list/ui/login_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() async {
@@ -18,29 +20,43 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Firebase Riverpod',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen(),
+      //home: HomeScreen2(),
+      initialRoute:'/login' ,
+      routes:{
+        '/login':(context)=> LoginScreen(),
+        '/home':(context)=>HomeScreen2()
+       } ,
     );
   }
 }
 
-class HomeScreen extends HookWidget {
+class HomeScreen2 extends HookConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    final authControllerState = useProvider(authControllerProvider);
-    final itemListFilter = useProvider(itemListFilterProvider);
-    final isObtainedFilter = itemListFilter.state == ItemListFilter.obtained;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authControllerState = ref.watch(authControllerProvider);
+    final isObtainedFilter = ref.watch(itemListFilterProvider.notifier).state == ItemListFilter.all;
+
+    late TextEditingController emailController = TextEditingController();
+    late TextEditingController passwordController = TextEditingController();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shopping List'),
         leading: authControllerState != null
             ? IconButton(
                 icon: const Icon(Icons.logout),
-                onPressed: () => context.read(authControllerProvider.notifier).signOut(),
-              )
-            : null,
+                onPressed: () {
+                    ref.read(authControllerProvider.notifier).signOut();
+                    Navigator.pop(context);
+              })
+            : IconButton(
+                icon: const Icon(Icons.abc),
+                onPressed: () {}//=> ref.read(authControllerProvider.notifier).signInAnonymously(),
+              ),
         actions: [
           IconButton(
             icon: Icon(
@@ -48,25 +64,49 @@ class HomeScreen extends HookWidget {
                   ? Icons.check_circle
                   : Icons.check_circle_outline,
             ),
-            onPressed: () => itemListFilter.state =
-                isObtainedFilter ? ItemListFilter.all : ItemListFilter.obtained,
+            onPressed: () { //TODO NEM SZÉP, DE CSÚNYA, ERRE KI KELL TALÁLNI VALAMIT
+             if(ref.watch(itemListFilterProvider.notifier).state == ItemListFilter.all){
+               ref.watch(itemListFilterProvider.notifier).state = ItemListFilter.obtained ;
+             }
+             else
+               ref.watch(itemListFilterProvider.notifier).state = ItemListFilter.all ;
+              print("megnyomodtam genyo");
+              print(ref.watch(itemListFilterProvider.state).state);
+              },
           ),
         ],
       ),
-      body: ProviderListener(
-        provider: itemListExceptionProvider,
-        onChange: (
-          BuildContext context,
-          StateController<CustomException?> customException,
-        ) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.red,
-              content: Text(customException.state!.message!),
-            ),
-          );
-        },
-        child: const ItemList(),
+      body: Column(
+        children: [
+          if (authControllerState==null)...[
+            // //region show login "page"
+            // TextField(
+            //   controller: emailController,
+            // ),
+            // TextField(
+            //   controller: passwordController,
+            // ),
+            // TextButton(
+            //     onPressed: ()=>ref.watch(authControllerProvider.notifier).singInViaEmailAndPassword(emailController.text, passwordController.text),
+            //     child: Text("login")
+            // ),
+            // TextButton(
+            //     onPressed: ()=>ref.watch(authControllerProvider.notifier).createUserWithEmailAndPassword(emailController.text, passwordController.text),
+            //     child: Text("register")
+            // ),
+            // TextButton(
+            //   onPressed: ()=>ref.watch(authControllerProvider.notifier).signInAnonymously(),
+            //   child: Text("continue anonymously"),
+            // ),
+            //
+            // authControllerState!=null
+            // ? Text("be vagyok jelentkezve")
+            // :Text("ki vagyok jelentkezve")
+            // //endregion
+          ]else ...[
+             ItemList(),
+          ]
+        ]
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => AddItemDialog.show(context, Item.empty()),
@@ -76,7 +116,9 @@ class HomeScreen extends HookWidget {
   }
 }
 
-class AddItemDialog extends HookWidget {
+
+
+class AddItemDialog extends HookConsumerWidget {
   static void show(BuildContext context, Item item) {
     showDialog(
       context: context,
@@ -91,7 +133,7 @@ class AddItemDialog extends HookWidget {
   bool get isUpdating => item.id != null;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textController = useTextEditingController(text: item.name);
     return Dialog(
       child: Padding(
@@ -115,13 +157,15 @@ class AddItemDialog extends HookWidget {
                 ),
                 onPressed: () {
                   isUpdating
-                      ? context.read(itemListControllerProvider.notifier).updateItem(
+                      ? ref
+                          .read(itemListControllerProvider.notifier)
+                          .updateItem(
                             updatedItem: item.copyWith(
                               name: textController.text.trim(),
                               obtained: item.obtained,
                             ),
                           )
-                      : context
+                      : ref
                           .read(itemListControllerProvider.notifier)
                           .addItem(name: textController.text.trim());
                   Navigator.of(context).pop();
@@ -136,15 +180,15 @@ class AddItemDialog extends HookWidget {
   }
 }
 
-final currentItem = ScopedProvider<Item>((_) => throw UnimplementedError());
+final currentItem = Provider<Item>((_) => throw UnimplementedError());
 
-class ItemList extends HookWidget {
+class ItemList extends HookConsumerWidget {
   const ItemList({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final itemListState = useProvider(itemListControllerProvider);
-    final filteredItemList = useProvider(filteredItemListProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final itemListState = ref.watch(itemListControllerProvider);
+    final filteredItemList = ref.watch(filteredItemListProvider);
     return itemListState.when(
       data: (items) => items.isEmpty
           ? const Center(
@@ -154,6 +198,7 @@ class ItemList extends HookWidget {
               ),
             )
           : ListView.builder(
+              shrinkWrap: true,
               itemCount: filteredItemList.length,
               itemBuilder: (BuildContext context, int index) {
                 final item = filteredItemList[index];
@@ -172,29 +217,30 @@ class ItemList extends HookWidget {
   }
 }
 
-class ItemTile extends HookWidget {
+class ItemTile extends HookConsumerWidget {
   const ItemTile({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final item = useProvider(currentItem);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final item = ref.watch(currentItem);
     return ListTile(
       key: ValueKey(item.id),
       title: Text(item.name),
       trailing: Checkbox(
         value: item.obtained,
-        onChanged: (val) => context
+        onChanged: (val) => ref
             .read(itemListControllerProvider.notifier)
             .updateItem(updatedItem: item.copyWith(obtained: !item.obtained)),
       ),
       onTap: () => AddItemDialog.show(context, item),
-      onLongPress: () =>
-          context.read(itemListControllerProvider.notifier).deleteItem(itemId: item.id!),
+      onLongPress: () => ref
+          .read(itemListControllerProvider.notifier)
+          .deleteItem(itemId: item.id!),
     );
   }
 }
 
-class ItemListError extends StatelessWidget {
+class ItemListError extends ConsumerWidget {
   final String message;
 
   const ItemListError({
@@ -203,7 +249,7 @@ class ItemListError extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -211,12 +257,71 @@ class ItemListError extends StatelessWidget {
           Text(message, style: const TextStyle(fontSize: 20.0)),
           const SizedBox(height: 20.0),
           ElevatedButton(
-            onPressed: () => context
+            onPressed: () => ref
                 .read(itemListControllerProvider.notifier)
                 .retrieveItems(isRefreshing: true),
             child: const Text('Retry'),
           ),
         ],
+      ),
+    );
+  }
+}
+class HomeScreen extends HookConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authControllerState = ref.watch(authControllerProvider);
+    final itemListFilter = ref.watch(itemListFilterProvider);
+    final isObtainedFilter = ref.read(itemListFilterProvider.notifier).state == ItemListFilter.obtained;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Shopping List'),
+        leading: authControllerState != null
+            ? IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () =>
+              ref.read(authControllerProvider.notifier).signOut(),
+        )
+            : IconButton(
+          icon: const Icon(Icons.abc),
+          onPressed: () => ref
+              .read(authControllerProvider.notifier)
+              .signInAnonymously(),
+        ),
+        actions: [
+          IconButton(
+              icon: Icon(
+                isObtainedFilter
+                    ? Icons.check_circle
+                    : Icons.check_circle_outline,
+              ),
+              onPressed: () {
+                ref.read(itemListFilterProvider.notifier).state = isObtainedFilter ? ItemListFilter.all : ItemListFilter.obtained;
+                print("megnyomodtam genyo");
+                print(ref.watch(itemListFilterProvider.state).state);}
+          ),
+        ],
+      ),
+      body: ItemList(),
+      // body: ProviderListener(
+      //   provider: itemListExceptionProvider,
+      //   onChange: (
+      //     BuildContext context,
+      //     StateController<CustomException?> customException,
+      //   ) {
+      //     ScaffoldMessenger.of(context).showSnackBar(
+      //       SnackBar(
+      //         backgroundColor: Colors.red,
+      //         content: Text(customException.state!.message!),
+      //       ),
+      //     );
+      //   },
+      //   child: const ItemList(),
+      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => AddItemDialog.show(context, Item.empty()),
+        child: const Icon(Icons.add),
       ),
     );
   }

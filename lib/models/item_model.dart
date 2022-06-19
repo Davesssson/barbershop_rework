@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
@@ -21,7 +22,7 @@ abstract class Item implements _$Item {
 
   factory Item.fromDocument(DocumentSnapshot doc) {
     final data = doc.data()!;
-    return Item.fromJson(data).copyWith(id: doc.id);
+    return Item.fromJson(data as Map<String,dynamic>).copyWith(id: doc.id);
   }
 
   Map<String, dynamic> toDocument() => toJson()..remove('id');
