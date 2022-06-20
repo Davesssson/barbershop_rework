@@ -15,7 +15,6 @@ class LoginScreen extends HookConsumerWidget{
       ),
       body: Column(
           children: [
-            //if (authControllerState==null)...[
               TextField(
                 controller: emailController,
               ),
@@ -25,39 +24,30 @@ class LoginScreen extends HookConsumerWidget{
               TextButton(
                   onPressed: (){
                     ref.watch(authControllerProvider.notifier).singInViaEmailAndPassword(emailController.text, passwordController.text);
-                    Navigator.pushNamed(context,"/home");
+                    Navigator.pushNamed(context,"/navbar");
                     },
                   child: Text("login")
               ),
               TextButton(
                   onPressed: (){
                     ref.watch(authControllerProvider.notifier).createUserWithEmailAndPassword(emailController.text, passwordController.text);
-                    Navigator.pushNamed(context,"/home");
+                    Navigator.pushNamed(context,"/navbar");
                     },
                   child: Text("register")
               ),
               TextButton(
                 onPressed: (){
                   ref.watch(authControllerProvider.notifier).signInAnonymously();
-                  Navigator.pushNamed(context,"/home");
+                  Navigator.pushNamed(context,"/navbar");
                 },
                 child: Text("continue anonymously"),
               ),
-
               authControllerState!=null
                   ? Text("be vagyok jelentkezve")
                   :Text("ki vagyok jelentkezve")
 
-          // ]else ...[
-          //   Text("beszoptad")
-          //   // ItemList(),
-          // ]
           ]
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () => AddItemDialog.show(context, Item.empty()),
-      //   child: const Icon(Icons.add),
-      // ),
     );
   }
 
