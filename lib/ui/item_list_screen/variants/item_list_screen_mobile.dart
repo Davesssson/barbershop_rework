@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../../../controllers/auth_controller.dart';
 import '../../../controllers/item_list_controller.dart';
 import '../../../models/item_model.dart';
 import '../../../repositories/custom_exception.dart';
@@ -14,30 +15,79 @@ class ItemListScreen_mobile extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final itemListState = ref.watch(itemListControllerProvider);
     final filteredItemList = ref.watch(filteredItemListProvider);
+    final authControllerState = ref.watch(authControllerProvider);
+    final isObtainedFilter =
+        ref.watch(itemListFilterProvider.notifier).state == ItemListFilter.all;
 
-    return itemListState.when(
-      data: (items) => items.isEmpty
-          ? const Center(
-              child: Text(
-                'Tap + to add an item',
-                style: TextStyle(fontSize: 20.0),
-              ),
-            )
-          : ListView.builder(
-              shrinkWrap: true,
-              itemCount: filteredItemList.length,
-              itemBuilder: (BuildContext context, int index) {
-                final item = filteredItemList[index];
-                return ProviderScope(
-                  overrides: [currentItem.overrideWithValue(item)],
-                  child: const ItemTile(),
-                );
-              },
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Shopping List'),
+        leading: authControllerState != null
+            ? IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () {
+                  ref.read(authControllerProvider.notifier).signOut();
+                  //Navigator.pushNamed(context, '/login');
+                  Navigator.of(context, rootNavigator: true)
+                      .popUntil(ModalRoute.withName('/login'));
+                  //Navigator.pushNamed(context, '/login');
+                })
+            : IconButton(
+                icon: const Icon(Icons.abc),
+                onPressed:
+                    () {} //=> ref.read(authControllerProvider.notifier).signInAnonymously(),
+                ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              isObtainedFilter
+                  ? Icons.check_circle
+                  : Icons.check_circle_outline,
             ),
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, _) => ItemListError(
-        message:
-            error is CustomException ? error.message! : 'Something went wrong!',
+            onPressed: () {
+              //TODO NEM SZÉP, DE CSÚNYA, ERRE KI KELL TALÁLNI VALAMIT
+              if (ref.watch(itemListFilterProvider.notifier).state ==
+                  ItemListFilter.all) {
+                ref.watch(itemListFilterProvider.notifier).state =
+                    ItemListFilter.obtained;
+              } else
+                ref.watch(itemListFilterProvider.notifier).state =
+                    ItemListFilter.all;
+              print("megnyomodtam genyo");
+              print(ref.watch(itemListFilterProvider.state).state);
+            },
+          ),
+        ],
+      ),
+      body: itemListState.when(
+        data: (items) => items.isEmpty
+            ? const Center(
+                child: Text(
+                  'Tap + to add an item',
+                  style: TextStyle(fontSize: 20.0),
+                ),
+              )
+            : ListView.builder(
+                shrinkWrap: true,
+                itemCount: filteredItemList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final item = filteredItemList[index];
+                  return ProviderScope(
+                    overrides: [currentItem.overrideWithValue(item)],
+                    child: const ItemTile(),
+                  );
+                },
+              ),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, _) => ItemListError(
+          message: error is CustomException
+              ? error.message!
+              : 'Something went wrong!',
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => AddItemDialog.show(context, Item.empty()),
+        child: const Icon(Icons.add),
       ),
     );
   }

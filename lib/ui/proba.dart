@@ -104,7 +104,7 @@ class MainScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     pushDynamicScreen(context,
-                        screen: HomeScreen2(), withNavBar: true);
+                        screen: HomeScreen(), withNavBar: true);
                   },
                   child: Text(
                     "Push Dynamic/Modal Screen",

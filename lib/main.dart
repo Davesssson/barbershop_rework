@@ -24,11 +24,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      //home: HomeScreen2(),
       initialRoute:'/login' ,
       routes:{
         '/login':(context)=> LoginScreen(),
-        '/home':(context)=>HomeScreen2(),
+        '/home':(context)=>HomeScreen(),
         //'/navbar':(context)=>NavBar()
        } ,
     );
