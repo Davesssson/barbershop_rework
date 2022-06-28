@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../controllers/auth_controller.dart';
 import '../../../controllers/item_list_controller.dart';
+import '../../../controllers/theme_controller.dart';
 import '../../../models/item_model.dart';
 import '../../../repositories/custom_exception.dart';
 
@@ -57,6 +58,21 @@ class ItemListScreen_mobile extends HookConsumerWidget {
               print(ref.watch(itemListFilterProvider.state).state);
             },
           ),
+          IconButton(
+              onPressed: () {
+                if (ref.watch(ThemeModeFilterProvider.notifier).state ==
+                    ThemeModeFilter.dark) {
+                  ref.watch(ThemeModeFilterProvider.notifier).state =
+                      ThemeModeFilter.light;
+                  print("switched from dark to light");
+                } else if (ref.watch(ThemeModeFilterProvider.notifier).state ==
+                    ThemeModeFilter.light) {
+                  ref.watch(ThemeModeFilterProvider.notifier).state =
+                      ThemeModeFilter.dark;
+                  print("switched from light to dark");
+                }
+              },
+              icon: Icon(Icons.map))
         ],
       ),
       body: itemListState.when(
