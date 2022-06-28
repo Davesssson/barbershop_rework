@@ -33,6 +33,7 @@ dependencies:
   riverpod: ^1.0.3
   google_sign_in: ^5.3.3
   freezed_annotation: ^0.14.1
+  responsive_builder: ^0.4.2
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/ui/home_screen.dart';
+import 'package:flutter_shopping_list/ui/item_list_screen/item_list_screen.dart';
 import 'package:flutter_shopping_list/ui/proba.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
@@ -15,10 +16,11 @@ class NavBar extends HookConsumerWidget {
 
   List<Widget> _buildScreens() {
     return [
-      HomeScreen2(),  //TODO PAGES HERE MUST NOT CONTAIN SCAFFOLD ||  just appbar?
-      MainScreen(
-        hideStatus: _hideNavBar,
-      ),
+      MainScreen2(),  //TODO PAGES HERE MUST NOT CONTAIN SCAFFOLD ||  just appbar?
+      // MainScreen(
+      //   hideStatus: _hideNavBar,
+      // ),
+      ItemListScreen(),
       MainScreen(
         hideStatus: _hideNavBar,
       ),
@@ -42,13 +44,13 @@ class NavBar extends HookConsumerWidget {
         routeAndNavigatorSettings: RouteAndNavigatorSettings(
           initialRoute: '/',
           routes: {
-            '/first': (context) => HomeScreen2(),
-            '/second': (context) => HomeScreen2(),
+            '/first': (context) => MainScreen2(),
+            '/second': (context) => MainScreen2(),
           },
         ),
       ),
       PersistentBottomNavBarItem(
-          icon: Icon(Icons.add),
+          icon: Icon(Icons.search_off),
           title: ("Add"),
           activeColorPrimary: Colors.blueAccent,
           activeColorSecondary: Colors.black,
@@ -56,16 +58,15 @@ class NavBar extends HookConsumerWidget {
           routeAndNavigatorSettings: RouteAndNavigatorSettings(
             initialRoute: '/',
             routes: {
-              '/first': (context) => HomeScreen2(),
-              '/second': (context) => HomeScreen2(),
+              '/first': (context) => MainScreen2(),
+              '/second': (context) => MainScreen2(),
             },
           ),
           onPressed: (context) {
             pushDynamicScreen(context!,
                 screen: HomeScreen2(), withNavBar: true);
-          }),
-
-
+          }
+      ),
     ];
   }
 
@@ -83,7 +84,7 @@ class NavBar extends HookConsumerWidget {
             icon: const Icon(Icons.logout),
             onPressed: () {
               ref.read(authControllerProvider.notifier).signOut();
-              Navigator.popAndPushNamed(context, '/login');
+              Navigator.pushNamed(context, '/login');
               //Navigator.pushNamed(context, '/login');
             })
             : IconButton(
@@ -126,56 +127,59 @@ class NavBar extends HookConsumerWidget {
       //   ),
       // ),
       //endregion
-      body: PersistentTabView(
-        context,
-        controller: _controller,
-        screens: _buildScreens(),
-        items: _navBarsItems(),
-        confineInSafeArea: true,
-        backgroundColor: Colors.white,
-        handleAndroidBackButtonPress: true,
-        resizeToAvoidBottomInset: true,
-        stateManagement: true,
-        navBarHeight: kBottomNavigationBarHeight,
-        hideNavigationBarWhenKeyboardShows: true,
-        margin: EdgeInsets.all(0.0),
-        popActionScreens: PopActionScreensType.all,
-        bottomScreenMargin: 0.0,
-        onWillPop: (context) async {
-          await showDialog(
-            context: context!,
-            useSafeArea: true,
-            builder: (context) => Container(
-              height: 50.0,
-              width: 50.0,
-              color: Colors.white,
-              child: ElevatedButton(
-                child: Text("Close"),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-          );
-          return false;
-        },
-        hideNavigationBar: _hideNavBar,
-        decoration: NavBarDecoration(
-            colorBehindNavBar: Colors.indigo,
-            borderRadius: BorderRadius.circular(20.0)),
-        popAllScreensOnTapOfSelectedTab: true,
-        itemAnimationProperties: ItemAnimationProperties(
-          duration: Duration(milliseconds: 400),
-          curve: Curves.ease,
-        ),
-        screenTransitionAnimation: ScreenTransitionAnimation(
-          animateTabTransition: true,
-          curve: Curves.ease,
-          duration: Duration(milliseconds: 200),
-        ),
-        navBarStyle:
-        NavBarStyle.style1, // Choose the nav bar style with this property
-      ),
+       body:Container(color: Colors.green),
+    //PersistentTabView(
+      //   context,
+      //   controller: _controller,
+      //   screens: _buildScreens(),
+      //   items: _navBarsItems(),
+      //   confineInSafeArea: true,
+      //   backgroundColor: Colors.white,
+      //   handleAndroidBackButtonPress: true,
+      //   resizeToAvoidBottomInset: true,
+      //   stateManagement: true,
+      //   navBarHeight: kBottomNavigationBarHeight,
+      //   hideNavigationBarWhenKeyboardShows: true,
+      //   margin: EdgeInsets.all(0.0),
+      //   popActionScreens: PopActionScreensType.all,
+      //   bottomScreenMargin: 0.0,
+      //   //region onWillPop
+      //   // onWillPop: (context) async {
+      //   //   await showDialog(
+      //   //     context: context!,
+      //   //     useSafeArea: true,
+      //   //     builder: (context) => Container(
+      //   //       height: 50.0,
+      //   //       width: 50.0,
+      //   //       color: Colors.white,
+      //   //       child: ElevatedButton(
+      //   //         child: Text("Close"),
+      //   //         onPressed: () {
+      //   //           Navigator.pop(context);
+      //   //         },
+      //   //       ),
+      //   //     ),
+      //   //   );
+      //   //   return false;
+      //   // },
+      //   //endregion
+      //   // hideNavigationBar: _hideNavBar,
+      //   decoration: NavBarDecoration(
+      //       colorBehindNavBar: Colors.indigo,
+      //       borderRadius: BorderRadius.circular(20.0)
+      //   ),
+      //   popAllScreensOnTapOfSelectedTab: true,
+      //   itemAnimationProperties: ItemAnimationProperties(
+      //     duration: Duration(milliseconds: 400),
+      //     curve: Curves.ease,
+      //   ),
+      //   screenTransitionAnimation: ScreenTransitionAnimation(
+      //     animateTabTransition: true,
+      //     curve: Curves.ease,
+      //     duration: Duration(milliseconds: 200),
+      //   ),
+      //   navBarStyle:NavBarStyle.style1, // Choose the nav bar style with this property
+      // ),
     );
   }
 }
