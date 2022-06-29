@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import '../item_list_screen/item_list_screen.dart';
+import '../list_screen/list_screen.dart';
 import '../proba.dart';
 
 class BottomNavBar extends StatelessWidget {
@@ -20,7 +21,8 @@ class BottomNavBar extends StatelessWidget {
         hideStatus: _hideNavBar,
       ),
       ItemListScreen(),
-      Container(color:Colors.yellow)
+      //Container(color:Colors.yellow)
+      ListScreen(),
       //MainScreen(
       //hideStatus: _hideNavBar,
       //),

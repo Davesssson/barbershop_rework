@@ -1,18 +1,23 @@
 import 'package:flutter_shopping_list/controllers/auth_controller.dart';
-import 'package:flutter_shopping_list/models/item_model.dart';
+import 'package:flutter_shopping_list/models/item/item_model.dart';
 import 'package:flutter_shopping_list/repositories/custom_exception.dart';
 import 'package:flutter_shopping_list/repositories/item_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'dart:developer' as developer;
 
 enum ItemListFilter {
   all,
   obtained,
 }
 
+//ez csak megváltoztatja az enum állapotát
 final itemListFilterProvider = StateProvider<ItemListFilter>((_) => ItemListFilter.all);
 
+//ez adja vissza a szűrt és a nemszűrt listát is
 final filteredItemListProvider = Provider<List<Item>>((ref) {
+  //itt állítjuk be a szűrést
   final itemListFilterState = ref.watch(itemListFilterProvider);
+
   final itemListState = ref.watch(itemListControllerProvider);
   return itemListState.maybeWhen(
     data: (items) {
@@ -27,15 +32,18 @@ final filteredItemListProvider = Provider<List<Item>>((ref) {
   );
 });
 
-final itemListExceptionProvider = StateProvider<CustomException?>((_) => null);
-
-final itemListControllerProvider =
-    StateNotifierProvider<ItemListController, AsyncValue<List<Item>>>((ref) {
+//todo | ez csak egy állapotot ad vissza!!, és magát a controllert.
+//TODO | ezt olvasva meghívhatjuk rajta a metódusokat, amiket lentebb implementáltunk. Használat
+//TODO | ref.read(itemListControllerProvider.notifier).METHODNAME
+final itemListControllerProvider = StateNotifierProvider<ItemListController, AsyncValue<List<Item>>>((ref) {
+    developer.log("[item_list_controller.dart][itemListControllerProvider] - StateNotifier invoked..");
     final user = ref.watch(authControllerProvider);
+    //ami egyből fetchel is...
     return ItemListController(ref.read, user?.uid);
   },
 );
 
+//ez maga a facade, amin hívjuk a dolgokat. Ezen belül implementáljuk a végpontokat, amiket a user elér
 class ItemListController extends StateNotifier<AsyncValue<List<Item>>> {
   final Reader _read;
   final String? _userId;
@@ -101,3 +109,5 @@ class ItemListController extends StateNotifier<AsyncValue<List<Item>>> {
     }
   }
 }
+
+final itemListExceptionProvider = StateProvider<CustomException?>((_) => null);

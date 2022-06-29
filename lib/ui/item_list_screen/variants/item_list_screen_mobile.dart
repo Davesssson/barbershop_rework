@@ -4,10 +4,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../controllers/auth_controller.dart';
 import '../../../controllers/item_list_controller.dart';
 import '../../../controllers/theme_controller.dart';
-import '../../../models/item_model.dart';
+import '../../../models/item/item_model.dart';
 import '../../../repositories/custom_exception.dart';
+import 'dart:developer' as developer;
 
-final currentItem = Provider<Item>((_) => throw UnimplementedError());
+final currentItem = Provider<Item>((_) {
+  developer.log("[item_list_screen_mobile.dart][currentItem] - ??????.");
+  throw UnimplementedError();
+});
 
 class ItemListScreen_mobile extends HookConsumerWidget {
   const ItemListScreen_mobile({Key? key}) : super(key: key);
@@ -17,8 +21,7 @@ class ItemListScreen_mobile extends HookConsumerWidget {
     final itemListState = ref.watch(itemListControllerProvider);
     final filteredItemList = ref.watch(filteredItemListProvider);
     final authControllerState = ref.watch(authControllerProvider);
-    final isObtainedFilter =
-        ref.watch(itemListFilterProvider.notifier).state == ItemListFilter.all;
+    final isObtainedFilter = ref.watch(itemListFilterProvider.notifier).state == ItemListFilter.all;
 
     return Scaffold(
       appBar: AppBar(
