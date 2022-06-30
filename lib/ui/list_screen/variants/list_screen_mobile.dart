@@ -34,7 +34,16 @@ class ListScreen_mobile extends ConsumerWidget {
                           children: [
                             Text(item.name!),
                             Text(item.main_image!),
-                            Text(item.places_id!)
+                            Text(item.places_id!),
+                            Row(
+                              children: [
+                              Text(item.location.longitude.toString()),
+                              Text(item.location.latitude.toString()),
+                              ],
+                            ),
+                            Text("------")
+
+
                           ],
                         ),
                       );
