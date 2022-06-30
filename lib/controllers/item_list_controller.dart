@@ -15,6 +15,8 @@ final itemListFilterProvider = StateProvider<ItemListFilter>((_) => ItemListFilt
 
 //ez adja vissza a szűrt és a nemszűrt listát is
 final filteredItemListProvider = Provider<List<Item>>((ref) {
+  developer.log("[item_list_controller.dart][-][filteredItemListProvider] - filteredItemListProvider.");
+
   //itt állítjuk be a szűrést
   final itemListFilterState = ref.watch(itemListFilterProvider);
 
@@ -36,7 +38,7 @@ final filteredItemListProvider = Provider<List<Item>>((ref) {
 //TODO | ezt olvasva meghívhatjuk rajta a metódusokat, amiket lentebb implementáltunk. Használat
 //TODO | ref.read(itemListControllerProvider.notifier).METHODNAME
 final itemListControllerProvider = StateNotifierProvider<ItemListController, AsyncValue<List<Item>>>((ref) {
-    developer.log("[item_list_controller.dart][itemListControllerProvider] - StateNotifier invoked..");
+  developer.log("[item_list_controller.dart][-][filteredItemListProvider] - StateNotifier invoked...");
     final user = ref.watch(authControllerProvider);
     //ami egyből fetchel is...
     return ItemListController(ref.read, user?.uid);
@@ -50,6 +52,7 @@ class ItemListController extends StateNotifier<AsyncValue<List<Item>>> {
 
   ItemListController(this._read, this._userId) : super(AsyncValue.loading()) {
     if (_userId != null) {
+      developer.log("[item_list_controller.dart][ItemListController][ItemListControllerConstructor] - ItemListController constructed");
       retrieveItems();
     }
   }
@@ -57,18 +60,20 @@ class ItemListController extends StateNotifier<AsyncValue<List<Item>>> {
   Future<void> retrieveItems({bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
-      final items =
-          await _read(itemRepositoryProvider).retrieveItems(userId: _userId!);
+      developer.log("[item_list_controller.dart][ItemListController][retrieveItems] - retrieveItems ");
+      final items = await _read(itemRepositoryProvider).retrieveItems(userId: _userId!);
       if (mounted) {
         state = AsyncValue.data(items);
       }
     } on CustomException catch (e) {
+      developer.log("[item_list_controller.dart][ItemListController][retrieveItems] - retrieveItems Exception");
       state = AsyncValue.error(e);
     }
   }
 
   Future<void> addItem({required String name, bool obtained = false}) async {
     try {
+      developer.log("[item_list_controller.dart][ItemListController][addItem] - addItem ");
       final item = Item(name: name, obtained: obtained);
       final itemId = await _read(itemRepositoryProvider).createItem(
         userId: _userId!,
@@ -77,12 +82,14 @@ class ItemListController extends StateNotifier<AsyncValue<List<Item>>> {
       state.whenData((items) =>
           state = AsyncValue.data(items..add(item.copyWith(id: itemId))));
     } on CustomException catch (e) {
+      developer.log("[item_list_controller.dart][ItemListController][addItem] - addItem Exception");
       //_read(itemListExceptionProvider).state = e;
     }
   }
 
   Future<void> updateItem({required Item updatedItem}) async {
     try {
+      developer.log("[item_list_controller.dart][ItemListController][updateItem] - updateItem ");
       await _read(itemRepositoryProvider)
           .updateItem(userId: _userId!, item: updatedItem);
       state.whenData((items) {
@@ -92,12 +99,15 @@ class ItemListController extends StateNotifier<AsyncValue<List<Item>>> {
         ]);
       });
     } on CustomException catch (e) {
-     // _read(itemListExceptionProvider).state = e;
+      developer.log("[item_list_controller.dart][ItemListController][updateItem] - updateItem Exception ");
+
+      // _read(itemListExceptionProvider).state = e;
     }
   }
 
   Future<void> deleteItem({required String itemId}) async {
     try {
+      developer.log("[item_list_controller.dart][ItemListController][deleteItem] - deleteItem ");
       await _read(itemRepositoryProvider).deleteItem(
         userId: _userId!,
         itemId: itemId,
@@ -105,7 +115,9 @@ class ItemListController extends StateNotifier<AsyncValue<List<Item>>> {
       state.whenData((items) => state =
           AsyncValue.data(items..removeWhere((item) => item.id == itemId)));
     } on CustomException catch (e) {
-     // _read(itemListExceptionProvider).state = e;
+      developer.log("[item_list_controller.dart][ItemListController][deleteItem] - deleteItem Exception ");
+
+      // _read(itemListExceptionProvider).state = e;
     }
   }
 }

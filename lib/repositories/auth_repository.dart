@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_shopping_list/general_providers.dart';
 import 'package:flutter_shopping_list/repositories/custom_exception.dart';
-import 'package:flutter_shopping_list/repositories/users_repository.dart';
+import 'package:flutter_shopping_list/repositories/user_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'dart:developer' as developer;
 
 abstract class BaseAuthRepository {
   Stream<User?> get authStateChanges;
@@ -27,8 +28,10 @@ class AuthRepository implements BaseAuthRepository {
   @override
   Future<void> signInAnonymously() async {
     try {
+      developer.log("[auth_repository.dart][AuthRepository][signInAnonymously] - Signed in anonymously.");
       await _read(firebaseAuthProvider).signInAnonymously();
     } on FirebaseAuthException catch (e) {
+      developer.log("[auth_repository.dart][AuthRepository][signInAnonymously] - Sign in anonymously Exception.");
       throw CustomException(message: e.message);
     }
   }
@@ -36,8 +39,10 @@ class AuthRepository implements BaseAuthRepository {
   @override
   User? getCurrentUser() {
     try {
+      developer.log("[auth_repository.dart][AuthRepository][getCurrentUser] - Get current user.");
       return _read(firebaseAuthProvider).currentUser;
     } on FirebaseAuthException catch (e) {
+      developer.log("[auth_repository.dart][AuthRepository][getCurrentUser] - Get current user Exception.");
       throw CustomException(message: e.message);
     }
   }
@@ -45,9 +50,11 @@ class AuthRepository implements BaseAuthRepository {
   @override
   Future<void> signOut() async {
     try {
+      developer.log("[auth_repository.dart][AuthRepository][signOut] - Sign out.");
       await _read(firebaseAuthProvider).signOut();
      // await signInAnonymously();
     } on FirebaseAuthException catch (e) {
+      developer.log("[auth_repository.dart][AuthRepository][signOut] - Sign out Exception.");
       throw CustomException(message: e.message);
     }
   }
@@ -55,17 +62,21 @@ class AuthRepository implements BaseAuthRepository {
   @override
   Future<void> singInViaEmailAndPassword(String email, String password) async {
     try {
+      developer.log("[auth_repository.dart][AuthRepository][singInViaEmailAndPassword] - Sign in via Email.");
       await _read(firebaseAuthProvider).signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
+      developer.log("[auth_repository.dart][AuthRepository][singInViaEmailAndPassword] - Sign in via Email Exception.");
       throw CustomException(message: e.message);
     }
   }
 
   Future<void> createUserWithEmailAndPassword(String email, String password) async {  //todo add different error handling (existing, in use, weak password, etc)
     try { //TODO get in parameters the user data from the reg process
+      developer.log("[auth_repository.dart][AuthRepository][createUserWithEmailAndPassword] - Register  via Email.");
       UserCredential result = await _read(firebaseAuthProvider).createUserWithEmailAndPassword(email: email, password: password);
-      _read(usersRepositoryProvider).addUser(result);
+      _read(userRepositoryProvider).addUser(result);
     } on FirebaseAuthException catch (e) {
+      developer.log("[auth_repository.dart][AuthRepository][createUserWithEmailAndPassword] - Register  via Email Exception.");
       throw CustomException(message: e.message);
     }
   }

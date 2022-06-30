@@ -45,6 +45,8 @@ class ListScreen_mobile extends ConsumerWidget {
                             //Text(item.barber!.name.toString()),
                             Text("------"),
                             Text(item.barbers!.length.toString()),
+                            Text(item.barbers!.length.toString()),
+                            Text(item.barbers!.length.toString()),
                             Text("-----"),
                           ],
                         ),

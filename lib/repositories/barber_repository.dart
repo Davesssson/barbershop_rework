@@ -23,20 +23,20 @@ class BarberRepository implements BaseBarberRepository{
 
   @override
   Future<List<Barber>> retrieveBarbers() async {
-    developer.log("[barber_repository.dart][BarberRepository][retrieveBarbers] - Barbershops retrieved.");
+    developer.log("[barber_repository.dart][BarberRepository][retrieveBarbers] - Barbers retrieved.");
     try {
       final snap =
       await _read(firebaseFirestoreProvider).collection('barbers').get();
       return snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
-      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Barbershop retrieve exception.");
+      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Barbers retrieve exception.");
       throw CustomException(message: e.message);
     }
   }
 
   @override
   Future<Barber> retrieveSingleBarbersFromShop(String id) async{
-    developer.log("[barber_repository.dart][BarberRepository][retrieveSingleBarbersFromShop] - Barbershops retrieved.");
+    developer.log("[barber_repository.dart][BarberRepository][retrieveSingleBarbersFromShop] - Barbers retrieved.");
     try {
       final snap =
        await  _read(firebaseFirestoreProvider).collection('barbers').doc(id).get().then((value) => Barber.fromJson(value.data()!)); //QueryDocSnapshop
@@ -48,7 +48,7 @@ class BarberRepository implements BaseBarberRepository{
        return snap;
       
     } on FirebaseException catch (e) {
-      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Barbershop retrieve exception.");
+      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveSingleBarbersFromShop] - Barbers retrieve exception.");
       throw CustomException(message: e.message);
     }
 
@@ -56,7 +56,7 @@ class BarberRepository implements BaseBarberRepository{
 
   @override
   Future<List<Barber>> retrieveBarbersFromShop(List<String> ids) async{
-    developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbershops retrieved.");
+    developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers retrieved.");
     try {//EZ JÓ DE CSAK 10 IG MUKODIK
       // final snap = await _read(firebaseFirestoreProvider).collection('barbers').where('__name__',whereIn: ids).get();;
       // return snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
@@ -66,12 +66,8 @@ class BarberRepository implements BaseBarberRepository{
         barbers.add(snap);
       });
       return barbers;
-
-
-
-
     } on FirebaseException catch (e) {
-      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Barbershop retrieve exception.");
+      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbersFromShop] - Barbers retrieve exception.");
       throw CustomException(message: e.message);
     }
 
