@@ -26,6 +26,7 @@ mixin _$Barbershop {
   @CustomGeoPointConverter()
   GeoPoint get location => throw _privateConstructorUsedError;
   String? get places_id => throw _privateConstructorUsedError;
+  List<String>? get barbers => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,7 +44,8 @@ abstract class $BarbershopCopyWith<$Res> {
       String? name,
       String? main_image,
       @CustomGeoPointConverter() GeoPoint location,
-      String? places_id});
+      String? places_id,
+      List<String>? barbers});
 }
 
 /// @nodoc
@@ -61,6 +63,7 @@ class _$BarbershopCopyWithImpl<$Res> implements $BarbershopCopyWith<$Res> {
     Object? main_image = freezed,
     Object? location = freezed,
     Object? places_id = freezed,
+    Object? barbers = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -83,6 +86,10 @@ class _$BarbershopCopyWithImpl<$Res> implements $BarbershopCopyWith<$Res> {
           ? _value.places_id
           : places_id // ignore: cast_nullable_to_non_nullable
               as String?,
+      barbers: barbers == freezed
+          ? _value.barbers
+          : barbers // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -99,7 +106,8 @@ abstract class _$$_BarbershopCopyWith<$Res>
       String? name,
       String? main_image,
       @CustomGeoPointConverter() GeoPoint location,
-      String? places_id});
+      String? places_id,
+      List<String>? barbers});
 }
 
 /// @nodoc
@@ -119,6 +127,7 @@ class __$$_BarbershopCopyWithImpl<$Res> extends _$BarbershopCopyWithImpl<$Res>
     Object? main_image = freezed,
     Object? location = freezed,
     Object? places_id = freezed,
+    Object? barbers = freezed,
   }) {
     return _then(_$_Barbershop(
       id: id == freezed
@@ -141,6 +150,10 @@ class __$$_BarbershopCopyWithImpl<$Res> extends _$BarbershopCopyWithImpl<$Res>
           ? _value.places_id
           : places_id // ignore: cast_nullable_to_non_nullable
               as String?,
+      barbers: barbers == freezed
+          ? _value._barbers
+          : barbers // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -153,8 +166,10 @@ class _$_Barbershop extends _Barbershop with DiagnosticableTreeMixin {
       this.name,
       this.main_image,
       @CustomGeoPointConverter() required this.location,
-      this.places_id})
-      : super._();
+      this.places_id,
+      final List<String>? barbers})
+      : _barbers = barbers,
+        super._();
 
   factory _$_Barbershop.fromJson(Map<String, dynamic> json) =>
       _$$_BarbershopFromJson(json);
@@ -170,10 +185,18 @@ class _$_Barbershop extends _Barbershop with DiagnosticableTreeMixin {
   final GeoPoint location;
   @override
   final String? places_id;
+  final List<String>? _barbers;
+  @override
+  List<String>? get barbers {
+    final value = _barbers;
+    if (value == null) return null;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Barbershop(id: $id, name: $name, main_image: $main_image, location: $location, places_id: $places_id)';
+    return 'Barbershop(id: $id, name: $name, main_image: $main_image, location: $location, places_id: $places_id, barbers: $barbers)';
   }
 
   @override
@@ -185,7 +208,8 @@ class _$_Barbershop extends _Barbershop with DiagnosticableTreeMixin {
       ..add(DiagnosticsProperty('name', name))
       ..add(DiagnosticsProperty('main_image', main_image))
       ..add(DiagnosticsProperty('location', location))
-      ..add(DiagnosticsProperty('places_id', places_id));
+      ..add(DiagnosticsProperty('places_id', places_id))
+      ..add(DiagnosticsProperty('barbers', barbers));
   }
 
   @override
@@ -198,7 +222,8 @@ class _$_Barbershop extends _Barbershop with DiagnosticableTreeMixin {
             const DeepCollectionEquality()
                 .equals(other.main_image, main_image) &&
             const DeepCollectionEquality().equals(other.location, location) &&
-            const DeepCollectionEquality().equals(other.places_id, places_id));
+            const DeepCollectionEquality().equals(other.places_id, places_id) &&
+            const DeepCollectionEquality().equals(other._barbers, _barbers));
   }
 
   @JsonKey(ignore: true)
@@ -209,7 +234,8 @@ class _$_Barbershop extends _Barbershop with DiagnosticableTreeMixin {
       const DeepCollectionEquality().hash(name),
       const DeepCollectionEquality().hash(main_image),
       const DeepCollectionEquality().hash(location),
-      const DeepCollectionEquality().hash(places_id));
+      const DeepCollectionEquality().hash(places_id),
+      const DeepCollectionEquality().hash(_barbers));
 
   @JsonKey(ignore: true)
   @override
@@ -228,7 +254,8 @@ abstract class _Barbershop extends Barbershop {
       final String? name,
       final String? main_image,
       @CustomGeoPointConverter() required final GeoPoint location,
-      final String? places_id}) = _$_Barbershop;
+      final String? places_id,
+      final List<String>? barbers}) = _$_Barbershop;
   _Barbershop._() : super._();
 
   factory _Barbershop.fromJson(Map<String, dynamic> json) =
@@ -245,6 +272,8 @@ abstract class _Barbershop extends Barbershop {
   GeoPoint get location => throw _privateConstructorUsedError;
   @override
   String? get places_id => throw _privateConstructorUsedError;
+  @override
+  List<String>? get barbers => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$$_BarbershopCopyWith<_$_Barbershop> get copyWith =>

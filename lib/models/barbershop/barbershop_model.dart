@@ -1,8 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_shopping_list/controllers/barber_controller.dart';
 import 'package:flutter_shopping_list/extensions/firebase_firestore_extension.dart';
+import 'package:flutter_shopping_list/general_providers.dart';
 import 'package:flutter_shopping_list/models/json_converter.dart';
+import 'package:flutter_shopping_list/repositories/barber_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
+
+import '../barber/barber_model.dart';
 
 part 'barbershop_model.freezed.dart';
 part 'barbershop_model.g.dart';
@@ -19,6 +24,7 @@ class Barbershop with _$Barbershop{
     @CustomGeoPointConverter()
     required GeoPoint location,
     String? places_id,
+    List<String>? barbers,
 
   })= _Barbershop;
 

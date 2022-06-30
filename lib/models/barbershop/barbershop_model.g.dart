@@ -14,6 +14,8 @@ _$_Barbershop _$$_BarbershopFromJson(Map<String, dynamic> json) =>
       location: const CustomGeoPointConverter()
           .fromJson(json['location'] as Map<String, dynamic>),
       places_id: json['places_id'] as String?,
+      barbers:
+          (json['barbers'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$$_BarbershopToJson(_$_Barbershop instance) =>
@@ -23,4 +25,5 @@ Map<String, dynamic> _$$_BarbershopToJson(_$_Barbershop instance) =>
       'main_image': instance.main_image,
       'location': const CustomGeoPointConverter().toJson(instance.location),
       'places_id': instance.places_id,
+      'barbers': instance.barbers,
     };

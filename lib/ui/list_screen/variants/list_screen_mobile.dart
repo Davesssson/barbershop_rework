@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/controllers/barber_controller.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -41,9 +42,10 @@ class ListScreen_mobile extends ConsumerWidget {
                               Text(item.location.latitude.toString()),
                               ],
                             ),
-                            Text("------")
-
-
+                            //Text(item.barber!.name.toString()),
+                            Text("------"),
+                            Text(item.barbers!.length.toString()),
+                            Text("-----"),
                           ],
                         ),
                       );
