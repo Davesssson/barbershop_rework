@@ -18,19 +18,13 @@ class DetailsScreen_mobile extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final arg = ModalRoute.of(context)?.settings.arguments;
-    final barbershopListState = ref.watch(BarbershopListControllerProvider);
-    final filteredbarbershopList = ref.watch(filteredBarbershopListProvider);
-
     final singleBarbershopState = ref.watch(BarbershopSingleControllerProvider(arg.toString()));
-    final fitleredSingleBarber = ref.watch(filteredBarbershopSingleProvider(arg.toString()));
 
-
-
-      return singleBarbershopState.when(
+    return singleBarbershopState.when(
           data: (data)=>Text(data.name!),
           error: (e,_)=>Text(e.toString()),
           loading: ()=>CircularProgressIndicator(),
-      );
+    );
 
 
   }
