@@ -18,21 +18,21 @@ class ListScreen_mobile2 extends ConsumerWidget {
     return Scaffold(
         body: ref.watch(BarberListControllerProvider).when(
             data: (items)=>items.isEmpty
-                ? const Center(
-              child: Text(
-                'Sajnos a berberek megbaszódtak',
-                style: TextStyle(fontSize: 20.0, color: Colors.red),
-              ),
-            )
-                :ListView.builder(
-                itemCount: ref.watch(filteredBarberListProvider).length,
-                itemBuilder: (BuildContext context, int index){
-                  final barber = ref.watch(filteredBarberListProvider)[index];
-                  return Container(
-                    color: Colors.red,
-                    child: Text(barber.name!),
-                  );
-                }
+              ? const Center(
+                child: Text(
+                  'Sajnos a berberek megbaszódtak',
+                  style: TextStyle(fontSize: 20.0, color: Colors.red),
+                ),
+              )
+            :ListView.builder(
+              itemCount: ref.watch(filteredBarberListProvider).length,
+              itemBuilder: (BuildContext context, int index){
+                final barber = ref.watch(filteredBarberListProvider)[index];
+                return Container(
+                  color: Colors.red,
+                  child: Text(barber.name!),
+                );
+              }
             ),
             error: (error,_)=>Text("error a barberrel"),
             loading: () => const Center(child: CircularProgressIndicator())

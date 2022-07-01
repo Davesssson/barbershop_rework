@@ -1,8 +1,7 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/ui/details_screen/details_screen.dart';
+import 'package:flutter_shopping_list/ui/details_screen/variants/details_screen_mobile.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
-
 import '../item_list_screen/item_list_screen.dart';
 import '../list_screen/list_screen.dart';
 import '../proba.dart';
@@ -20,6 +19,7 @@ class BottomNavBar extends StatelessWidget {
       MainScreen(
         hideStatus: _hideNavBar,
       ),
+      //DetailsScreen(),
       ItemListScreen(),
       //Container(color:Colors.yellow)
       ListScreen(),
@@ -32,12 +32,19 @@ class BottomNavBar extends StatelessWidget {
   List<PersistentBottomNavBarItem> _navBarsItems()  {
     return [
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.home),
+        icon: Icon(Icons.h_mobiledata),
         title: "Home",
         activeColorPrimary: Colors.blue,
         inactiveColorPrimary: Colors.grey,
         inactiveColorSecondary: Colors.purple,
       ),
+      // PersistentBottomNavBarItem(
+      //   icon: Icon(Icons.home),
+      //   title: "Home",
+      //   activeColorPrimary: Colors.blue,
+      //   inactiveColorPrimary: Colors.grey,
+      //   inactiveColorSecondary: Colors.purple,
+      // ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.search),
         title: ("Search"),
@@ -47,8 +54,9 @@ class BottomNavBar extends StatelessWidget {
         routeAndNavigatorSettings: RouteAndNavigatorSettings(
           initialRoute: '/',
           routes: {
-            '/first': (context) => MainScreen2(),
-            '/second': (context) => MainScreen2(),
+            //'/details':(context)=>DetailsScreen(),
+            //'/first': (context) => MainScreen2(),
+            //'/second': (context) => MainScreen2(),
           },
         ),
       ),
@@ -61,8 +69,9 @@ class BottomNavBar extends StatelessWidget {
         routeAndNavigatorSettings: RouteAndNavigatorSettings(
           initialRoute: '/',
           routes: {
-            '/first': (context) => MainScreen2(),
-            '/second': (context) => MainScreen2(),
+            '/details':(context)=>DetailsScreen(),
+            // '/first': (context) => MainScreen2(),
+            // '/second': (context) => MainScreen2(),
           },
         ),
         // onPressed: (context) {

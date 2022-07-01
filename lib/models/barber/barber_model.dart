@@ -13,6 +13,9 @@ class Barber with _$Barber{
   factory Barber({
     String? id,
     String? name,
+    String? description,
+    String? prof_pic,
+    List<String>? works,
 
   })= _Barber;
 
