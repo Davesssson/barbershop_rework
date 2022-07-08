@@ -16,10 +16,8 @@ final itemListFilterProvider = StateProvider<ItemListFilter>((_) => ItemListFilt
 //ez adja vissza a szűrt és a nemszűrt listát is
 final filteredItemListProvider = Provider<List<Item>>((ref) {
   developer.log("[item_list_controller.dart][-][filteredItemListProvider] - filteredItemListProvider.");
-
   //itt állítjuk be a szűrést
   final itemListFilterState = ref.watch(itemListFilterProvider);
-
   final itemListState = ref.watch(itemListControllerProvider);
   return itemListState.maybeWhen(
     data: (items) {

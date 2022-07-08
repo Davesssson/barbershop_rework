@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/controllers/barbershop_controller.dart';
+import 'package:flutter_shopping_list/controllers/city_controller.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
+import 'package:flutter_shopping_list/repositories/barbershops_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../models/item/item_model.dart';
 import 'dart:developer' as developer;
@@ -17,32 +19,65 @@ class ListScreen_mobile3 extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
+     const List<String> _kOptions = <String>[
+      'aardvark',
+      'bobcat',
+      'chameleon',
+    ];
+    final optionsState = ref.watch(cityListControllerProvider);
+    final filteredCityList = ref.watch(filteredCityListProvider);
     final barbershopListState = ref.watch(BarbershopListControllerProvider);
     final filteredbarbershopList = ref.watch(filteredBarbershopListProvider);
 
     return Scaffold(
-      body: barbershopListState.when(
-          data: (shops) => shops.isEmpty
-          ? const Center(
-            child: Text(
-              'no barbershop to display',
-              style: TextStyle(fontSize: 20.0),
-            ),
-          )
-          : ListView.builder(
-            shrinkWrap: true,
-            itemCount: filteredbarbershopList.length,
-            itemBuilder: (BuildContext context, int index) {
-              final item = filteredbarbershopList[index];
-              return ProviderScope(
-                overrides: [currentShop.overrideWithValue(item)],
-                child:  ShopTile(),
-              );
-            },
+      body: Column(
+        children: [
+          Autocomplete<String>(
+              optionsBuilder: (TextEditingValue textEditingValue) async {
+                if (textEditingValue.text == '') {
+                  return const Iterable<String>.empty();
+                }
+               // return _kOptions.where((String option) {
+               //   return option.contains(textEditingValue.text.toLowerCase());
+               // });
+
+                return optionsState.when(
+                    data: (data){
+                      return data.where((String option){
+                        return option.contains(textEditingValue.text.toLowerCase());
+                      });
+                    },
+                    error: (error,_)=>const Iterable<String>.empty(),
+                    loading: () => const Iterable<String>.empty()
+                );
+              },
+              onSelected:(String selected){
+                print(selected);
+              }
           ),
-          error: (error,_)=>Text("errpr in details screen"),
-          loading: () => const Center(child: CircularProgressIndicator())
+          barbershopListState.when(
+              data: (shops) => shops.isEmpty
+              ? const Center(
+                child: Text(
+                  'no barbershop to display',
+                  style: TextStyle(fontSize: 20.0),
+                ),
+              )
+              : ListView.builder(
+                shrinkWrap: true,
+                itemCount: filteredbarbershopList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final item = filteredbarbershopList[index];
+                  return ProviderScope(
+                    overrides: [currentShop.overrideWithValue(item)],
+                    child:  ShopTile(),
+                  );
+                },
+              ),
+              error: (error,_)=>Text("errpr in details screen"),
+              loading: () => const Center(child: CircularProgressIndicator())
+          ),
+        ],
       ),
 
     );
@@ -70,7 +105,8 @@ class ShopTile extends HookConsumerWidget {
       }, //TODO ITT KELL MEGADNI HOGY MILYEN APARMÉTERT ADUNK ÁT ÉS ARRA KELL FETCHELNI A DETAILSBAN
       child: ListTile(
         key: ValueKey(barbershop.id), //ez nemtudom mit csinal
-        title: Text(barbershop.id!),
+        title: Text(barbershop.name!),
+        subtitle: Text(barbershop.city!),
       ),
     );
   }

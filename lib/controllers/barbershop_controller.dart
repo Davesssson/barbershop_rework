@@ -1,4 +1,3 @@
-import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_shopping_list/extensions/firebase_firestore_extension.dart';
@@ -127,3 +126,5 @@ class BarbershopListController extends StateNotifier<AsyncValue<List<Barbershop>
 
 
 }
+
+

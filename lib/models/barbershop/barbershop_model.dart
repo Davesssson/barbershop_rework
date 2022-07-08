@@ -25,6 +25,7 @@ class Barbershop with _$Barbershop{
     required GeoPoint location,
     String? places_id,
     List<String>? barbers,
+    String? city,
 
   })= _Barbershop;
 

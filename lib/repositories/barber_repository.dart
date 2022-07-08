@@ -1,6 +1,8 @@
+import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../general_providers.dart';
 import '../models/barber/barber_model.dart';

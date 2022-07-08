@@ -1,10 +1,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/controllers/barbershop_controller.dart';
+import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../controllers/barber_controller.dart';
 import 'dart:developer' as developer;
 
+import '../../../controllers/barber_controller.dart';
+import '../../../models/barber/barber_model.dart';
 
 
 
@@ -64,6 +67,35 @@ class DetailWidget_mobile extends ConsumerWidget {
         loading: ()=>CircularProgressIndicator(),
     );
 
-    
+
   }
 }
+
+final currentBarber = Provider<Barber>((_) {
+  developer.log("[item_list_screen_mobile.dart][currentItem] - ??????.");
+  throw UnimplementedError();
+});
+
+class DetailWidget_mobile2 extends ConsumerWidget{
+  final barbershop;
+  DetailWidget_mobile2({Key? key, required this.barbershop}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref){
+    final barberListState = ref.watch(BarberListControllerProvider);
+    final filteredBarberList = ref.watch(filteredBarberListProvider);
+
+    return
+       barberListState.when(
+           data: (items) => items.isEmpty
+               ?Text("asd")
+               :Text(items.length.toString()),
+
+
+          error: (e,_)=> Text("asd"),
+          loading: ()=>Text("loading")
+
+    );
+  }
+}
+
