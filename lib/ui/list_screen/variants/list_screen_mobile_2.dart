@@ -13,10 +13,10 @@ class ListScreen_mobile2 extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final barbershopListState = ref.watch(BarbershopListControllerProvider);
-    final filteredBarbershopList = ref.watch(filteredBarbershopListProvider);
+    final barbershopListState = ref.watch(barbershopListStateProvider);
+    final filteredBarbershopList = ref.watch(barbershopListContentProvider);
     return Scaffold(
-        body: ref.watch(BarberListControllerProvider).when(
+        body: ref.watch(barberListStateProvider).when(
             data: (items)=>items.isEmpty
               ? const Center(
                 child: Text(
@@ -25,9 +25,9 @@ class ListScreen_mobile2 extends ConsumerWidget {
                 ),
               )
             :ListView.builder(
-              itemCount: ref.watch(filteredBarberListProvider).length,
+              itemCount: ref.watch(barberListContentProvider).length,
               itemBuilder: (BuildContext context, int index){
-                final barber = ref.watch(filteredBarberListProvider)[index];
+                final barber = ref.watch(barberListContentProvider)[index];
                 return Container(
                   color: Colors.red,
                   child: Text(barber.name!),

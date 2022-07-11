@@ -8,7 +8,7 @@ import 'dart:developer' as developer;
 abstract class BaseBarbershopRepository {
   Future<List<Barbershop>> retrieveBarbershops();
   Future<Barbershop> retrieveSingleBarbershop(String id);
-  Future<List<String>> retrieveCityes();
+  Future<List<String>> retrieveCities();
 }
 
 final barbershopRepositoryProvider = Provider<BarbershopRepository>((ref) => BarbershopRepository(ref.read));
@@ -23,7 +23,7 @@ class BarbershopRepository implements BaseBarbershopRepository{
     try {
       final snap =
           await _read(firebaseFirestoreProvider).collection('barbershops').get();
-      this.retrieveCityes();
+      this.retrieveCities();
       return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
 
@@ -46,18 +46,15 @@ class BarbershopRepository implements BaseBarbershopRepository{
 
   }
   @override
-  Future<List<String>> retrieveCityes()async {
-    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveCityes] - Cityes retrieved.");
+  Future<List<String>> retrieveCities()async {
+    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveCities] - retrieveCities retrieved.");
     try {
-      final snap =
-      await _read(firebaseFirestoreProvider).collection('barbershops').get();
-      //return snap.docs.map((doc) => doc['city'].toString()).toSet().toList();
-      final things =  snap.docs.map((doc) => doc['city'].toString()).toSet().toList();
-      print("---varosok----");
-      print(things);
-      return things;
+      final snap = await _read(firebaseFirestoreProvider).collection('barbershops').get();
+      final cities =  snap.docs.map((doc) => doc['city'].toString()).toSet().toList();
+      developer.log("[cities = " + cities.toString());
+      return cities;
     } on FirebaseException catch (e) {
-      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Cityes retrieved exception.");
+      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveCities] - retrieveCities retrieved exception.");
       throw CustomException(message: e.message);
     }
   }

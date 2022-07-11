@@ -18,8 +18,8 @@ class DetailsScreen_mobile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final arg = ModalRoute.of(context)?.settings.arguments;
-    final singleBarbershopState = ref.watch(BarbershopSingleControllerProvider(arg.toString()));
+    final arg = ModalRoute.of(context)?.settings.arguments as String;
+    final singleBarbershopState = ref.watch(barbershopSingleStateProvider(arg));
 
     return SingleChildScrollView(
       child: singleBarbershopState.when(
@@ -45,8 +45,8 @@ class DetailWidget_mobile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    final barbersState=ref.watch(BarberListControllerFromShopProvider(ids));
-    final filteredBarbers2=ref.watch(filteredBarberListFromShopProvider(ids));
+    final barbersState=ref.watch(barberListFromShopStateProvider(ids));
+    final barbersContent=ref.watch(barberListFromShopContentProvider(ids));
 
     print("widget kapott ids = ");
     print(ids);
@@ -57,9 +57,9 @@ class DetailWidget_mobile extends ConsumerWidget {
         )
         :ListView.builder(
           shrinkWrap: true,
-          itemCount: filteredBarbers2.length,
+          itemCount: barbersContent.length,
           itemBuilder:(BuildContext context, int index){
-            final barber = filteredBarbers2[index];
+            final barber = barbersContent[index];
             return Text(barber.name!);
           }
         ),
@@ -76,26 +76,4 @@ final currentBarber = Provider<Barber>((_) {
   throw UnimplementedError();
 });
 
-class DetailWidget_mobile2 extends ConsumerWidget{
-  final barbershop;
-  DetailWidget_mobile2({Key? key, required this.barbershop}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref){
-    final barberListState = ref.watch(BarberListControllerProvider);
-    final filteredBarberList = ref.watch(filteredBarberListProvider);
-
-    return
-       barberListState.when(
-           data: (items) => items.isEmpty
-               ?Text("asd")
-               :Text(items.length.toString()),
-
-
-          error: (e,_)=> Text("asd"),
-          loading: ()=>Text("loading")
-
-    );
-  }
-}
 

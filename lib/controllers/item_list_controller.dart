@@ -14,11 +14,11 @@ enum ItemListFilter {
 final itemListFilterProvider = StateProvider<ItemListFilter>((_) => ItemListFilter.all);
 
 //ez adja vissza a szűrt és a nemszűrt listát is
-final filteredItemListProvider = Provider<List<Item>>((ref) {
+final itemListContentProvider = Provider<List<Item>>((ref) {
   developer.log("[item_list_controller.dart][-][filteredItemListProvider] - filteredItemListProvider.");
   //itt állítjuk be a szűrést
   final itemListFilterState = ref.watch(itemListFilterProvider);
-  final itemListState = ref.watch(itemListControllerProvider);
+  final itemListState = ref.watch(itemListStateProvider);
   return itemListState.maybeWhen(
     data: (items) {
       switch (itemListFilterState) {
@@ -35,20 +35,20 @@ final filteredItemListProvider = Provider<List<Item>>((ref) {
 //todo | ez csak egy állapotot ad vissza!!, és magát a controllert.
 //TODO | ezt olvasva meghívhatjuk rajta a metódusokat, amiket lentebb implementáltunk. Használat
 //TODO | ref.read(itemListControllerProvider.notifier).METHODNAME
-final itemListControllerProvider = StateNotifierProvider<ItemListController, AsyncValue<List<Item>>>((ref) {
+final itemListStateProvider = StateNotifierProvider<ItemListStateController, AsyncValue<List<Item>>>((ref) {
   developer.log("[item_list_controller.dart][-][filteredItemListProvider] - StateNotifier invoked...");
     final user = ref.watch(authControllerProvider);
     //ami egyből fetchel is...
-    return ItemListController(ref.read, user?.uid);
+    return ItemListStateController(ref.read, user?.uid);
   },
 );
 
 //ez maga a facade, amin hívjuk a dolgokat. Ezen belül implementáljuk a végpontokat, amiket a user elér
-class ItemListController extends StateNotifier<AsyncValue<List<Item>>> {
+class ItemListStateController extends StateNotifier<AsyncValue<List<Item>>> {
   final Reader _read;
   final String? _userId;
 
-  ItemListController(this._read, this._userId) : super(AsyncValue.loading()) {
+  ItemListStateController(this._read, this._userId) : super(AsyncValue.loading()) {
     if (_userId != null) {
       developer.log("[item_list_controller.dart][ItemListController][ItemListControllerConstructor] - ItemListController constructed");
       retrieveItems();
@@ -119,5 +119,9 @@ class ItemListController extends StateNotifier<AsyncValue<List<Item>>> {
     }
   }
 }
+
+
+
+
 
 final itemListExceptionProvider = StateProvider<CustomException?>((_) => null);

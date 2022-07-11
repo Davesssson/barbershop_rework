@@ -1,3 +1,7 @@
+
+import 'dart:html';
+
+import 'package:chips_choice_null_safety/chips_choice_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_shopping_list/controllers/barbershop_controller.dart';
@@ -15,16 +19,29 @@ final currentShop = Provider<Barbershop>((_) {
   throw UnimplementedError();
 });
 
-class ListScreen_mobile3 extends HookConsumerWidget {
-  const ListScreen_mobile3({Key? key}) : super(key: key);
+class ListScreen_mobile4 extends HookConsumerWidget {
+  const ListScreen_mobile4({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
+    final chipList = ref.watch(chipListFilterProvider);
     final optionsState = ref.watch(cityListStateProvider);
     final barbershopsState = ref.watch(barbershopListStateProvider);
     final barbershopsContent = ref.watch(barbershopListContentProvider);
-
+    List<String> options = [
+      'News',
+      'Entertainment',
+      'Politics',
+      'Automotive',
+      'Sports',
+      'Education',
+      'Fashion',
+      'Travel',
+      'Food',
+      'Tech',
+      'Science',
+    ];
+    List<String> tags = [];
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: (){
@@ -35,6 +52,26 @@ class ListScreen_mobile3 extends HookConsumerWidget {
       ),
       body: Column(
         children: [
+          ChipsChoice<String>.multiple(
+            value: chipList,
+            onChanged: (val) => {
+            ref.read(chipListFilterProvider.notifier).state = val,
+              print("ezek vannak elvileg kijelolve " + ref.read(chipListFilterProvider.notifier).state.toString())
+
+            },
+            choiceItems: C2Choice.listFrom<String, String>(
+              source: options,
+              value: (i, v) => v,
+              label: (i, v) => v,
+            ),
+            choiceStyle: C2ChoiceStyle(
+              color: Colors.orange,
+              borderColor: Colors.red,
+            ),
+            wrapped: true,
+            textDirection: TextDirection.ltr,
+          ),
+
           Autocomplete<String>(
               optionsBuilder: (TextEditingValue textEditingValue) async {
                 if (textEditingValue.text == '') {
@@ -95,7 +132,7 @@ class ShopTile extends HookConsumerWidget {
       onTap: (){
         //Navigator.pushNamed(context, '/details', arguments: barbershop.id!.toString());
         Navigator.push(
-            context,
+          context,
           MaterialPageRoute(
             builder: (context) => DetailsScreen(),
             settings: RouteSettings(

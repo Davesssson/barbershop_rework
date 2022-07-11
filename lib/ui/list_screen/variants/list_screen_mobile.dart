@@ -13,8 +13,8 @@ class ListScreen_mobile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final barbershopListState = ref.watch(BarbershopListControllerProvider);
-    final filteredBarbershopList = ref.watch(filteredBarbershopListProvider);
+    final barbershopListState = ref.watch(barbershopListStateProvider);
+    final filteredBarbershopList = ref.watch(barbershopListContentProvider);
     return Scaffold(
         body: barbershopListState.when(
             data: (items) => items.isEmpty

@@ -5,47 +5,44 @@ import '../repositories/custom_exception.dart';
 import 'dart:developer' as developer;
 
 
-final filteredBarberListFromShopProvider = Provider.family<List<Barber>,List<String>>((ref,ids) {
-  print("filteredBarberListFromShopProvider kapott ids = ");
-  print(ids);
-  developer.log("[barber_controller.dart][-][filteredBarberListFromShopProvider] - filteredBarberListFromShopProvider.");
-  final itemListState = ref.watch(BarberListControllerFromShopProvider(ids));
-  return itemListState.maybeWhen(
-    data: (items) {
+final barberListFromShopContentProvider = Provider.family<List<Barber>,List<String>>((ref,ids) {
+  developer.log("[barber_controller.dart][-][barberListFromShopContentProvider] - barberListFromShopContentProvider.");
+  final barbersListState = ref.watch(barberListFromShopStateProvider(ids));
+  return barbersListState.maybeWhen(
+    data: (barbers) {
       switch ("asd") {
-
         default:
           print("switch default ag");
-          print(items);
-          return items;
+          developer.log("swtich default ag item barbers = " + barbers.toString());
+          return barbers;
       }
     },
     orElse: () => [],
   );
 });
 
-final BarberListControllerFromShopProvider = StateNotifierProvider.family<BarberListFromShopController, AsyncValue<List<Barber>>,List<String>>((ref,ids) {
-  developer.log("[barber_controller.dart][-][BarberListControllerFromShopProvider] - BarberListControllerFromShopProvider.");
-  return BarberListFromShopController(ref.read,ids);
+final barberListFromShopStateProvider = StateNotifierProvider.family<BarberListFromShopStateController, AsyncValue<List<Barber>>,List<String>>((ref,ids) {
+  developer.log("[barber_controller.dart][-][barberListFromShopStateProvider] - barberListFromShopStateProvider.");
+  return BarberListFromShopStateController(ref.read,ids);
 },);
 
-class BarberListFromShopController extends StateNotifier<AsyncValue<List<Barber>>>{
+class BarberListFromShopStateController extends StateNotifier<AsyncValue<List<Barber>>>{
   final Reader _read;
-  BarberListFromShopController(this._read,List<String> ids):super(AsyncValue.loading()){
-    developer.log("[barber_controller.dart][BarberListFromShopController][BarberListFromShopControllerConstructor] - BarberListFromShopController constructed.");
+  BarberListFromShopStateController(this._read,List<String> ids):super(AsyncValue.loading()){
+    developer.log("[barber_controller.dart][BarberListFromShopStateController][BarberListFromShopStateController] - BarberListFromShopStateController constructed.");
     retrieveBarbersFromShop(ids);
   }
 
   Future<void> retrieveBarbers({bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
-      developer.log("[barber_controller.dart][BarberListFromShopController][retrieveBarbers] - retrieveBarbers.");
+      developer.log("[barber_controller.dart][BarberListFromShopStateController][retrieveBarbers] - retrieveBarbers.");
       final items = await _read(barberRepositoryProvider).retrieveBarbers();
       if (mounted) {
         state = AsyncValue.data(items);
       }
     } on CustomException catch (e) {
-      developer.log("[barber_controller.dart][BarberListController][retrieveBarbers] - retrieveBarbers Exception.");
+      developer.log("[barber_controller.dart][BarberListFromShopStateController][retrieveBarbers] - retrieveBarbers Exception.");
       state = AsyncValue.error(e);
     }
   }
@@ -53,14 +50,14 @@ class BarberListFromShopController extends StateNotifier<AsyncValue<List<Barber>
   Future<void> retrieveSingleBarber(String id, {bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
-      developer.log("[barber_controller.dart][BarberListController][retrieveSingleBarber] - retrieveSingleBarber.");
+      developer.log("[barber_controller.dart][BarberListFromShopStateController][retrieveSingleBarber] - retrieveSingleBarber.");
       final items = await _read(barberRepositoryProvider).retrieveSingleBarbersFromShop(id);
       if (mounted) {
         List<Barber> asd=[]; asd.add(items);
         state = AsyncValue.data(asd);
       }
     } on CustomException catch (e) {
-      developer.log("[barber_controller.dart][BarberListController][retrieveSingleBarber] - retrieveSingleBarber Exception.");
+      developer.log("[barber_controller.dart][BarberListFromShopStateController][retrieveSingleBarber] - retrieveSingleBarber Exception.");
       state = AsyncValue.error(e);
     }
   }
@@ -68,7 +65,7 @@ class BarberListFromShopController extends StateNotifier<AsyncValue<List<Barber>
   Future<void> retrieveBarbersFromShop(List<String> ids, {bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
-      developer.log("[barber_controller.dart][BarberListController][retrieveBarbersFromShop] - retrieveBarbersFromShop.");
+      developer.log("[barber_controller.dart][BarberListFromShopStateController][retrieveBarbersFromShop] - retrieveBarbersFromShop.");
       final items = await _read(barberRepositoryProvider).retrieveBarbersFromShop(ids);
       if (mounted) {
         print("state before =");
@@ -78,7 +75,7 @@ class BarberListFromShopController extends StateNotifier<AsyncValue<List<Barber>
         print(state);
       }
     } on CustomException catch (e) {
-      developer.log("[barber_controller.dart][BarberListController][retrieveBarbersFromShop] - retrieveBarbersFromShop Exception.");
+      developer.log("[barber_controller.dart][BarberListFromShopStateController][retrieveBarbersFromShop] - retrieveBarbersFromShop Exception.");
       state = AsyncValue.error(e);
     }
   }
@@ -94,48 +91,45 @@ class BarberListFromShopController extends StateNotifier<AsyncValue<List<Barber>
 
 
 
-final filteredBarberListProvider = Provider<List<Barber>>((ref) {
-  developer.log("[barber_controller.dart][-][filteredBarberListProvider] - filteredBarberListProvider.");
-  final itemListState = ref.watch(BarberListControllerProvider);
-  return itemListState.maybeWhen(
-    data: (items) {
-      //switch (itemListFilterState) {
+final barberListContentProvider = Provider<List<Barber>>((ref) {
+  developer.log("[barber_controller.dart][-][barberListContentProvider] - barberListContentProvider.");
+  final barbersListState = ref.watch(barberListStateProvider);
+  return barbersListState.maybeWhen(
+    data: (barbers) {
       switch ("asd") {
-      //case ItemListFilter.obtained:
-      //return items.where((item) => item.obtained).toList();
         default:
-          return items;
+          return barbers;
       }
     },
     orElse: () => [],
   );
 });
 
-final BarberListControllerProvider = StateNotifierProvider<BarberListController, AsyncValue<List<Barber>>>((ref) {
-  developer.log("[barber_controller.dart][-][BarberListControllerProvider] - BarberListControllerProvider.");
-  return BarberListController(ref.read);
+final barberListStateProvider = StateNotifierProvider<BarberListStateController, AsyncValue<List<Barber>>>((ref) {
+  developer.log("[barber_controller.dart][-][barberListStateProvider] - barberListStateProvider.");
+  return BarberListStateController(ref.read);
 },);
 
-class BarberListController extends StateNotifier<AsyncValue<List<Barber>>>{
+class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
   final Reader _read;
-  BarberListController(this._read):super(AsyncValue.loading()){
-    developer.log("[barber_controller.dart][BarberListController][BarberListControllerConstructor] - BarberListController constructed.");
-    //retrieveBarbers();
-    List<String> ids = [];
-    ids.add("uyl7p7YnJWjvjmrhSAhY");
-    retrieveBarbersFromShop(ids);
+  BarberListStateController(this._read):super(AsyncValue.loading()){
+    developer.log("[barber_controller.dart][BarberListStateController][BarberListStateController] - BarberListStateController constructed.");
+    retrieveBarbers();
+    //List<String> ids = [];
+    //ids.add("uyl7p7YnJWjvjmrhSAhY");
+    //retrieveBarbersFromShop(ids);
   }
 
   Future<void> retrieveBarbers({bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
-      developer.log("[barber_controller.dart][BarberListController][retrieveBarbers] - retrieveBarbers.");
+      developer.log("[barber_controller.dart][BarberListStateController][retrieveBarbers] - retrieveBarbers.");
       final items = await _read(barberRepositoryProvider).retrieveBarbers();
       if (mounted) {
         state = AsyncValue.data(items);
       }
     } on CustomException catch (e) {
-      developer.log("[barber_controller.dart][BarberListController][retrieveBarbers] - retrieveBarbers Exception.");
+      developer.log("[barber_controller.dart][BarberListStateController][retrieveBarbers] - retrieveBarbers Exception.");
       state = AsyncValue.error(e);
     }
   }
@@ -143,14 +137,14 @@ class BarberListController extends StateNotifier<AsyncValue<List<Barber>>>{
   Future<void> retrieveSingleBarber(String id, {bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
-      developer.log("[barber_controller.dart][BarberListController][retrieveSingleBarber] - retrieveSingleBarber.");
+      developer.log("[barber_controller.dart][BarberListStateController][retrieveSingleBarber] - retrieveSingleBarber.");
       final items = await _read(barberRepositoryProvider).retrieveSingleBarbersFromShop(id);
       if (mounted) {
         List<Barber> asd=[]; asd.add(items);
         state = AsyncValue.data(asd);
       }
     } on CustomException catch (e) {
-      developer.log("[barber_controller.dart][BarberListController][retrieveSingleBarber] - retrieveSingleBarber Exception.");
+      developer.log("[barber_controller.dart][BarberListStateController][retrieveSingleBarber] - retrieveSingleBarber Exception.");
       state = AsyncValue.error(e);
     }
   }
@@ -158,7 +152,7 @@ class BarberListController extends StateNotifier<AsyncValue<List<Barber>>>{
   Future<void> retrieveBarbersFromShop(List<String> ids, {bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
-      developer.log("[barber_controller.dart][BarberListController][retrieveBarbersFromShop] - retrieveBarbersFromShop.");
+      developer.log("[barber_controller.dart][BarberListStateController][retrieveBarbersFromShop] - retrieveBarbersFromShop.");
       final items = await _read(barberRepositoryProvider).retrieveBarbersFromShop(ids);
       if (mounted) {
         state = AsyncValue.data(items);
@@ -166,7 +160,7 @@ class BarberListController extends StateNotifier<AsyncValue<List<Barber>>>{
         print(state);
       }
     } on CustomException catch (e) {
-      developer.log("[barber_controller.dart][BarberListController][retrieveBarbersFromShop] - retrieveBarbersFromShop Exception.");
+      developer.log("[barber_controller.dart][BarberListStateController][retrieveBarbersFromShop] - retrieveBarbersFromShop Exception.");
       state = AsyncValue.error(e);
     }
   }

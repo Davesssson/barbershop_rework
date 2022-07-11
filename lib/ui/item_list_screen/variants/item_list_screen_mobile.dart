@@ -18,8 +18,8 @@ class ItemListScreen_mobile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final itemListState = ref.watch(itemListControllerProvider);
-    final filteredItemList = ref.watch(filteredItemListProvider);
+    final itemListState = ref.watch(itemListStateProvider);
+    final filteredItemList = ref.watch(itemListContentProvider);
     final authControllerState = ref.watch(authControllerProvider);
     final isObtainedFilter = ref.watch(itemListFilterProvider.notifier).state == ItemListFilter.all;
 
@@ -124,12 +124,12 @@ class ItemTile extends HookConsumerWidget {
       trailing: Checkbox(
         value: item.obtained,
         onChanged: (val) => ref
-            .read(itemListControllerProvider.notifier)
+            .read(itemListStateProvider.notifier)
             .updateItem(updatedItem: item.copyWith(obtained: !item.obtained)),
       ),
       onTap: () => AddItemDialog.show(context, item),
       onLongPress: () => ref
-          .read(itemListControllerProvider.notifier)
+          .read(itemListStateProvider.notifier)
           .deleteItem(itemId: item.id!),
     );
   }
@@ -175,7 +175,7 @@ class AddItemDialog extends HookConsumerWidget {
                 onPressed: () {
                   isUpdating
                       ? ref
-                          .read(itemListControllerProvider.notifier)
+                          .read(itemListStateProvider.notifier)
                           .updateItem(
                             updatedItem: item.copyWith(
                               name: textController.text.trim(),
@@ -183,7 +183,7 @@ class AddItemDialog extends HookConsumerWidget {
                             ),
                           )
                       : ref
-                          .read(itemListControllerProvider.notifier)
+                          .read(itemListStateProvider.notifier)
                           .addItem(name: textController.text.trim());
                   Navigator.of(context).pop();
                 },
@@ -215,7 +215,7 @@ class ItemListError extends ConsumerWidget {
           const SizedBox(height: 20.0),
           ElevatedButton(
             onPressed: () => ref
-                .read(itemListControllerProvider.notifier)
+                .read(itemListStateProvider.notifier)
                 .retrieveItems(isRefreshing: true),
             child: const Text('Retry'),
           ),
