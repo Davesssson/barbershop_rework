@@ -21,8 +21,22 @@ class BarbershopRepository implements BaseBarbershopRepository{
   Future<List<Barbershop>> retrieveBarbershops() async {
     developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Barbershops retrieved.");
     try {
+      final snap = await _read(firebaseFirestoreProvider).collection('barbershops').where('tags.cool',isEqualTo: true).get();
+      this.retrieveCities();
+      return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();
+    } on FirebaseException catch (e) {
+
+      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Barbershop retrieve exception.");
+      throw CustomException(message: e.message);
+    }
+  }
+
+  @override
+  Future<List<Barbershop>> retrieveBarbershopsoriginal() async {
+    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Barbershops retrieved.");
+    try {
       final snap =
-          await _read(firebaseFirestoreProvider).collection('barbershops').get();
+      await _read(firebaseFirestoreProvider).collection('barbershops').get();
       this.retrieveCities();
       return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {

@@ -82,6 +82,7 @@ final barbershopListContentProvider = Provider<List<Barbershop>>((ref) {
     data: (shops) {
       //switch (itemListFilterState) {
       if(cityListFilterState.toString()=="Gyöngyös")
+
         return shops.where((shop) => shop.city=="Gyöngyös").toList();
       else
         return shops;
