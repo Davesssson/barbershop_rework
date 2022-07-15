@@ -3,6 +3,8 @@
    <application
         android:label="flutter_shopping_list"
         android:icon="@mipmap/ic_launcher">
+       <meta-data android:name="com.google.android.geo.API_KEY"
+           android:value="AIzaSyApw2Y9o99gr7XHPKw_ShJOc3ANYZ6hu3A"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
