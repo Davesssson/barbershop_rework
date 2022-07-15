@@ -7,7 +7,7 @@ import 'package:flutter_shopping_list/ui/home_screen.dart';
 import 'package:flutter_shopping_list/ui/login_screen/login_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'firebase_options.dart';
-
+//https://stackoverflow.com/questions/72833245/calling-firebase-initializeapp-returns-unable-to-establish-connection-on-chan/72835948#72835948
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
