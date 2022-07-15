@@ -6,7 +6,7 @@ import 'dart:developer' as developer;
 
 final chipListFilterProvider = StateProvider<List<String>>((_) => []);
 
-final cityListFilterProvider = StateProvider<String>((_) => "");
+final cityListFilterProvider = StateProvider<String>((_) => "Budapest");
 
 
 

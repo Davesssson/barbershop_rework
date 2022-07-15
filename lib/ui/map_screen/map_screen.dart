@@ -1,39 +1,76 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping_list/controllers/auth_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../../controllers/city_controller.dart';
+import '../../controllers/marker_controller.dart';
 
-class MapScreen extends StatefulWidget {
-  @override
-  State<MapScreen> createState() => MapSampleState();
-}
-
-class MapSampleState extends State<MapScreen> {
-  Completer<GoogleMapController> _controller = Completer();
-
+class MapScreen extends ConsumerWidget {
+  final _controller = Completer();
   static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
+    target: LatLng(47.2475177, 19.1855499),
+    zoom: 8.25,
   );
-
   static final CameraPosition _kLake = CameraPosition(
       bearing: 192.8334901395799,
       target: LatLng(37.43296265331129, -122.08832357078792),
       tilt: 59.440717697143555,
       zoom: 19.151926040649414);
 
+
   @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      body: GoogleMap(
-        mapType: MapType.hybrid,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
+  Widget build(BuildContext context,WidgetRef ref) {
+    final optionsState = ref.watch(cityListStateProvider);
+    final markersState = ref.watch(markerListStateProvider);
+    final markersContent = ref.watch(markerListContentProvider);
+
+    return Scaffold(
+      body: markersState.when(
+          data: (markers)=> markers.isEmpty
+              ? const Center(
+            child: Text(
+              'no barbershop to display',
+              style: TextStyle(fontSize: 20.0),
+            ),
+          )
+          : Stack(
+              children:[
+                GoogleMap(
+                  markers: markersContent,
+                  mapType: MapType.hybrid,
+                  initialCameraPosition: _kGooglePlex,
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+                  },
+                ),
+                Autocomplete<String>(
+                    optionsBuilder: (TextEditingValue textEditingValue) async {
+                      if (textEditingValue.text == '') {
+                        return const Iterable<String>.empty();
+                      }
+                      return optionsState.when(
+                          data: (data){
+                            return data.where((String option){
+                              return option.contains(textEditingValue.text.toLowerCase());
+                            });
+                          },
+                          error: (error,_)=>const Iterable<String>.empty(),
+                          loading: () => const Iterable<String>.empty()
+                      );
+                    },
+                    onSelected:(String selected){
+                      //set zoom and location to that city
+
+                      ref.read(cityListFilterProvider.notifier).state = selected;
+                      //ref.read(queryStateProvider.notifier).queryForCity(selected);
+                      print("a beallitott allapot a barberlistanak a :");
+                      print(selected);
+                    }
+                ),
+              ]
+          ),
+          error: (e,_)=>Text("faszom"),
+          loading: ()=>CircularProgressIndicator()
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _goToTheLake,

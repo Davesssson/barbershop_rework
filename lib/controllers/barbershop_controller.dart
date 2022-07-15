@@ -81,9 +81,8 @@ final barbershopListContentProvider = Provider<List<Barbershop>>((ref) {
   return barbershopsListState.maybeWhen(
     data: (shops) {
       //switch (itemListFilterState) {
-      if(cityListFilterState.toString()=="Gyöngyös")
-
-        return shops.where((shop) => shop.city=="Gyöngyös").toList();
+      if(cityListFilterState.toString()!="")
+        return shops.where((shop) => shop.city==cityListFilterState.toString()).toList();
       else
         return shops;
     },
