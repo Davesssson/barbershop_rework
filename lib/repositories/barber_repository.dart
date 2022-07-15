@@ -1,8 +1,5 @@
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../general_providers.dart';
 import '../models/barber/barber_model.dart';
@@ -29,7 +26,7 @@ class BarberRepository implements BaseBarberRepository{
       await _read(firebaseFirestoreProvider).collection('barbers').get();
       return snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
-      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Barbers retrieve exception.");
+      developer.log("[barber_repository.dart][BarberRepository][retrieveBarbers] - Barbers retrieve exception.");
       throw CustomException(message: e.message);
     }
   }
@@ -48,7 +45,7 @@ class BarberRepository implements BaseBarberRepository{
        return snap;
       
     } on FirebaseException catch (e) {
-      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveSingleBarbersFromShop] - Barbers retrieve exception.");
+      developer.log("[barber_repository.dart][BarberRepository][retrieveSingleBarbersFromShop] - Barbers retrieve exception.");
       throw CustomException(message: e.message);
     }
 
@@ -76,7 +73,7 @@ class BarberRepository implements BaseBarberRepository{
 
       //return barbers;
     } on FirebaseException catch (e) {
-      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbersFromShop] - Barbers retrieve exception.");
+      developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers retrieve exception.");
       throw CustomException(message: e.message);
     }
 

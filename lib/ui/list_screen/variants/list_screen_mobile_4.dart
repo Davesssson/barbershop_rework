@@ -21,6 +21,7 @@ class ListScreen_mobile4 extends HookConsumerWidget {
     final optionsState = ref.watch(cityListStateProvider);
     final barbershopsState = ref.watch(barbershopListStateProvider);
     final barbershopsContent = ref.watch(barbershopListContentProvider);
+    //region options
     List<String> options = [
       'News',
       'Entertainment',
@@ -34,6 +35,7 @@ class ListScreen_mobile4 extends HookConsumerWidget {
       'Tech',
       'Science',
     ];
+    //endregion
     List<String> tags = [];
     return Scaffold(
       floatingActionButton: FloatingActionButton(
