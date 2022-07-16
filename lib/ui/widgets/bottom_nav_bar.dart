@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/ui/details_screen/details_screen.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/details_screen_mobile.dart';
+import 'package:flutter_shopping_list/ui/explorer_screen/explorer_screen.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import '../item_list_screen/item_list_screen.dart';
 import '../list_screen/list_screen.dart';
@@ -25,6 +26,7 @@ class BottomNavBar extends StatelessWidget {
       //Container(color:Colors.yellow)
       ListScreen(),
       MapScreen(),
+      ExplorerScreen()
       //MainScreen(
       //hideStatus: _hideNavBar,
       //),
@@ -33,6 +35,13 @@ class BottomNavBar extends StatelessWidget {
 
   List<PersistentBottomNavBarItem> _navBarsItems()  {
     return [
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.add_chart_sharp),
+        title: "Home",
+        activeColorPrimary: Colors.blue,
+        inactiveColorPrimary: Colors.grey,
+        inactiveColorSecondary: Colors.purple,
+      ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.access_time_filled_sharp),
         title: "Home",

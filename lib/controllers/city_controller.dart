@@ -1,4 +1,3 @@
-import 'package:flutter_shopping_list/controllers/auth_controller.dart';
 import 'package:flutter_shopping_list/repositories/barbershops_repository.dart';
 import 'package:flutter_shopping_list/repositories/custom_exception.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -6,7 +5,7 @@ import 'dart:developer' as developer;
 
 final chipListFilterProvider = StateProvider<List<String>>((_) => []);
 
-final cityListFilterProvider = StateProvider<String>((_) => "Budapest");
+final cityListFilterProvider = StateProvider<String>((_) => "");
 
 
 
@@ -28,21 +27,17 @@ final cityListContentProvider = Provider<List<String>>((ref) {
 });
 
 final cityListStateProvider = StateNotifierProvider<CityListStateController, AsyncValue<List<String>>>((ref) {
-  developer.log("[city_controller.dart][-][cityListStateProvider] - cityListStateProvider");
-  final user = ref.watch(authControllerProvider);
-  return CityListStateController(ref.read, user?.uid);
-},
+    developer.log("[city_controller.dart][-][cityListStateProvider] - cityListStateProvider");
+    return CityListStateController(ref.read);
+  },
 );
 
 class CityListStateController extends StateNotifier<AsyncValue<List<String>>> {
   final Reader _read;
-  final String? _userId;
 
-  CityListStateController(this._read, this._userId) : super(AsyncValue.loading()) {
-    if (_userId != null) {
+  CityListStateController(this._read) : super(AsyncValue.loading()) {
       developer.log("[city_controller.dart][CityListStateController][CityListStateController] - CityListStateController constructed");
       retrieveCities();
-    }
   }
 
   Future<void> retrieveCities({bool isRefreshing = false}) async {

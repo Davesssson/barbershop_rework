@@ -21,16 +21,20 @@ class DetailsScreen_mobile extends HookConsumerWidget {
     final arg = ModalRoute.of(context)?.settings.arguments as String;
     final singleBarbershopState = ref.watch(barbershopSingleStateProvider(arg));
 
-    return SingleChildScrollView(
-      child: singleBarbershopState.when(
-            data: (data)=>Column(
-              children: [
-                Text(data.name!),
-                DetailWidget_mobile(ids:data.barbers!)
-              ],
-            ),
-            error: (e,_)=>Text(e.toString()),
-            loading: ()=>CircularProgressIndicator(),
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: singleBarbershopState.when(
+              data: (data)=>
+              DetailWidget_mobile(ids: data.barbers),
+              //  Column(
+              //   children: [
+              //     Text(data.name!),
+              //     DetailWidget_mobile(ids:data.barbers!)
+              //   ],
+              // ),
+              error: (e,_)=>Text(e.toString()),
+              loading: ()=>CircularProgressIndicator(),
+        ),
       ),
     );
 
@@ -48,8 +52,7 @@ class DetailWidget_mobile extends ConsumerWidget {
     final barbersState=ref.watch(barberListFromShopStateProvider(ids));
     final barbersContent=ref.watch(barberListFromShopContentProvider(ids));
 
-    print("widget kapott ids = ");
-    print(ids);
+
     return barbersState.when(
         data: (data)=>data.isEmpty
         ? const Center(

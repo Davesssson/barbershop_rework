@@ -1,7 +1,5 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_shopping_list/controllers/city_controller.dart';
-import 'package:flutter_shopping_list/extensions/firebase_firestore_extension.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../repositories/barbershops_repository.dart';
@@ -80,7 +78,6 @@ final barbershopListContentProvider = Provider<List<Barbershop>>((ref) {
 
   return barbershopsListState.maybeWhen(
     data: (shops) {
-      //switch (itemListFilterState) {
       if(cityListFilterState.toString()!="")
         return shops.where((shop) => shop.city==cityListFilterState.toString()).toList();
       else
@@ -121,6 +118,7 @@ class BarbershopListStateController extends StateNotifier<AsyncValue<List<Barber
       state = AsyncValue.error(e);
     }
   }
+
   Future<void> retrieveSingleBarbershop(String id,{bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {

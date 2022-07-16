@@ -122,25 +122,6 @@ class BarbershopRepository implements BaseBarbershopRepository{
             )
         );
       }).toSet();
-
-
-      // final markers =  snap.docs.map((doc) {
-      //   GeoPoint gp = doc['location'];
-      //   return Marker(
-      //     markerId: MarkerId(doc.id),
-      //     position: LatLng(gp.latitude,gp.longitude),
-      //   );
-      //   //position:LatLng( doc['location']['latitude'], doc['location']['longitude']))
-      // }).toSet();
-
-      // final markers =  snap.docs.map((doc) =>
-      //     Marker(
-      //         markerId: MarkerId(doc.id),
-      //         position:latLng2
-      //     )
-      //         //position:LatLng( doc['location']['latitude'], doc['location']['longitude']))
-      //     ).toSet();
-
       developer.log("[markers = " + markers.toString());
       return markers;
     } on FirebaseException catch (e) {

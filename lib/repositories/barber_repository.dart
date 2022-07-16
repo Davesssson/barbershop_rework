@@ -37,11 +37,6 @@ class BarberRepository implements BaseBarberRepository{
     try {
       final snap =
        await  _read(firebaseFirestoreProvider).collection('barbers').doc(id).get().then((value) => Barber.fromJson(value.data()!)); //QueryDocSnapshop
-
-
-      // List<Barber> asd=[];
-     // asd.add(snap);
-     // return asd;
        return snap;
       
     } on FirebaseException catch (e) {
@@ -55,26 +50,26 @@ class BarberRepository implements BaseBarberRepository{
   Future<List<Barber>> retrieveBarbersFromShop(List<String> ids) async{
     developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers retrieved from shop.");
     try {//EZ JÓ DE CSAK 10 IG MUKODIK
-      final snap = await _read(firebaseFirestoreProvider).collection('barbers').where('__name__',whereIn: ids).get();
-      return snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
-      //List<Barber> barbers= snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
-     // print(barbers.toString());
-      //return barbers;
-      // print(ids.toString());
-      // List<Barber> barbers = [];
-      // ids.forEach((id)async {
-      //   print(id);
-      //   Barber snap = await  _read(firebaseFirestoreProvider).collection('barbers').doc(id).get().then((value) => Barber.fromDocument(value));
-      //   print("ez lesz a barber");
-      //   print(snap.toString());
-      //   barbers.add(snap);
-      // });
-      // print(barbers.toString());
+        final snap = await _read(firebaseFirestoreProvider).collection('barbers').where('__name__',whereIn: ids).get();
+        return snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
+        //List<Barber> barbers= snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
+       // print(barbers.toString());
+        //return barbers;
+        // print(ids.toString());
+        // List<Barber> barbers = [];
+        // ids.forEach((id)async {
+        //   print(id);
+        //   Barber snap = await  _read(firebaseFirestoreProvider).collection('barbers').doc(id).get().then((value) => Barber.fromDocument(value));
+        //   print("ez lesz a barber");
+        //   print(snap.toString());
+        //   barbers.add(snap);
+        // });
+        // print(barbers.toString());
 
-      //return barbers;
+        //return barbers;
     } on FirebaseException catch (e) {
-      developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers retrieve exception.");
-      throw CustomException(message: e.message);
+        developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers retrieve exception.");
+        throw CustomException(message: e.message);
     }
 
   }
