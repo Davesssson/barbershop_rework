@@ -18,8 +18,7 @@ class DetailsScreen_mobile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final arg = ModalRoute.of(context)?.settings.arguments as String;
-    final singleBarbershopState = ref.watch(barbershopSingleStateProvider(arg));
+    final Barbershop barbershop = ModalRoute.of(context)?.settings.arguments as Barbershop;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -31,20 +30,7 @@ class DetailsScreen_mobile extends HookConsumerWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: singleBarbershopState.when(
-              data: (data)=>
-              SingleChildScrollView(
-                  child: DetailWidget_mobile(bs: data)
-              ),
-              //  Column(
-              //   children: [
-              //     Text(data.name!),
-              //     DetailWidget_mobile(ids:data.barbers!)
-              //   ],
-              // ),
-              error: (e,_)=>Text("barbershopot nem tudtuk betölteni"),
-              loading: ()=>CircularProgressIndicator(),
-        ),
+      body: DetailWidget_mobile(bs:barbershop)
 
     );
 
@@ -67,7 +53,7 @@ class DetailWidget_mobile extends ConsumerWidget {
         ? const Center(
           child: Text("sajnos a barbereket nem sikerült betölteni, vagy üresek"),
         )
-        :Column(
+        :ListView(
           children:[
             Header(bs: bs),
             Container(height: 50,color: Colors.red,child: Text("Ide jon még az elérhetőség"),),

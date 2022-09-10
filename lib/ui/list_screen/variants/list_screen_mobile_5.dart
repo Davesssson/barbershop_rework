@@ -130,7 +130,7 @@ class ShopTile extends HookConsumerWidget {
             MaterialPageRoute(
                 builder: (_)=>DetailsScreen(),
                    settings: RouteSettings(
-               arguments: barbershop.id,// TODO ez igy ebben a formában jo a materialRoutepage-el????
+               arguments: barbershop,// TODO ez igy ebben a formában jo a materialRoutepage-el????
              ),
             ),
           );
