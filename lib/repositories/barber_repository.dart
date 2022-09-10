@@ -73,4 +73,15 @@ class BarberRepository implements BaseBarberRepository{
     }
 
   }
+  Future<List<Barber>> retrieveBarbersFromShop2(String shopId) async{
+    developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop2] - Barbers retrieved from shop.");
+    try {//EZ JÓ DE CSAK 10 IG MUKODIK
+      final snap = await _read(firebaseFirestoreProvider).collection('barbers').where('barbershop_id', isEqualTo: shopId).get();
+      return snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
+    } on FirebaseException catch (e) {
+      developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers retrieve exception.");
+      throw CustomException(message: e.message);
+    }
+  }
+
 }

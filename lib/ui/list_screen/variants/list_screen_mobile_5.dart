@@ -3,6 +3,7 @@ import 'package:flutterfire_ui/firestore.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:developer' as developer;
 
+import '../../../controllers/barber_controller.dart';
 import '../../../controllers/city_controller.dart';
 import '../../../controllers/query_controller.dart';
 import '../../../models/barbershop/barbershop_model.dart';
@@ -125,6 +126,7 @@ class ShopTile extends HookConsumerWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: (){
+          ref.read(barberListStateProvider.notifier).retrieveBarbersFromShop2(barbershop.id!);
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -134,6 +136,7 @@ class ShopTile extends HookConsumerWidget {
              ),
             ),
           );
+
         },
         child: Column(
           children: [
