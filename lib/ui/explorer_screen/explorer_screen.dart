@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/controllers/barbershop_controller.dart';
 import 'package:flutter_shopping_list/repositories/barber_repository.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,7 +15,7 @@ import '../details_screen/details_screen.dart';
 
 //https://medium.com/geekculture/flutter-for-single-page-scrollable-websites-with-navigator-2-0-part-3-scroll-to-page-30b6c43bd41
 
-final currentShop = Provider<Barbershop>((_) {
+final currentShop = Provider<Barber>((_) {
   developer.log("[details_screen_mobile.dart][currentItem] - ??????.");
   throw UnimplementedError();
 });
@@ -58,27 +59,11 @@ class ExplorerScreen extends ConsumerWidget {
 
                       }
                       final barber = snapshot.docs[index].data();
-                      return Stack(
-                          fit:StackFit.expand,
-                          children: [
-                            Image.network(
-                              barber.prof_pic!,
-                              fit: BoxFit.fitHeight,
-                            ),
-                            Positioned(
-                              bottom: 50,
-                              right: 10,
-                              child: Column(
-                                children: [
-                                  ElevatedButton(
-                                      onPressed: () {
+                      return ProviderScope(
+                          overrides: [currentShop.overrideWithValue(barber)],
+                          child: OnePage()
+                      );
 
-                                      },
-                                      child: Text(barber.name!),
-                                  )],
-                              ),
-                            )
-                          ]);
                     }
 
                 );
@@ -138,48 +123,93 @@ class ExplorerScreen extends ConsumerWidget {
   }
 }
 
-class ShopTile extends HookConsumerWidget {
+class OnePage extends HookConsumerWidget {
+  const OnePage({
+    Key? key,
+  }) : super(key: key);
 
-  const ShopTile({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final barbershop = ref.watch(currentShop);
-    return Card(
-      color:Colors.grey,
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: (){
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_)=>DetailsScreen(),
-              settings: RouteSettings(
-                arguments: barbershop.id,// TODO ez igy ebben a formában jo a materialRoutepage-el????
-              ),
-            ),
-          );
-        },
-        child: Column(
-          children: [
-            ListTile(
-              leading: CircleAvatar(backgroundImage: NetworkImage(barbershop.main_image!)),
-              title: Text(barbershop.name!,style: TextStyle(color: Colors.white70),),
-              key: ValueKey(barbershop.id),
-              subtitle: Text(
-                "secondary",
-                style: TextStyle(color: Colors.black.withOpacity(0.6)),
-              ),
-            ),
+    final barber = ref.watch(currentShop);
+    return Stack(
+        fit:StackFit.expand,
+        children: [
+          Image.network(
+            barber.prof_pic!,
+            fit: BoxFit.fitHeight,
+          ),
+          Positioned(
+            bottom: 50,
+            right: 10,
+            child: Column(
+              children: [
+                ElevatedButton(
+                  onPressed: (){
+                    ref.read(barberListStateProvider.notifier).retrieveBarbersFromShop2(barber.barbershop_id!);
+                    ref.read(barbershopListStateProvider.notifier).retrieveSingleBarbershop(barber.barbershop_id!);
+                    List<Barbershop> b = ref.watch(barbershopListContentProvider);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_)=>DetailsScreen(),
+                        settings: RouteSettings(
+                          arguments:b[0] ,// TODO ez igy ebben a formában jo a materialRoutepage-el????
+                        ),
+                      ),
+                    );
 
-            Container(
-                width: double.infinity,
-                child: Image.network(barbershop.main_image!,height: MediaQuery.of(context).size.height/4.5,fit: BoxFit.cover,))
-            //Image.asset('assets/card-sample-image-2.jpg'),
-          ],
-        ),
-      ),
-    );
+                  },
+                    child: Text(barber.name!),
+                )],
+            ),
+          )
+        ]);
   }
 }
+
+// class ShopTile extends HookConsumerWidget {
+//
+//   const ShopTile({Key? key}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final barbershop = ref.watch(currentShop);
+//     return Card(
+//       color:Colors.grey,
+//       clipBehavior: Clip.antiAlias,
+//       child: InkWell(
+//         onTap: (){
+//           Navigator.push(
+//             context,
+//             MaterialPageRoute(
+//               builder: (_)=>DetailsScreen(),
+//               settings: RouteSettings(
+//                 arguments: barbershop.id,// TODO ez igy ebben a formában jo a materialRoutepage-el????
+//               ),
+//             ),
+//           );
+//         },
+//         child: Column(
+//           children: [
+//             ListTile(
+//               leading: CircleAvatar(backgroundImage: NetworkImage(barbershop.main_image!)),
+//               title: Text(barbershop.name!,style: TextStyle(color: Colors.white70),),
+//               key: ValueKey(barbershop.id),
+//               subtitle: Text(
+//                 "secondary",
+//                 style: TextStyle(color: Colors.black.withOpacity(0.6)),
+//               ),
+//             ),
+//
+//             Container(
+//                 width: double.infinity,
+//                 child: Image.network(barbershop.main_image!,height: MediaQuery.of(context).size.height/4.5,fit: BoxFit.cover,))
+//             //Image.asset('assets/card-sample-image-2.jpg'),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 

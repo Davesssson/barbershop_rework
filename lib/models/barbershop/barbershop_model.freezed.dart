@@ -264,7 +264,9 @@ class _$_Barbershop extends _Barbershop with DiagnosticableTreeMixin {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_BarbershopToJson(this);
+    return _$$_BarbershopToJson(
+      this,
+    );
   }
 }
 
@@ -283,20 +285,20 @@ abstract class _Barbershop extends Barbershop {
       _$_Barbershop.fromJson;
 
   @override
-  String? get id => throw _privateConstructorUsedError;
+  String? get id;
   @override
-  String? get name => throw _privateConstructorUsedError;
+  String? get name;
   @override
-  String? get main_image => throw _privateConstructorUsedError;
+  String? get main_image;
   @override
   @CustomGeoPointConverter()
-  GeoPoint get location => throw _privateConstructorUsedError;
+  GeoPoint get location;
   @override
-  String? get places_id => throw _privateConstructorUsedError;
+  String? get places_id;
   @override
-  List<String>? get barbers => throw _privateConstructorUsedError;
+  List<String>? get barbers;
   @override
-  String? get city => throw _privateConstructorUsedError;
+  String? get city;
   @override
   @JsonKey(ignore: true)
   _$$_BarbershopCopyWith<_$_Barbershop> get copyWith =>

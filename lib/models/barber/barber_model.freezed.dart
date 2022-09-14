@@ -20,6 +20,7 @@ Barber _$BarberFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Barber {
+  String? get barbershop_id => throw _privateConstructorUsedError;
   String? get id => throw _privateConstructorUsedError;
   String? get name => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
@@ -36,7 +37,8 @@ abstract class $BarberCopyWith<$Res> {
   factory $BarberCopyWith(Barber value, $Res Function(Barber) then) =
       _$BarberCopyWithImpl<$Res>;
   $Res call(
-      {String? id,
+      {String? barbershop_id,
+      String? id,
       String? name,
       String? description,
       String? prof_pic,
@@ -53,6 +55,7 @@ class _$BarberCopyWithImpl<$Res> implements $BarberCopyWith<$Res> {
 
   @override
   $Res call({
+    Object? barbershop_id = freezed,
     Object? id = freezed,
     Object? name = freezed,
     Object? description = freezed,
@@ -60,6 +63,10 @@ class _$BarberCopyWithImpl<$Res> implements $BarberCopyWith<$Res> {
     Object? works = freezed,
   }) {
     return _then(_value.copyWith(
+      barbershop_id: barbershop_id == freezed
+          ? _value.barbershop_id
+          : barbershop_id // ignore: cast_nullable_to_non_nullable
+              as String?,
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -90,7 +97,8 @@ abstract class _$$_BarberCopyWith<$Res> implements $BarberCopyWith<$Res> {
       __$$_BarberCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String? id,
+      {String? barbershop_id,
+      String? id,
       String? name,
       String? description,
       String? prof_pic,
@@ -108,6 +116,7 @@ class __$$_BarberCopyWithImpl<$Res> extends _$BarberCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? barbershop_id = freezed,
     Object? id = freezed,
     Object? name = freezed,
     Object? description = freezed,
@@ -115,6 +124,10 @@ class __$$_BarberCopyWithImpl<$Res> extends _$BarberCopyWithImpl<$Res>
     Object? works = freezed,
   }) {
     return _then(_$_Barber(
+      barbershop_id: barbershop_id == freezed
+          ? _value.barbershop_id
+          : barbershop_id // ignore: cast_nullable_to_non_nullable
+              as String?,
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -143,7 +156,8 @@ class __$$_BarberCopyWithImpl<$Res> extends _$BarberCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Barber extends _Barber with DiagnosticableTreeMixin {
   _$_Barber(
-      {this.id,
+      {this.barbershop_id,
+      this.id,
       this.name,
       this.description,
       this.prof_pic,
@@ -154,6 +168,8 @@ class _$_Barber extends _Barber with DiagnosticableTreeMixin {
   factory _$_Barber.fromJson(Map<String, dynamic> json) =>
       _$$_BarberFromJson(json);
 
+  @override
+  final String? barbershop_id;
   @override
   final String? id;
   @override
@@ -173,7 +189,7 @@ class _$_Barber extends _Barber with DiagnosticableTreeMixin {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Barber(id: $id, name: $name, description: $description, prof_pic: $prof_pic, works: $works)';
+    return 'Barber(barbershop_id: $barbershop_id, id: $id, name: $name, description: $description, prof_pic: $prof_pic, works: $works)';
   }
 
   @override
@@ -181,6 +197,7 @@ class _$_Barber extends _Barber with DiagnosticableTreeMixin {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'Barber'))
+      ..add(DiagnosticsProperty('barbershop_id', barbershop_id))
       ..add(DiagnosticsProperty('id', id))
       ..add(DiagnosticsProperty('name', name))
       ..add(DiagnosticsProperty('description', description))
@@ -193,6 +210,8 @@ class _$_Barber extends _Barber with DiagnosticableTreeMixin {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Barber &&
+            const DeepCollectionEquality()
+                .equals(other.barbershop_id, barbershop_id) &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality()
@@ -205,6 +224,7 @@ class _$_Barber extends _Barber with DiagnosticableTreeMixin {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      const DeepCollectionEquality().hash(barbershop_id),
       const DeepCollectionEquality().hash(id),
       const DeepCollectionEquality().hash(name),
       const DeepCollectionEquality().hash(description),
@@ -218,13 +238,16 @@ class _$_Barber extends _Barber with DiagnosticableTreeMixin {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_BarberToJson(this);
+    return _$$_BarberToJson(
+      this,
+    );
   }
 }
 
 abstract class _Barber extends Barber {
   factory _Barber(
-      {final String? id,
+      {final String? barbershop_id,
+      final String? id,
       final String? name,
       final String? description,
       final String? prof_pic,
@@ -234,15 +257,17 @@ abstract class _Barber extends Barber {
   factory _Barber.fromJson(Map<String, dynamic> json) = _$_Barber.fromJson;
 
   @override
-  String? get id => throw _privateConstructorUsedError;
+  String? get barbershop_id;
   @override
-  String? get name => throw _privateConstructorUsedError;
+  String? get id;
   @override
-  String? get description => throw _privateConstructorUsedError;
+  String? get name;
   @override
-  String? get prof_pic => throw _privateConstructorUsedError;
+  String? get description;
   @override
-  List<String>? get works => throw _privateConstructorUsedError;
+  String? get prof_pic;
+  @override
+  List<String>? get works;
   @override
   @JsonKey(ignore: true)
   _$$_BarberCopyWith<_$_Barber> get copyWith =>

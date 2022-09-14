@@ -7,6 +7,7 @@ part of 'barber_model.dart';
 // **************************************************************************
 
 _$_Barber _$$_BarberFromJson(Map<String, dynamic> json) => _$_Barber(
+      barbershop_id: json['barbershop_id'] as String?,
       id: json['id'] as String?,
       name: json['name'] as String?,
       description: json['description'] as String?,
@@ -16,6 +17,7 @@ _$_Barber _$$_BarberFromJson(Map<String, dynamic> json) => _$_Barber(
     );
 
 Map<String, dynamic> _$$_BarberToJson(_$_Barber instance) => <String, dynamic>{
+      'barbershop_id': instance.barbershop_id,
       'id': instance.id,
       'name': instance.name,
       'description': instance.description,

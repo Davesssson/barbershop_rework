@@ -11,6 +11,7 @@ class Barber with _$Barber{
   const Barber._();
 
   factory Barber({
+    String? barbershop_id,
     String? id,
     String? name,
     String? description,
