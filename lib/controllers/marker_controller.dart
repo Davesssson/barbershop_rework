@@ -11,10 +11,10 @@ import 'dart:developer' as developer;
 
 final markerListContentProvider = Provider<Set<Marker>>((ref) {
   developer.log("[barbershop_controller.dart][-][barbershopListContentProvider] - barbershopListContentProvider.");
-  final barbershopsListState = ref.watch(markerListStateProvider);
+  final markersListState = ref.watch(markerListStateProvider);
   final cityListFilterState = ref.watch(cityListFilterProvider);
 
-  return barbershopsListState.maybeWhen(
+  return markersListState.maybeWhen(
     data: (markerItems) {
       if(cityListFilterState.toString()!="") {
         return markerItems.where((element) => element.city==cityListFilterState.toString()).map((markerItem) {
