@@ -32,14 +32,7 @@ class MapScreen extends ConsumerWidget {
       'News',
       'Entertainment',
       'Politics',
-      'Automotive',
-      'Sports',
-      'Education',
-      'Fashion',
-      'Travel',
-      'Food',
-      'Tech',
-      'Science',
+
     ];
 
     return Scaffold(
@@ -65,14 +58,14 @@ class MapScreen extends ConsumerWidget {
                   // padding: const EdgeInsets.all(30.0),
                   padding: const EdgeInsets.fromLTRB(100, 30, 100, 0),
                   child: Autocomplete<String>(
-                      optionsBuilder: (TextEditingValue textEditingValue) async {
+                      optionsBuilder: (textEditingValue) async {
                         if (textEditingValue.text == '') {
                           return const Iterable<String>.empty();
                         }
                         return optionsState.when(
                             data: (data){
                               return data.where((String option){
-                                return option.contains(textEditingValue.text.toLowerCase());
+                                return option.contains(textEditingValue.text.trim()); //TODO CASE INSENSITIVITY
                               });
                             },
                             error: (error,_)=>const Iterable<String>.empty(),
@@ -80,34 +73,43 @@ class MapScreen extends ConsumerWidget {
                         );
                       },
 
-                      optionsViewBuilder:
-                          (context, Function(String) onSelected, options) {
-                        return Material(
-                          elevation: 4,
-                          child: ListView.separated(
-                            padding: EdgeInsets.zero,
-                            itemBuilder: (context, index) {
-                              final option = options.elementAt(index);
+                      optionsViewBuilder:(context, Function(String) onSelected, options) {
+                        return Align(
+                          alignment: Alignment.topLeft,
+                          child: Material(
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(bottom: Radius.circular(4.0)),
+                            ),
+                            elevation: 4,
+                            child: Container(
+                              color:Colors.grey,
+                              width: MediaQuery.of(context).size.width*0.5,
+                              child: ListView.separated(
+                                padding: EdgeInsets.zero,
+                                separatorBuilder: (context, index) => Divider(),
+                                itemCount: options.length,
+                                shrinkWrap: false,
+                                itemBuilder: (context, index) {
+                                  final option = options.elementAt(index);
 
-                              return ListTile(
-                                title: Text(option.toString()),
-                                subtitle: Text("This is subtitle"),
-                                onTap: () {
-                                  onSelected(option.toString());
+                                  return ListTile(
+                                    tileColor: Colors.transparent,
+                                    title: Text(option.toString()),
+                                    subtitle: Text("This is subtitle"),
+                                    onTap: () {
+                                      onSelected(option.toString());
+                                    },
+                                  );
                                 },
-                              );
-                            },
-                            separatorBuilder: (context, index) => Divider(),
-                            itemCount: options.length,
+
+                              ),
+                            ),
                           ),
                         );
                       },
-                      fieldViewBuilder:
-                      (context, controller, focusNode, onEditingComplete) {
-                    controller = controller;
-
-                    return TextField(
-
+                      fieldViewBuilder:(context, controller, focusNode, onEditingComplete) {
+                        controller = controller;
+                        return TextField(
                       controller: controller,
                       focusNode: focusNode,
                       onEditingComplete: onEditingComplete,
@@ -130,10 +132,9 @@ class MapScreen extends ConsumerWidget {
                         prefixIcon: Icon(Icons.search),
                       ),
                     );
-                  },
+                      },
                       onSelected:(String selected){
                         //set zoom and location to that city
-
                         ref.read(cityListFilterProvider.notifier).state = selected;
                         //ref.read(queryStateProvider.notifier).queryForCity(selected);
                         print("a beallitott allapot a barberlistanak a :");
@@ -177,4 +178,10 @@ class MapScreen extends ConsumerWidget {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
+  Future<void> _goToCity(String city) async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+  }
+
+
 }

@@ -53,6 +53,7 @@ class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
       if (mounted) {
         List<Barber> asd=[]; asd.add(items);
         state = AsyncValue.data(asd);
+        //state = AsyncValue.data( List.from(items as List<Barber>));
       }
     } on CustomException catch (e) {
       developer.log("[barber_controller.dart][BarberListStateController][retrieveSingleBarber] - retrieveSingleBarber Exception.");
@@ -67,8 +68,6 @@ class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
       final items = await _read(barberRepositoryProvider).retrieveBarbersFromShop(ids);
       if (mounted) {
         state = AsyncValue.data(items);
-        developer.log("state = " + items.toString());
-
       }
     } on CustomException catch (e) {
       developer.log("[barber_controller.dart][BarberListStateController][retrieveBarbersFromShop] - retrieveBarbersFromShop Exception.");
@@ -82,7 +81,6 @@ class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
       final items = await _read(barberRepositoryProvider).retrieveBarbersFromShop2(shopId);
       if (mounted) {
         state = AsyncValue.data(items);
-        developer.log("itt vagyok state = " + items.toString());
       }
     } on CustomException catch (e) {
       developer.log("[barber_controller.dart][BarberListStateController][retrieveBarbersFromShop2] - retrieveBarbersFromShop Exception.");
