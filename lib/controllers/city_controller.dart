@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_shopping_list/repositories/barbershops_repository.dart';
+import 'package:flutter_shopping_list/repositories/cities_repository.dart';
 import 'package:flutter_shopping_list/repositories/custom_exception.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:developer' as developer;
@@ -6,8 +8,6 @@ import 'dart:developer' as developer;
 final chipListFilterProvider = StateProvider<List<String>>((_) => []);
 
 final cityListFilterProvider = StateProvider<String>((_) => "");
-
-
 
 final cityListContentProvider = Provider<List<String>>((ref) {
   developer.log("[city_controller.dart][-][cityListContentProvider] - cityListContentProvider.");
@@ -44,7 +44,7 @@ class CityListStateController extends StateNotifier<AsyncValue<List<String>>> {
     if (isRefreshing) state = AsyncValue.loading();
     try {
       developer.log("[city_controller.dart][CityListStateController][retrieveCities] - retrieveCities ");
-      final items = await _read(barbershopRepositoryProvider).retrieveCities();
+      final items = await _read(citiesRepositoryProvider).retrieveCities();
       if (mounted) {
         state = AsyncValue.data(items);
       }

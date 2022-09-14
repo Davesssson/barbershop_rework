@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:chips_choice_null_safety/chips_choice_null_safety.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/models/responses/marker_response_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../controllers/city_controller.dart';
@@ -27,6 +29,7 @@ class MapScreen extends ConsumerWidget {
     final optionsState = ref.watch(cityListStateProvider);
     final markersState = ref.watch(markerListStateProvider);
     final markersContent = ref.watch(markerListContentProvider);
+
     late TextEditingController controller ;
     List<String> options = [
       'News',
@@ -133,12 +136,13 @@ class MapScreen extends ConsumerWidget {
                       ),
                     );
                       },
-                      onSelected:(String selected){
+                      onSelected:(String selected)async {
                         //set zoom and location to that city
-                        ref.read(cityListFilterProvider.notifier).state = selected;
-                        //ref.read(queryStateProvider.notifier).queryForCity(selected);
-                        print("a beallitott allapot a barberlistanak a :");
-                        print(selected);
+                        ref.read(cityListFilterProvider.notifier).state = selected; //TODO SET VIA NOTIFIER
+                        //todo itt már a pinek automatikusan updatelodnek, csak oda kell mozgatni a kamerát a VÁROSRA
+                        Marker m = ref.read(markerListContentProvider).elementAt(0);
+                        _goToCity(GeoPoint(m.position.latitude,m.position.longitude));
+
                       }
                   ),
                 ),
@@ -178,9 +182,14 @@ class MapScreen extends ConsumerWidget {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
-  Future<void> _goToCity(String city) async {
+  Future<void> _goToCity(GeoPoint city) async {
     final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+    final CameraPosition pointToGo = CameraPosition(
+        bearing: 0,
+        target: LatLng(city.latitude, city.longitude),
+        tilt: 10,
+        zoom: 12.5);
+    controller.animateCamera(CameraUpdate.newCameraPosition(pointToGo));
   }
 
 

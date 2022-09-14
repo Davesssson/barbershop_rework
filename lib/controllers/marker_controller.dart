@@ -3,6 +3,7 @@ import 'package:flutter_shopping_list/controllers/auth_controller.dart';
 import 'package:flutter_shopping_list/controllers/city_controller.dart';
 import 'package:flutter_shopping_list/models/responses/marker_response_item.dart';
 import 'package:flutter_shopping_list/repositories/barbershops_repository.dart';
+import 'package:flutter_shopping_list/repositories/cities_repository.dart';
 import 'package:flutter_shopping_list/repositories/custom_exception.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -53,7 +54,7 @@ class MarkerListStateController extends StateNotifier<AsyncValue<Set<MarkerRespo
     try {
       developer.log("[marker_controller.dart][CityListStateController][retrieveCities] - retrieveCities ");
       final city = await _read(cityListFilterProvider.state);
-      final markers =await _read(barbershopRepositoryProvider).retrieveCityMarkers2();
+      final markers =await _read(citiesRepositoryProvider).retrieveCityMarkers2();
       print("controller" + markers.toString());
       if (mounted) {
         state = AsyncValue.data(markers);
