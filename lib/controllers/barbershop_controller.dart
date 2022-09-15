@@ -62,6 +62,7 @@ class BarbershopListStateController extends StateNotifier<AsyncValue<List<Barber
       if (mounted) {
         List<Barbershop> asd = [];
         asd.add(items);
+        state = AsyncValue.data(asd);
         //state = AsyncValue.data(List.from(items as List<Barbershop>)); //ez valamiért nem működik :(
       }
     } on CustomException catch (e) {

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_shopping_list/ui/pagination/pagination_state.dart';
+import 'package:flutter_shopping_list/controllers/pagination/pagination_state.dart';
 
 class PaginationNotifier<T> extends StateNotifier<PaginationState<T>> {
   PaginationNotifier({

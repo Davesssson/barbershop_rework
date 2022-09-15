@@ -45,6 +45,33 @@ class BarbershopRepository implements BaseBarbershopRepository{
 
   }
 
+  Future<List<Barbershop>> retrievePaginatedBarbershops(Barbershop? item) async {
+    final itemsCollectionRef = await  _read(firebaseFirestoreProvider).collection('barbershops');
+    try {
+      if (item == null) {
+        final documentSnapshot = await itemsCollectionRef
+            .limit(1000)
+            .get();
+        return documentSnapshot.docs
+            .map<Barbershop>(
+                (data) => Barbershop.fromDocument(data)).toList();
+      } else {
+        final documentSnapshot = await itemsCollectionRef
+            .startAfter([item.id])
+            .limit(1000)
+            .get();
+
+        return documentSnapshot.docs
+            .map<Barbershop>(
+                (data) => Barbershop
+                .fromDocument(data))
+            .toList();
+      }
+    } on FirebaseException catch (e) {
+      throw CustomException(message: e.message);
+    }
+  }
+
 
 
 }

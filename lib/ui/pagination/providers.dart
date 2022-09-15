@@ -1,21 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
-import 'package:flutter_shopping_list/ui/pagination/pagination_notifier.dart';
-import 'package:flutter_shopping_list/ui/pagination/pagination_state.dart';
+import 'package:flutter_shopping_list/controllers/pagination/pagination_notifier.dart';
 
 
-import 'database.dart';
+import '../../controllers/pagination/pagination_state.dart';
+import '../../repositories/barbershops_repository.dart';
 
 final itemsProvider = StateNotifierProvider<PaginationNotifier<Barbershop>, PaginationState<Barbershop>>(
         (ref) {
       return PaginationNotifier(
         itemsPerBatch: 20,
-        fetchNextItems: (
-            item,
-            ) {
-          return ref.read(databaseProvider).fetchItems(item);
+        fetchNextItems: (barbershops) {
+          return ref.read(barbershopRepositoryProvider).retrievePaginatedBarbershops(barbershops);
         },
       )..init();
     });
 
-final databaseProvider = Provider<MyDatabase>((ref) => MyDatabase());

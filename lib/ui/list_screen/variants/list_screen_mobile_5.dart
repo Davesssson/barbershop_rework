@@ -8,6 +8,7 @@ import '../../../controllers/city_controller.dart';
 import '../../../controllers/query_controller.dart';
 import '../../../models/barbershop/barbershop_model.dart';
 import '../../details_screen/details_screen.dart';
+import 'list_screen_mobile_pagination.dart';
 
 final currentShop = Provider<Barbershop>((_) {
   developer.log("[details_screen_mobile.dart][currentItem] - ??????.");
@@ -120,7 +121,7 @@ class ShopTile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final barbershop = ref.watch(currentShop);
+    final barbershop = ref.watch(currentShop2);
     return Card(
       color:Colors.grey,
       clipBehavior: Clip.antiAlias,
