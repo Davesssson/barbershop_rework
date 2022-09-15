@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/constants/theme_data.dart';
 import 'package:flutter_shopping_list/controllers/barbershop_controller.dart';
+import 'package:flutter_shopping_list/controllers/theme_controller.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../controllers/barber_controller.dart';
 import 'dart:developer' as developer;
 
-import '../../../controllers/barber_controller.dart';
 import '../../../models/barber/barber_model.dart';
 
 class DetailsScreen_mobile extends HookConsumerWidget {
@@ -57,7 +58,6 @@ class DetailWidget_mobile extends ConsumerWidget {
               ),
               BarberList(
                   barbershop: bs,
-
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
@@ -161,7 +161,8 @@ class BarberList extends ConsumerWidget {
                         //   ),);
                       },
                       child: Container(
-                        color: Colors.black54,
+                        //color: Colors.black54,
+                        color:Theme.of(context).primaryColor,
                         child: Column(
                           children: [
                             CircleAvatar(
