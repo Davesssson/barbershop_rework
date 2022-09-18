@@ -43,9 +43,10 @@ class PaginatedListView extends ConsumerWidget {
           //region ez itt opcionális
           SliverToBoxAdapter(
               child: Container(
-            color: Colors.red,
-            height: 20,
-          )),
+                color: Colors.red,
+                height: 20,
+              )
+          ),
           //endregion ez itt opcionális
           ItemsList(),
           NoMoreItems(),

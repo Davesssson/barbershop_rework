@@ -6,8 +6,7 @@ import 'package:flutter_shopping_list/controllers/pagination/pagination_notifier
 import '../../controllers/pagination/pagination_state.dart';
 import '../../repositories/barbershops_repository.dart';
 
-final itemsProvider = StateNotifierProvider<PaginationNotifier<Barbershop>, PaginationState<Barbershop>>(
-        (ref) {
+final itemsProvider = StateNotifierProvider<PaginationNotifier<Barbershop>, PaginationState<Barbershop>>((ref) {
       return PaginationNotifier(
         itemsPerBatch: 20,
         fetchNextItems: (barbershops) {

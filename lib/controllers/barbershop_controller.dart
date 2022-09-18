@@ -35,11 +35,6 @@ class BarbershopListStateController extends StateNotifier<AsyncValue<List<Barber
     retrieveBarbershops();
   }
 
-  BarbershopListStateController.masikconstructor(this._read,String id):super(AsyncValue.loading()){
-    retrieveSingleBarbershop(id);
-  }
-
-
   Future<void> retrieveBarbershops({bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
