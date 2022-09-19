@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_shopping_list/controllers/barber_controller.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_5.dart';
 
+import '../../../controllers/barbershop_controller.dart';
 import '../../pagination/providers.dart';
 
 final currentShop2 = Provider<Barbershop>((_) {
@@ -23,7 +25,8 @@ class PaginatedListView extends ConsumerWidget {
       double currentScroll = scrollController.position.pixels;
       double delta = MediaQuery.of(context).size.width * 0.20;
       if (maxScroll - currentScroll <= delta) {
-        ref.read(itemsProvider.notifier).fetchNextBatch();
+        //ref.read(itemsProvider.notifier).fetchNextBatch();
+        ref.read(itemsProviderMine.notifier).fetchNextBatchMine();
       }
     });
     //endregion
@@ -62,13 +65,13 @@ class NoMoreItems extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(itemsProvider);
+    final state = ref.watch(itemsProviderMine);
 
     return SliverToBoxAdapter(
       child: state.maybeWhen(
           orElse: () => const SizedBox.shrink(),
           data: (items) {
-            final nomoreItems = ref.read(itemsProvider.notifier).noMoreItems;
+            final nomoreItems = ref.read(itemsProviderMine.notifier).noMoreItems;
             return nomoreItems
                 ? const Padding(
                     padding: EdgeInsets.only(bottom: 20),
@@ -89,7 +92,7 @@ class ItemsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(itemsProvider);
+    final state = ref.watch(itemsProviderMine);
     return state.when(
       data: (items) {
         return items.isEmpty
@@ -99,7 +102,7 @@ class ItemsList extends ConsumerWidget {
                     IconButton(
                       icon: const Icon(Icons.replay),
                       onPressed: () {
-                        ref.read(itemsProvider.notifier).fetchFirstBatch();
+                        ref.read(itemsProviderMine.notifier).fetchFirstBatch();
                       },
                     ),
                     const Chip(
@@ -126,6 +129,7 @@ class ItemsList extends ConsumerWidget {
                   color: Colors.black,
                 ),
               ),
+
             ],
           ),
         ),
@@ -184,7 +188,7 @@ class OnGoingBottomWidget extends StatelessWidget {
       padding: const EdgeInsets.all(40),
       sliver: SliverToBoxAdapter(
         child: Consumer(builder: (context, ref, child) {
-          final state = ref.watch(itemsProvider);
+          final state = ref.watch(itemsProviderMine);
           return state.maybeWhen(
             orElse: () => const SizedBox.shrink(),
             onGoingLoading: (items) =>

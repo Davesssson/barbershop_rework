@@ -22,12 +22,25 @@ class BarbershopRepository implements BaseBarbershopRepository{
   Future<List<Barbershop>> retrieveBarbershops() async {
     developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Barbershops retrieved.");
     try {
-        final snap = await _read(firebaseFirestoreProvider).collection('barbershops').get();
+        final snap = await _read(firebaseFirestoreProvider).collection('barbershops').limit(3).get();
         //this.retrieveCities();
         return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
         developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Barbershop retrieve exception.");
         throw CustomException(message: e.message);
+    }
+  }
+
+  Future<List<Barbershop>> retrieveMoreBarbershops(Barbershop? b) async {
+    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Barbershops retrieved.");
+    try {
+      final previoussSnap = await  _read(firebaseFirestoreProvider).collection('barbershops').doc(b!.id).get();
+      final snap = await _read(firebaseFirestoreProvider).collection('barbershops').startAfterDocument(previoussSnap).limit(3).get();
+      //this.retrieveCities();
+      return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();
+    } on FirebaseException catch (e) {
+      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Barbershop retrieve exception.");
+      throw CustomException(message: e.message);
     }
   }
 
@@ -46,16 +59,19 @@ class BarbershopRepository implements BaseBarbershopRepository{
   }
 
   Future<List<Barbershop>> retrievePaginatedBarbershops(Barbershop? item) async {
+    print(item);
     final itemsCollectionRef = await  _read(firebaseFirestoreProvider).collection('barbershops');
     try {
+      print("try 1");
       if (item == null) {
         final documentSnapshot = await itemsCollectionRef
-            .limit(1000)
+            .limit(3)
             .get();
         return documentSnapshot.docs
             .map<Barbershop>(
                 (data) => Barbershop.fromDocument(data)).toList();
       } else {
+        print("else 1");
         final documentSnapshot = await itemsCollectionRef
             .startAfter([item.id])
             .limit(1000)

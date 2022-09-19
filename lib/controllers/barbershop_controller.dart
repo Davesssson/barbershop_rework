@@ -49,6 +49,23 @@ class BarbershopListStateController extends StateNotifier<AsyncValue<List<Barber
     }
   }
 
+  Future<void> retrieveMoreBarbershops( {bool isRefreshing = false}) async {
+    if (isRefreshing) state = AsyncValue.loading();
+    try {
+      final oldstate= [...state.value!];
+
+      developer.log("[barbershop_controller.dart][BarbershopListStateController][retrieveBarbershops] - retrieveBarbershops .");
+      //final newItems = await _read(barbershopRepositoryProvider).retrieveMoreBarbershops(oldstate.last.id!);
+     // final newState = newItems+oldstate;
+      if (mounted) {
+       // state = AsyncValue.data(newState);
+      }
+    } on CustomException catch (e) {
+      developer.log("[barbershop_controller.dart][BarbershopListStateController][retrieveBarbershops] - retrieveBarbershops Exception.");
+      state = AsyncValue.error(e);
+    }
+  }
+
   Future<void> retrieveSingleBarbershop(String id,{bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {

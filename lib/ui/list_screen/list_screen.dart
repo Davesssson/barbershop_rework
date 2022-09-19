@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_5.dart';
 import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_pagination.dart';
+import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_pagination_mine.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 

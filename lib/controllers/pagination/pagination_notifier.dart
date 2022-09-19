@@ -13,14 +13,14 @@ class PaginationNotifier<T> extends StateNotifier<PaginationState<T>> {
   final Future<List<T>> Function(T? item) fetchNextItems;
   final int itemsPerBatch;
 
-  final List<T> _items = [];
+  final List<T> items = [];
 
   Timer _timer = Timer(const Duration(milliseconds: 0), () {});
 
   bool noMoreItems = false;
 
   void init() {
-    if (_items.isEmpty) {
+    if (items.isEmpty) {
       fetchFirstBatch();
     }
   }
@@ -29,9 +29,9 @@ class PaginationNotifier<T> extends StateNotifier<PaginationState<T>> {
     noMoreItems = result.length < itemsPerBatch;
 
     if (result.isEmpty) {
-      state = PaginationState.data(_items);
+      state = PaginationState.data(items);
     } else {
-      state = PaginationState.data(_items..addAll(result));
+      state = PaginationState.data(items..addAll(result));
     }
   }
 
@@ -39,9 +39,9 @@ class PaginationNotifier<T> extends StateNotifier<PaginationState<T>> {
     try {
       state = const PaginationState.loading();
 
-      final List<T> result = _items.isEmpty
+      final List<T> result = items.isEmpty
           ? await fetchNextItems(null)
-          : await fetchNextItems(_items.last);
+          : await fetchNextItems(items.last);
       updateData(result);
     } catch (e, stk) {
       state = PaginationState.error(e, stk);
@@ -49,7 +49,7 @@ class PaginationNotifier<T> extends StateNotifier<PaginationState<T>> {
   }
 
   Future<void> fetchNextBatch() async {
-    if (_timer.isActive && _items.isNotEmpty) {
+    if (_timer.isActive && items.isNotEmpty) {
       return;
     }
     _timer = Timer(const Duration(milliseconds: 1000), () {});
@@ -58,23 +58,23 @@ class PaginationNotifier<T> extends StateNotifier<PaginationState<T>> {
       return;
     }
 
-    if (state == PaginationState<T>.onGoingLoading(_items)) {
+    if (state == PaginationState<T>.onGoingLoading(items)) {
       log("Rejected");
       return;
     }
 
     log("Fetching next batch of items");
 
-    state = PaginationState.onGoingLoading(_items);
+    state = PaginationState.onGoingLoading(items);
 
     try {
       //await Future.delayed(const Duration(seconds: 1));
-      final result = await fetchNextItems(_items.last);
+      final result = await fetchNextItems(items.last);
       log(result.length.toString());
       updateData(result);
     } catch (e, stk) {
       log("Error fetching next page", error: e, stackTrace: stk);
-      state = PaginationState.onGoingError(_items, e, stk);
+      state = PaginationState.onGoingError(items, e, stk);
     }
   }
 }
