@@ -32,27 +32,27 @@ class BarbershopRepository implements BaseBarbershopRepository{
   }
 
   Future<List<Barbershop>> retrieveMoreBarbershops(Barbershop? b) async {
-    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Barbershops retrieved.");
+    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveMoreBarbershops] - More barbershops retrieved.");
     try {
       final previoussSnap = await  _read(firebaseFirestoreProvider).collection('barbershops').doc(b!.id).get();
       final snap = await _read(firebaseFirestoreProvider).collection('barbershops').startAfterDocument(previoussSnap).limit(3).get();
       //this.retrieveCities();
       return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
-      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Barbershop retrieve exception.");
+      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveMoreBarbershops] - More barbershop retrieve exception.");
       throw CustomException(message: e.message);
     }
   }
 
   @override
   Future<Barbershop> retrieveSingleBarbershop(String id)async {
-    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveSingleBarbershop] - Barbers retrieved.");
+    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveSingleBarbershop] - Single Barbershop retrieved.");
     try {
       final snap =
           await  _read(firebaseFirestoreProvider).collection('barbershops').doc(id).get().then((value) => Barbershop.fromDocument(value)); //QueryDocSnapshop
       return snap;
     } on FirebaseException catch (e) {
-      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveSingleBarbersFromShop] - Barbers retrieve exception.");
+      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveSingleBarbershop] - Single Barbershop retrieve exception.");
       throw CustomException(message: e.message);
     }
 

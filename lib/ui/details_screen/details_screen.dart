@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping_list/ui/details_screen/variants/details_screen_mobile.dart';
+import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/details_screen_mobile.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 

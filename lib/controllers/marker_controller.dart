@@ -11,7 +11,7 @@ import 'dart:developer' as developer;
 
 
 final markerListContentProvider = Provider<Set<Marker>>((ref) {
-  developer.log("[barbershop_controller.dart][-][barbershopListContentProvider] - barbershopListContentProvider.");
+  developer.log("[marker_controller.dart][-][markerListContentProvider] - markerListContentProvider.");
   final markersListState = ref.watch(markerListStateProvider);
   final cityListFilterState = ref.watch(cityListFilterProvider);
 
@@ -36,7 +36,7 @@ final markerListContentProvider = Provider<Set<Marker>>((ref) {
 
 
 final markerListStateProvider = StateNotifierProvider<MarkerListStateController, AsyncValue<Set<MarkerResponseItem>>>((ref) {
-  developer.log("[marker_controller.dart][-][cityListStateProvider] - cityListStateProvider");
+  developer.log("[marker_controller.dart][-][cityListStateProvider] - markerListStateProvider");
   return MarkerListStateController(ref.read);
 },
 );
@@ -45,14 +45,14 @@ class MarkerListStateController extends StateNotifier<AsyncValue<Set<MarkerRespo
   final Reader _read;
 
   MarkerListStateController(this._read) : super(AsyncValue.loading()) {
-    developer.log("[marker_controller.dart][CityListStateController][CityListStateController] - CityListStateController constructed");
+    developer.log("[marker_controller.dart][MarkerListStateController][MarkerListStateController] - MarkerListStateController constructed");
     retrieveCityMarkers();
   }
 
   Future<void> retrieveCityMarkers({bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
-      developer.log("[marker_controller.dart][CityListStateController][retrieveCities] - retrieveCities ");
+      developer.log("[marker_controller.dart][MarkerListStateController][retrieveCityMarkers] - retrieveMarkers ");
       final city = await _read(cityListFilterProvider.state);
       final markers =await _read(citiesRepositoryProvider).retrieveCityMarkers2();
       print("controller" + markers.toString());
@@ -60,7 +60,7 @@ class MarkerListStateController extends StateNotifier<AsyncValue<Set<MarkerRespo
         state = AsyncValue.data(markers);
       }
     } on CustomException catch (e) {
-      developer.log("[marker_controller.dart][CityListStateController][retrieveCities] - retrieveCities Exception");
+      developer.log("[marker_controller.dart][MarkerListStateController][retrieveCityMarkers] - retrieveMarkers Exception");
       state = AsyncValue.error(e);
     }
   }

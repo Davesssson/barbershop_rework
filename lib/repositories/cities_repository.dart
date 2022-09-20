@@ -23,20 +23,20 @@ class CitiesRepository implements BaseCitiesRepository {
 
   @override
   Future<List<String>> retrieveCities()async {
-    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveCities] - retrieveCities retrieved.");
+    developer.log("[cities_repository.dart][CitiesRepository][retrieveCities] - retrieveCities retrieved.");
     try {
       final snap = await _read(firebaseFirestoreProvider).collection('barbershops').get();
       final cities =  snap.docs.map((doc) => doc['city'].toString()).toSet().toList();
       developer.log("[cities = " + cities.toString());
       return cities;
     } on FirebaseException catch (e) {
-      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveCities] - retrieveCities retrieved exception.");
+      developer.log("[barbershops_repository.dart][CitiesRepository][retrieveCities] - retrieveCities retrieved exception.");
       throw CustomException(message: e.message);
     }
   }
 
   Future<Set<Marker>> retrieveCityMarkers(String city)async {
-    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveCityMarkers] - retrieveCityMarkers retrieved.");
+    developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkers] - retrieveCityMarkers retrieved.");
     try {
       print(city);
       final snap = await _read(firebaseFirestoreProvider).collection('barbershops').get();
@@ -54,12 +54,12 @@ class CitiesRepository implements BaseCitiesRepository {
       developer.log("[markers = " + markers.toString());
       return markers;
     } on FirebaseException catch (e) {
-      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveCities] - retrieveCityMarkers retrieved exception.");
+      developer.log("[cities_repository.dart][CitiesRepository][retrieveCities] - retrieveCityMarkers retrieved exception.");
       throw CustomException(message: e.message);
     }
   }
   Future<Set<MarkerResponseItem>> retrieveCityMarkers2()async {
-    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveCityMarkers] - retrieveCityMarkers retrieved.");
+    developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkers2] - retrieveCityMarkers2 retrieved.");
 
     try {
       final snap = await _read(firebaseFirestoreProvider).collection('barbershops').get();
@@ -76,7 +76,7 @@ class CitiesRepository implements BaseCitiesRepository {
       developer.log("[markers = " + markers.toString());
       return markers;
     } on FirebaseException catch (e) {
-      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveCities] - retrieveCityMarkers retrieved exception.");
+      developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkers2] - retrieveCityMarkers retrieved exception.");
       throw CustomException(message: e.message);
     }
   }
