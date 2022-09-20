@@ -109,7 +109,7 @@ class __$$_ItemCopyWithImpl<$Res> extends _$ItemCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Item extends _Item with DiagnosticableTreeMixin {
+class _$_Item extends _Item {
   const _$_Item({this.id, required this.name, this.obtained = false})
       : super._();
 
@@ -124,18 +124,8 @@ class _$_Item extends _Item with DiagnosticableTreeMixin {
   final bool obtained;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'Item(id: $id, name: $name, obtained: $obtained)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'Item'))
-      ..add(DiagnosticsProperty('id', id))
-      ..add(DiagnosticsProperty('name', name))
-      ..add(DiagnosticsProperty('obtained', obtained));
   }
 
   @override
@@ -163,7 +153,9 @@ class _$_Item extends _Item with DiagnosticableTreeMixin {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ItemToJson(this);
+    return _$$_ItemToJson(
+      this,
+    );
   }
 }
 
@@ -177,11 +169,11 @@ abstract class _Item extends Item {
   factory _Item.fromJson(Map<String, dynamic> json) = _$_Item.fromJson;
 
   @override
-  String? get id => throw _privateConstructorUsedError;
+  String? get id;
   @override
-  String get name => throw _privateConstructorUsedError;
+  String get name;
   @override
-  bool get obtained => throw _privateConstructorUsedError;
+  bool get obtained;
   @override
   @JsonKey(ignore: true)
   _$$_ItemCopyWith<_$_Item> get copyWith => throw _privateConstructorUsedError;

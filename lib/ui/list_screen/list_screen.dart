@@ -11,7 +11,7 @@ class ListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ScreenTypeLayout(
-      mobile: PaginatedListView(),
+      mobile: ListScreen_mobile_pagination_mine(),
       desktop: Container(color: Colors.blue),
     );
   }

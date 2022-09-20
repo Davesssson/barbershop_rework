@@ -17,6 +17,9 @@ _$_Barbershop _$$_BarbershopFromJson(Map<String, dynamic> json) =>
       barbers:
           (json['barbers'] as List<dynamic>?)?.map((e) => e as String).toList(),
       city: json['city'] as String?,
+      services: (json['services'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$$_BarbershopToJson(_$_Barbershop instance) =>
@@ -28,4 +31,5 @@ Map<String, dynamic> _$$_BarbershopToJson(_$_Barbershop instance) =>
       'places_id': instance.places_id,
       'barbers': instance.barbers,
       'city': instance.city,
+      'services': instance.services,
     };

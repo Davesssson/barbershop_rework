@@ -119,6 +119,8 @@ class ShopTile extends HookConsumerWidget {
 
   const ShopTile({Key? key}) : super(key: key);
 
+
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final barbershop = ref.watch(currentShop2);

@@ -26,6 +26,8 @@ class Barbershop with _$Barbershop{
     String? places_id,
     List<String>? barbers,
     String? city,
+    List<String>? services,
+
 
   })= _Barbershop;
 

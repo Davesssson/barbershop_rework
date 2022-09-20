@@ -154,7 +154,7 @@ class __$$_BarberCopyWithImpl<$Res> extends _$BarberCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Barber extends _Barber with DiagnosticableTreeMixin {
+class _$_Barber extends _Barber {
   _$_Barber(
       {this.barbershop_id,
       this.id,
@@ -188,21 +188,8 @@ class _$_Barber extends _Barber with DiagnosticableTreeMixin {
   }
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'Barber(barbershop_id: $barbershop_id, id: $id, name: $name, description: $description, prof_pic: $prof_pic, works: $works)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'Barber'))
-      ..add(DiagnosticsProperty('barbershop_id', barbershop_id))
-      ..add(DiagnosticsProperty('id', id))
-      ..add(DiagnosticsProperty('name', name))
-      ..add(DiagnosticsProperty('description', description))
-      ..add(DiagnosticsProperty('prof_pic', prof_pic))
-      ..add(DiagnosticsProperty('works', works));
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
+import 'package:flutter_shopping_list/repositories/service_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../general_providers.dart';
 import 'custom_exception.dart';
@@ -24,6 +25,8 @@ class BarbershopRepository implements BaseBarbershopRepository{
     try {
         final snap = await _read(firebaseFirestoreProvider).collection('barbershops').limit(3).get();
         //this.retrieveCities();
+        final asd = await _read(serviceRepositoryProvider).retrieveServiceTags();
+        print(asd);
         return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
         developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Barbershop retrieve exception.");

@@ -41,7 +41,7 @@ class PaginatedListView extends ConsumerWidget {
           SliverAppBar(
             centerTitle: true,
             pinned: true,
-            title: Text('Infinite Pagination'),
+            title: Text('Infinite Pagination asd'),
           ),
           //region ez itt opcionális
           SliverToBoxAdapter(
