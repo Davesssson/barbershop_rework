@@ -20,6 +20,7 @@ _$_Barbershop _$$_BarbershopFromJson(Map<String, dynamic> json) =>
       services: (json['services'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$$_BarbershopToJson(_$_Barbershop instance) =>
@@ -32,4 +33,5 @@ Map<String, dynamic> _$$_BarbershopToJson(_$_Barbershop instance) =>
       'barbers': instance.barbers,
       'city': instance.city,
       'services': instance.services,
+      'tags': instance.tags,
     };

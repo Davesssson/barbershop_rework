@@ -91,7 +91,17 @@ class BarbershopRepository implements BaseBarbershopRepository{
     }
   }
 
-
+  Future<List<Barbershop>> retrieveBarbershopsServices(List<String> tags) async {
+    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveMoreBarbershops] - More barbershops retrieved.");
+    try {
+      final snap = await _read(firebaseFirestoreProvider).collection('barbershops').where('tags',arrayContains: tags).get();
+      //this.retrieveCities();
+      return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();
+    } on FirebaseException catch (e) {
+      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveMoreBarbershops] - More barbershop retrieve exception.");
+      throw CustomException(message: e.message);
+    }
+  }
 
 }
 

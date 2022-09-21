@@ -29,6 +29,7 @@ mixin _$Barbershop {
   List<String>? get barbers => throw _privateConstructorUsedError;
   String? get city => throw _privateConstructorUsedError;
   List<String>? get services => throw _privateConstructorUsedError;
+  List<String>? get tags => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -49,7 +50,8 @@ abstract class $BarbershopCopyWith<$Res> {
       String? places_id,
       List<String>? barbers,
       String? city,
-      List<String>? services});
+      List<String>? services,
+      List<String>? tags});
 }
 
 /// @nodoc
@@ -70,6 +72,7 @@ class _$BarbershopCopyWithImpl<$Res> implements $BarbershopCopyWith<$Res> {
     Object? barbers = freezed,
     Object? city = freezed,
     Object? services = freezed,
+    Object? tags = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -104,6 +107,10 @@ class _$BarbershopCopyWithImpl<$Res> implements $BarbershopCopyWith<$Res> {
           ? _value.services
           : services // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      tags: tags == freezed
+          ? _value.tags
+          : tags // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -123,7 +130,8 @@ abstract class _$$_BarbershopCopyWith<$Res>
       String? places_id,
       List<String>? barbers,
       String? city,
-      List<String>? services});
+      List<String>? services,
+      List<String>? tags});
 }
 
 /// @nodoc
@@ -146,6 +154,7 @@ class __$$_BarbershopCopyWithImpl<$Res> extends _$BarbershopCopyWithImpl<$Res>
     Object? barbers = freezed,
     Object? city = freezed,
     Object? services = freezed,
+    Object? tags = freezed,
   }) {
     return _then(_$_Barbershop(
       id: id == freezed
@@ -180,6 +189,10 @@ class __$$_BarbershopCopyWithImpl<$Res> extends _$BarbershopCopyWithImpl<$Res>
           ? _value._services
           : services // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      tags: tags == freezed
+          ? _value._tags
+          : tags // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -195,9 +208,11 @@ class _$_Barbershop extends _Barbershop {
       this.places_id,
       final List<String>? barbers,
       this.city,
-      final List<String>? services})
+      final List<String>? services,
+      final List<String>? tags})
       : _barbers = barbers,
         _services = services,
+        _tags = tags,
         super._();
 
   factory _$_Barbershop.fromJson(Map<String, dynamic> json) =>
@@ -234,9 +249,18 @@ class _$_Barbershop extends _Barbershop {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<String>? _tags;
+  @override
+  List<String>? get tags {
+    final value = _tags;
+    if (value == null) return null;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'Barbershop(id: $id, name: $name, main_image: $main_image, location: $location, places_id: $places_id, barbers: $barbers, city: $city, services: $services)';
+    return 'Barbershop(id: $id, name: $name, main_image: $main_image, location: $location, places_id: $places_id, barbers: $barbers, city: $city, services: $services, tags: $tags)';
   }
 
   @override
@@ -252,7 +276,8 @@ class _$_Barbershop extends _Barbershop {
             const DeepCollectionEquality().equals(other.places_id, places_id) &&
             const DeepCollectionEquality().equals(other._barbers, _barbers) &&
             const DeepCollectionEquality().equals(other.city, city) &&
-            const DeepCollectionEquality().equals(other._services, _services));
+            const DeepCollectionEquality().equals(other._services, _services) &&
+            const DeepCollectionEquality().equals(other._tags, _tags));
   }
 
   @JsonKey(ignore: true)
@@ -266,7 +291,8 @@ class _$_Barbershop extends _Barbershop {
       const DeepCollectionEquality().hash(places_id),
       const DeepCollectionEquality().hash(_barbers),
       const DeepCollectionEquality().hash(city),
-      const DeepCollectionEquality().hash(_services));
+      const DeepCollectionEquality().hash(_services),
+      const DeepCollectionEquality().hash(_tags));
 
   @JsonKey(ignore: true)
   @override
@@ -290,7 +316,8 @@ abstract class _Barbershop extends Barbershop {
       final String? places_id,
       final List<String>? barbers,
       final String? city,
-      final List<String>? services}) = _$_Barbershop;
+      final List<String>? services,
+      final List<String>? tags}) = _$_Barbershop;
   _Barbershop._() : super._();
 
   factory _Barbershop.fromJson(Map<String, dynamic> json) =
@@ -313,6 +340,8 @@ abstract class _Barbershop extends Barbershop {
   String? get city;
   @override
   List<String>? get services;
+  @override
+  List<String>? get tags;
   @override
   @JsonKey(ignore: true)
   _$$_BarbershopCopyWith<_$_Barbershop> get copyWith =>
