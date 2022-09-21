@@ -2,31 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_shopping_list/controllers/city_controller.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../repositories/barbershops_repository.dart';
-import '../repositories/custom_exception.dart';
+import '../../repositories/barbershops_repository.dart';
+import '../../repositories/custom_exception.dart';
 import 'dart:developer' as developer;
 
-final barbershopListContentProvider = Provider<List<Barbershop>>((ref) {
-  developer.log("[barbershop_controller.dart][-][barbershopListContentProvider] - barbershopListContentProvider.");
-  final barbershopsListState = ref.watch(barbershopListStateProvider);
-  final cityListFilterState = ref.watch(cityListFilterProvider);
 
-  return barbershopsListState.maybeWhen(
-    data: (shops) {
-      if(cityListFilterState.toString()!="")
-        return shops.where((shop) => shop.city==cityListFilterState.toString()).toList();
-      else
-        return shops;
-    },
-    orElse: () => [],
-  );
-});
 
-final barbershopListStateProvider = StateNotifierProvider<BarbershopListStateController, AsyncValue<List<Barbershop>>>((ref) {
-  developer.log("[barbershop_controller.dart][-][barbershopListStateProvider] - barbershopListStateProvider.");
-  return BarbershopListStateController(ref.read);
-  },
-);
+
 
 class BarbershopListStateController extends StateNotifier<AsyncValue<List<Barbershop>>>{
   final Reader _read;

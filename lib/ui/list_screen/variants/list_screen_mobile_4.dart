@@ -1,11 +1,12 @@
 import 'package:chips_choice_null_safety/chips_choice_null_safety.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping_list/controllers/barbershop_controller.dart';
+import 'package:flutter_shopping_list/controllers/barber_controller/barbershop_controller.dart';
 import 'package:flutter_shopping_list/controllers/city_controller.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:developer' as developer;
 import '../../details_screen/details_screen.dart';
+import '../widgets/chipSelection.dart';
 
 final currentShop = Provider<Barbershop>((_) {
   developer.log("[details_screen_mobile.dart][currentItem] - ??????.");
@@ -47,25 +48,7 @@ class ListScreen_mobile4 extends HookConsumerWidget {
       ),
       body: Column(
         children: [
-          ChipsChoice<String>.multiple(
-            value: chipList,
-            onChanged: (val) => {
-              ref.read(chipListFilterProvider.notifier).state = val,
-              print("ezek vannak elvileg kijelolve " + ref.read(chipListFilterProvider.notifier).state.toString())
-
-            },
-            choiceItems: C2Choice.listFrom<String, String>(
-              source: options,
-              value: (i, v) => v,
-              label: (i, v) => v,
-            ),
-            choiceStyle: C2ChoiceStyle(
-              color: Colors.orange,
-              borderColor: Colors.red,
-            ),
-            wrapped: true,
-            textDirection: TextDirection.ltr,
-          ),
+          MultiSelectionMine(ref),
 
           Autocomplete<String>(
               optionsBuilder: (TextEditingValue textEditingValue) async {

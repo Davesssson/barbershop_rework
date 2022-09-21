@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/constants/theme_data.dart';
-import 'package:flutter_shopping_list/controllers/barbershop_controller.dart';
 import 'package:flutter_shopping_list/controllers/theme_controller.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/barberHead.dart';

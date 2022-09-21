@@ -3,7 +3,7 @@ import 'package:flutter_shopping_list/controllers/barber_controller.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../controllers/barbershop_controller.dart';
+import '../../../controllers/barber_controller/barbershop_controller.dart';
 
 
 class ListScreen_mobile extends ConsumerWidget {

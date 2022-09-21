@@ -5,15 +5,16 @@ import 'package:flutter_shopping_list/controllers/barber_controller.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/ui/list_screen/widgets/chipSelection.dart';
 
+import '../../../controllers/barber_controller/barbershop_controller.dart';
 import '../../pagination/providers.dart';
 import '../widgets/shopTile.dart';
 
-final currentShop3 = Provider<Barbershop>((_) {
+final currentShop4 = Provider<Barbershop>((_) {
   throw UnimplementedError();
 });
 
-class ListScreen_mobile_pagination_mine extends ConsumerWidget {
-  ListScreen_mobile_pagination_mine({Key? key}) : super(key: key);
+class ListScreen_mobile_services extends ConsumerWidget {
+  ListScreen_mobile_services({Key? key}) : super(key: key);
 
   final ScrollController scrollController = ScrollController();
 
@@ -26,7 +27,7 @@ class ListScreen_mobile_pagination_mine extends ConsumerWidget {
       double delta = MediaQuery.of(context).size.width * 0.20;
       if (maxScroll - currentScroll <= delta) {
         //ref.read(itemsProvider.notifier).fetchNextBatch();
-        ref.read(itemsProviderMine.notifier).fetchNextBatchMine();
+        //ref.read(itemsProviderMine.notifier).fetchNextBatchMine();
       }
     });
     //endregion
@@ -55,8 +56,8 @@ class ListScreen_mobile_pagination_mine extends ConsumerWidget {
           ),
           //endregion ez itt opcionális
           ItemsList(),
-          NoMoreItems(),
-          OnGoingBottomWidget(),
+          //NoMoreItems(),
+          //OnGoingBottomWidget(),
         ],
       ),
     );
@@ -95,26 +96,26 @@ class ItemsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(itemsProviderMine);
+    final state = ref.watch(barbershopListStateProvider);
     return state.when(
       data: (items) {
         return items.isEmpty
             ? SliverToBoxAdapter(
           child: Column(
             children: [
-              IconButton(
+/*              IconButton(
                 icon: const Icon(Icons.replay),
                 onPressed: () {
                   ref.read(itemsProviderMine.notifier).fetchFirstBatch();
                 },
-              ),
+              ),*/
               const Chip(
                 label: Text("Nem találtunk üzleteket! Szeretné újrapróbálni?"),
               ),
             ],
           ),
         )
-            : ItemsListBuilder(items: items);
+            : ItemsListBuilder(/*items: items*/);
       },
       loading: () => const SliverToBoxAdapter(
           child: Center(child: CircularProgressIndicator())),
@@ -137,16 +138,16 @@ class ItemsList extends ConsumerWidget {
           ),
         ),
       ),
-      onGoingLoading: (items) {
+/*      onGoingLoading: (items) {
         return ItemsListBuilder(
           items: items,
         );
-      },
-      onGoingError: (items, e, stk) {
+      },*/
+/*      onGoingError: (items, e, stk) {
         return ItemsListBuilder(
           items: items,
         );
-      },
+      },*/
     );
   }
 }
@@ -154,18 +155,18 @@ class ItemsList extends ConsumerWidget {
 class ItemsListBuilder extends ConsumerWidget {
   const ItemsListBuilder({
     Key? key,
-    required this.items,
+    //required this.items,
   }) : super(key: key);
 
-  final List<Barbershop> items;
+  //final List<Barbershop> items;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
+    final List<Barbershop> items = ref.watch(barbershopListContentProvider);
     return SliverList(
       delegate: SliverChildBuilderDelegate((context, index) {
         return ProviderScope(
-            overrides: [currentShop3.overrideWithValue(items[index])],
+            overrides: [currentShop4.overrideWithValue(items[index])],
             child: ShopTile()
         );
 

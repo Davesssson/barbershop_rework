@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../controllers/city_controller.dart';
 import '../../controllers/marker_controller.dart';
+import '../list_screen/widgets/chipSelection.dart';
 
 //https://github.com/themaaz32/auto_complete/blob/main/lib/main.dart
 //https://pub.dev/packages/google_maps_cluster_manager
@@ -55,7 +56,7 @@ class MapScreen extends ConsumerWidget {
                     },
                   ),
                   AutoComplete(optionsState, ref),
-                  MultiSelection(chipList, ref, options),
+                  MultiSelectionMine(ref),
                 ]
           ),
           error: (e, _) => Text("faszom"),
@@ -67,31 +68,6 @@ class MapScreen extends ConsumerWidget {
         icon: Icon(Icons.directions_boat),
       ),
     );
-  }
-
-  ChipsChoice<String> MultiSelection(List<String> chipList, WidgetRef ref, List<String> options) {
-    return ChipsChoice<String>.multiple(
-                  value: chipList,
-                  onChanged: (val) => {
-                    ref.read(chipListFilterProvider.notifier).state = val,
-                    print("ezek vannak elvileg kijelolve " +
-                        ref
-                            .read(chipListFilterProvider.notifier)
-                            .state
-                            .toString())
-                  },
-                  choiceItems: C2Choice.listFrom<String, String>(
-                    source: options,
-                    value: (i, v) => v,
-                    label: (i, v) => v,
-                  ),
-                  choiceStyle: C2ChoiceStyle(
-                    color: Colors.orange,
-                    borderColor: Colors.red,
-                  ),
-                  wrapped: true,
-                  textDirection: TextDirection.ltr,
-                );
   }
 
   Padding AutoComplete(AsyncValue<List<String>> optionsState, WidgetRef ref) {

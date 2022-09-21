@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_shopping_list/controllers/barbershop_controller.dart';
+import 'package:flutter_shopping_list/controllers/barber_controller/barbershop_controller.dart';
 import 'package:flutter_shopping_list/controllers/city_controller.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/repositories/barbershops_repository.dart';

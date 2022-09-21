@@ -5,7 +5,6 @@ import 'package:flutter_shopping_list/controllers/barber_controller.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_5.dart';
 
-import '../../../controllers/barbershop_controller.dart';
 import '../../pagination/providers.dart';
 
 final currentShop2 = Provider<Barbershop>((_) {
