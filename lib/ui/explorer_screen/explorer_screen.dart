@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping_list/repositories/barber_repository.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:developer' as developer;
-
-import '../../controllers/city_controller/city_controller.dart';
-import '../../../controllers/query_controller.dart';
 import '../../../models/barbershop/barbershop_model.dart';
-import '../../controllers/barber_controller/barber_controller.dart';
 import '../../controllers/barber_controller/barber_providers.dart';
 import '../../controllers/barbershop_controller/barbershop_providers.dart';
-import '../../controllers/city_controller/city_providers.dart';
 import '../../general_providers.dart';
 import '../../models/barber/barber_model.dart';
 import '../details_screen/details_screen.dart';
@@ -29,7 +23,6 @@ class ExplorerScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final queryState = ref.watch(firebaseFirestoreProvider).collection('barbers');
-    final optionsState = ref.watch(cityListStateProvider);
 
     final query = queryState.withConverter<Barber>(
         fromFirestore: (snapshots,_)=>Barber.fromDocument(snapshots),

@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_shopping_list/controllers/pagination/pagination_state.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
@@ -59,7 +57,7 @@ class PaginationNotifierMine extends StateNotifier<PaginationState<Barbershop>> 
       //final List<Barbershop> result = (await read(barbershopRepositoryProvider).retrieveMoreBarbershops(items.last)).cast<List<Barbershop>>() ;
       final List<Barbershop>  result = await read(barbershopRepositoryProvider).retrieveMoreBarbershops(items.last);
       print(result.length.toString());
-      updateData(result as List<Barbershop>);
+      updateData(result);
     } catch (e, stk) {
       log("Error fetching next page", error: e, stackTrace: stk);
       state = PaginationState.onGoingError(items, e, stk);

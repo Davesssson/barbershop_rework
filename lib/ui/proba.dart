@@ -1,10 +1,6 @@
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping_list/controllers/theme_controller.dart';
 import 'package:flutter_shopping_list/ui/home_screen.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
-
 
 class MainScreen extends StatelessWidget {
   //final Function onScreenHideButtonPressed;

@@ -37,7 +37,6 @@ class ListScreen_mobile4 extends HookConsumerWidget {
       'Science',
     ];
     //endregion
-    List<String> tags = [];
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: (){

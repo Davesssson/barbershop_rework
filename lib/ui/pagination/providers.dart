@@ -1,9 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_shopping_list/models/barber/barber_model.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/controllers/pagination/pagination_notifier.dart';
-
-
 import '../../controllers/pagination/pagination_notifier_mine.dart';
 import '../../controllers/pagination/pagination_state.dart';
 import '../../repositories/barbershops_repository.dart';

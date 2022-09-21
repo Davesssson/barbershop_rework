@@ -3,7 +3,6 @@ import 'package:flutter_shopping_list/repositories/cities_repository.dart';
 import 'package:flutter_shopping_list/repositories/custom_exception.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:developer' as developer;
-import '../city_controller/city_providers.dart';
 
 class MarkerListStateController extends StateNotifier<AsyncValue<Set<MarkerResponseItem>>> {
   final Reader _read;
@@ -17,7 +16,6 @@ class MarkerListStateController extends StateNotifier<AsyncValue<Set<MarkerRespo
     if (isRefreshing) state = AsyncValue.loading();
     try {
       developer.log("[marker_controller.dart][MarkerListStateController][retrieveCityMarkers] - retrieveMarkers ");
-      final city = await _read(cityListFilterProvider.state);
       final markers =await _read(citiesRepositoryProvider).retrieveCityMarkers2();
       print("controller" + markers.toString());
       if (mounted) {

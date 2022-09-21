@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping_list/controllers/barber_controller/barber_controller.dart';
-import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 import '../../../controllers/barbershop_controller/barbershop_providers.dart';
-
-
 
 class ListScreen_mobile extends ConsumerWidget {
   const ListScreen_mobile({
