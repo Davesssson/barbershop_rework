@@ -5,7 +5,7 @@ import '../../models/barber/barber_model.dart';
 import 'barber_controller.dart';
 
 final barberListContentProvider = Provider<List<Barber>>((ref) {
-  developer.log("[barber_controller.dart][-][barberListContentProvider] - barberListContentProvider.");
+  developer.log("[barber_providers.dart][-][barberListContentProvider] - barberListContentProvider.");
   final barbersListState = ref.watch(barberListStateProvider);
   return barbersListState.maybeWhen(
     data: (barbers) {
@@ -19,6 +19,6 @@ final barberListContentProvider = Provider<List<Barber>>((ref) {
 });
 
 final barberListStateProvider = StateNotifierProvider<BarberListStateController, AsyncValue<List<Barber>>>((ref) {
-  developer.log("[barber_controller.dart][-][barberListStateProvider] - barberListStateProvider.");
+  developer.log("[barber_providers.dart][-][barberListStateProvider] - barberListStateProvider.");
   return BarberListStateController(ref.read);
 },);

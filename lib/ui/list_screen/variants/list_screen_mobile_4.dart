@@ -1,10 +1,10 @@
-import 'package:chips_choice_null_safety/chips_choice_null_safety.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping_list/controllers/city_controller.dart';
+import 'package:flutter_shopping_list/controllers/city_controller/city_controller.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:developer' as developer;
 import '../../../controllers/barbershop_controller/barbershop_providers.dart';
+import '../../../controllers/city_controller/city_providers.dart';
 import '../../details_screen/details_screen.dart';
 import '../widgets/chipSelection.dart';
 

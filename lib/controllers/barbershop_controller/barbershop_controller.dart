@@ -1,13 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_shopping_list/controllers/city_controller.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../repositories/barbershops_repository.dart';
 import '../../repositories/custom_exception.dart';
 import 'dart:developer' as developer;
-
-
-
 
 
 class BarbershopListStateController extends StateNotifier<AsyncValue<List<Barbershop>>>{

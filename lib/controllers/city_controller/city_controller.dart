@@ -1,36 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_shopping_list/repositories/barbershops_repository.dart';
 import 'package:flutter_shopping_list/repositories/cities_repository.dart';
 import 'package:flutter_shopping_list/repositories/custom_exception.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:developer' as developer;
 
 final chipListFilterProvider = StateProvider<List<String>>((_) => []);
-
-final cityListFilterProvider = StateProvider<String>((_) => "");
-
-final cityListContentProvider = Provider<List<String>>((ref) {
-  developer.log("[city_controller.dart][-][cityListContentProvider] - cityListContentProvider.");
-  final itemListFilterState = ref.watch(cityListFilterProvider);
-  final itemListState = ref.watch(cityListStateProvider);
-  return itemListState.maybeWhen(
-    data: (items) {
-      switch (itemListFilterState) {
-        //case CityListFilter.choosen:
-        //  return items.where((item) => item.obtained).toList();
-        default:
-          return items;
-      }
-    },
-    orElse: () => [],
-  );
-});
-
-final cityListStateProvider = StateNotifierProvider<CityListStateController, AsyncValue<List<String>>>((ref) {
-    developer.log("[city_controller.dart][-][cityListStateProvider] - cityListStateProvider");
-    return CityListStateController(ref.read);
-  },
-);
 
 class CityListStateController extends StateNotifier<AsyncValue<List<String>>> {
   final Reader _read;
@@ -54,9 +27,5 @@ class CityListStateController extends StateNotifier<AsyncValue<List<String>>> {
     }
   }
 }
-
-
-
-
 
 final itemListExceptionProvider = StateProvider<CustomException?>((_) => null);

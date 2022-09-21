@@ -5,7 +5,8 @@ import 'dart:developer' as developer;
 
 import '../../../controllers/barber_controller/barber_controller.dart';
 import '../../../controllers/barber_controller/barber_providers.dart';
-import '../../../controllers/city_controller.dart';
+import '../../../controllers/city_controller/city_controller.dart';
+import '../../../controllers/city_controller/city_providers.dart';
 import '../../../controllers/query_controller.dart';
 import '../../../models/barbershop/barbershop_model.dart';
 import '../../details_screen/details_screen.dart';

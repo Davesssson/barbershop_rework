@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'package:chips_choice_null_safety/chips_choice_null_safety.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping_list/models/responses/marker_response_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../../controllers/city_controller.dart';
-import '../../controllers/marker_controller.dart';
+import '../../controllers/city_controller/city_controller.dart';
+import '../../controllers/city_controller/city_providers.dart';
+import '../../controllers/marker_controller/marker_providers.dart';
 import '../list_screen/widgets/chipSelection.dart';
 
 //https://github.com/themaaz32/auto_complete/blob/main/lib/main.dart

@@ -1,10 +1,8 @@
 import 'package:chips_choice_null_safety/chips_choice_null_safety.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping_list/repositories/service_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../../../controllers/city_controller.dart';
-import '../../../controllers/service_controller.dart';
+import '../../../controllers/city_controller/city_controller.dart';
+import '../../../controllers/service_controller/service_providers.dart';
 
 
 ChipsChoice<String> MultiSelectionMine( WidgetRef ref) {
