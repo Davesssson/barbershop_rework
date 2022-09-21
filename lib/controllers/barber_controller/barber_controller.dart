@@ -1,28 +1,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../models/barber/barber_model.dart';
-import '../repositories/barber_repository.dart';
-import '../repositories/custom_exception.dart';
+import '../../models/barber/barber_model.dart';
+import '../../repositories/barber_repository.dart';
+import '../../repositories/custom_exception.dart';
 import 'dart:developer' as developer;
-
-
-final barberListContentProvider = Provider<List<Barber>>((ref) {
-  developer.log("[barber_controller.dart][-][barberListContentProvider] - barberListContentProvider.");
-  final barbersListState = ref.watch(barberListStateProvider);
-  return barbersListState.maybeWhen(
-    data: (barbers) {
-      switch ("asd") {
-        default:
-          return barbers;
-      }
-    },
-    orElse: () => [],
-  );
-});
-
-final barberListStateProvider = StateNotifierProvider<BarberListStateController, AsyncValue<List<Barber>>>((ref) {
-  developer.log("[barber_controller.dart][-][barberListStateProvider] - barberListStateProvider.");
-  return BarberListStateController(ref.read);
-},);
 
 class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
   final Reader _read;

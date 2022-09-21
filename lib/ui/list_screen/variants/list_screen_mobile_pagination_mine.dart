@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_shopping_list/controllers/barber_controller.dart';
+import 'package:flutter_shopping_list/controllers/barber_controller/barber_controller.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/ui/list_screen/widgets/chipSelection.dart';
 

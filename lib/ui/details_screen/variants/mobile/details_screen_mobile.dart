@@ -5,9 +5,10 @@ import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/barberHead.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/header.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../../../../controllers/barber_controller.dart';
+import '../../../../controllers/barber_controller/barber_controller.dart';
 import 'dart:developer' as developer;
 
+import '../../../../controllers/barber_controller/barber_providers.dart';
 import '../../../../models/barber/barber_model.dart';
 
 class DetailsScreen_mobile extends HookConsumerWidget {

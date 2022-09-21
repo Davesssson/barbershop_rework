@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_shopping_list/controllers/barber_controller.dart';
+import 'package:flutter_shopping_list/controllers/barber_controller/barber_controller.dart';
 import 'package:flutter_shopping_list/extensions/firebase_firestore_extension.dart';
 import 'package:flutter_shopping_list/general_providers.dart';
 import 'package:flutter_shopping_list/models/json_converter.dart';

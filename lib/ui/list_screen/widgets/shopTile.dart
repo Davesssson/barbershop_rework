@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../controllers/barber_controller.dart';
+import '../../../controllers/barber_controller/barber_controller.dart';
+import '../../../controllers/barber_controller/barber_providers.dart';
 import '../../details_screen/details_screen.dart';
 import '../variants/list_screen_mobile_pagination.dart';
 import '../variants/list_screen_mobile_pagination_mine.dart';
