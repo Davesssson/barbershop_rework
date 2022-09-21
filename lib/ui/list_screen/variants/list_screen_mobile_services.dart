@@ -5,7 +5,7 @@ import 'package:flutter_shopping_list/controllers/barber_controller/barber_contr
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/ui/list_screen/widgets/chipSelection.dart';
 
-import '../../../controllers/barber_controller/barbershop_controller.dart';
+import '../../../controllers/barbershop_controller/barbershop_providers.dart';
 import '../../pagination/providers.dart';
 import '../widgets/shopTile.dart';
 
