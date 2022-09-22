@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../controllers/barber_controller/barber_providers.dart';
 import '../../details_screen/details_screen.dart';
 import '../variants/list_screen_mobile_pagination_mine.dart';
+import '../variants/list_screen_mobile_services.dart';
 
 class ShopTile extends HookConsumerWidget {
 
@@ -10,7 +11,7 @@ class ShopTile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final barbershop = ref.watch(currentShop3);
+    final barbershop = ref.watch(currentShop4);
     return Card(
       color:Colors.grey,
       clipBehavior: Clip.antiAlias,

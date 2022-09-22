@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:developer' as developer;
 import '../../../controllers/barbershop_controller/barbershop_providers.dart';
 import '../../../controllers/city_controller/city_providers.dart';
+import '../../../controllers/service_controller/service_providers.dart';
 import '../../details_screen/details_screen.dart';
 import '../widgets/chipSelection.dart';
 
@@ -18,7 +19,7 @@ class ListScreen_mobile4 extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final chipList = ref.watch(chipListFilterProvider);
+    final chipList = ref.watch(serviceTagsFilterProvider);
     final optionsState = ref.watch(cityListStateProvider);
     final barbershopsState = ref.watch(barbershopListStateProvider);
     final barbershopsContent = ref.watch(barbershopListContentProvider);

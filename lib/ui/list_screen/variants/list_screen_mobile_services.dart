@@ -39,7 +39,7 @@ class ListScreen_mobile_services extends ConsumerWidget {
           SliverAppBar(
             centerTitle: true,
             pinned: true,
-            title: Text('Infinite Pagination asd'),
+            title: Text('Services Test'),
           ),
           //region ez itt opcionális
           SliverToBoxAdapter(

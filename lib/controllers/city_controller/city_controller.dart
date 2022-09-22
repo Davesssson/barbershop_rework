@@ -3,7 +3,7 @@ import 'package:flutter_shopping_list/repositories/custom_exception.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:developer' as developer;
 
-final chipListFilterProvider = StateProvider<List<String>>((_) => []);
+
 
 class CityListStateController extends StateNotifier<AsyncValue<List<String>>> {
   final Reader _read;
