@@ -3,6 +3,8 @@ import 'package:flutter_shopping_list/repositories/service_repository.dart';
 import 'package:riverpod/riverpod.dart';
 import 'dart:developer' as developer;
 
+import '../../models/service/service_model.dart';
+
 
 final serviceTagsProvider = FutureProvider<List<String>>((ref) async {
   return await ref.read(serviceRepositoryProvider).retrieveServiceTags();
@@ -10,7 +12,7 @@ final serviceTagsProvider = FutureProvider<List<String>>((ref) async {
 
 final serviceTagsFilterProvider = StateProvider<List<String>>((_) => []);
 
-final serviceTagsListProvider = Provider<List<String>>((ref){
+final serviceListContentProvider = Provider<List<Service>>((ref){
   final serviceTagsState = ref.watch(serviceListStateProvider);
   return serviceTagsState.maybeWhen(
     data:(tags){
@@ -20,7 +22,7 @@ final serviceTagsListProvider = Provider<List<String>>((ref){
   );
 });
 
-final serviceListStateProvider = StateNotifierProvider<ServiceListStateController, AsyncValue<List<String>>>((ref) {
+final serviceListStateProvider = StateNotifierProvider<ServiceListStateController, AsyncValue<List<Service>>>((ref) {
   developer.log("[service_providers.dart][-][serviceListStateProvider] - serviceListStateProvider");
     return ServiceListStateController(ref.read);
   },

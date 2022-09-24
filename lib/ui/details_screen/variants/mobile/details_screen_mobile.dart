@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/controllers/service_controller/service_providers.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/barberHead.dart';
+import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/barberList.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/header.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:developer' as developer;
 import '../../../../controllers/barber_controller/barber_providers.dart';
 import '../../../../models/barber/barber_model.dart';
+import '../../../../models/service/service_model.dart';
 
 class DetailsScreen_mobile extends HookConsumerWidget {
   const DetailsScreen_mobile({Key? key}) : super(key: key);
@@ -35,6 +38,8 @@ class DetailWidget_mobile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final barbersState = ref.watch(barberListStateProvider);
+    final servicesState = ref.watch(serviceListStateProvider);
+    final List<Service> items = ref.watch(serviceListContentProvider);
 
     //TODO EZT KELL ÁTÍRNI ÚGY, HOGY A WIDGET BUILDELJEN, CSAK AZ ADOTT KONTÉNER MUTASSON MÁST
     return barbersState.when(
@@ -50,6 +55,7 @@ class DetailWidget_mobile extends ConsumerWidget {
                 color: Colors.red,
                 child: Text("Ide jon még az elérhetőség"),
               ),
+              ServiceList (barbershop: bs),
               BarberList(
                   barbershop: bs,
               ),
@@ -120,8 +126,10 @@ class DetailWidget_mobile extends ConsumerWidget {
   }
 }
 
-class BarberList extends ConsumerWidget {
-  const BarberList({
+
+
+class ServiceList extends ConsumerWidget {
+  const ServiceList({
     Key? key,
     required this.barbershop,
   }) : super(key: key);
@@ -131,26 +139,23 @@ class BarberList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    final barbersContent = ref.watch(barberListContentProvider);
+    final serviceListContent = ref.watch(serviceListContentProvider);
 
     return Container(
       height: 151,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
           shrinkWrap: true,
-          itemCount: barbersContent.length,
+          itemCount: serviceListContent.length,
           itemBuilder: (BuildContext context, int index) {
-            final barber = barbersContent[index];
+            final service = serviceListContent[index];
+            return Text(service.servicePrice.toString());
             //return Text(barber.name!);
-            return ProviderScope(
-                overrides: [currentBarber.overrideWithValue(barber)],
-                child: BarberHead(barber: barber));
           }
-          ),
+      ),
     );
   }
 }
-
 
 
 

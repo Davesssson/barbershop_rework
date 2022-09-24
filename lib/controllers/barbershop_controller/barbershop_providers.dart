@@ -35,7 +35,7 @@ final barbershopListContentProvider = Provider<List<Barbershop>>((ref) {
       if(serviceTagfFilterState.isNotEmpty) {
         print("itt vagyok");
         final asd =  shops.where((element) {
-          var bSet = element.tags!.toSet();
+          var bSet = element.tags!.toSet(); // TODO Ide még kéne egy csekk, hogy fix legyen
           final tSet = serviceTagfFilterState.toSet();
           return checkIfTagIsConteined(element, ref);
         }).toList();

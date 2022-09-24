@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/controllers/service_controller/service_providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../controllers/barber_controller/barber_providers.dart';
 import '../../details_screen/details_screen.dart';
@@ -18,6 +19,7 @@ class ShopTile extends HookConsumerWidget {
       child: InkWell(
         onTap: (){
           ref.read(barberListStateProvider.notifier).retrieveBarbersFromShop2(barbershop.id!);
+          ref.read(serviceListStateProvider.notifier).retrieveServiceTagsFromShop(barbershop.id!);
           Navigator.push(
             context,
             MaterialPageRoute(

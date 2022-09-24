@@ -7,7 +7,6 @@ import '../../../controllers/service_controller/service_providers.dart';
 
 ChipsChoice<String> MultiSelectionMine( WidgetRef ref) {
 
-  List<String> options2 = ref.watch(serviceTagsListProvider);
   final tags = ref.watch(serviceTagsProvider);
   List<String> options = [
     'News',
