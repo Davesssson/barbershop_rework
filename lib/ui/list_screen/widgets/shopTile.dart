@@ -3,6 +3,7 @@ import 'package:flutter_shopping_list/controllers/service_controller/service_pro
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../controllers/barber_controller/barber_providers.dart';
 import '../../details_screen/details_screen.dart';
+import '../variants/list_screen_mobile_final_proto.dart';
 import '../variants/list_screen_mobile_pagination_mine.dart';
 import '../variants/list_screen_mobile_services.dart';
 
@@ -12,7 +13,7 @@ class ShopTile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final barbershop = ref.watch(currentShop4);
+    final barbershop = ref.watch(currentShop5);
     return Card(
       color:Colors.grey,
       clipBehavior: Clip.antiAlias,

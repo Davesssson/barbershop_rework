@@ -44,6 +44,21 @@ class BarbershopListStateController extends StateNotifier<AsyncValue<List<Barber
     }
   }
 
+  Future<void> retrieveFeaturedBarbershops({bool isRefreshing = false}) async{
+    if (isRefreshing) state = AsyncValue.loading();
+    try {
+      developer.log("[barbershop_controller.dart][BarbershopListStateController][retrieveSingleBarbershop] - retrieve Single barbershop .");
+      final items = await _read(barbershopRepositoryProvider).retrieveFeaturedBarbershops();
+      if (mounted) {
+        state = AsyncValue.data(items);
+        //state = AsyncValue.data(List.from(items as List<Barbershop>)); //ez valamiért nem működik :(
+      }
+    } on CustomException catch (e) {
+      developer.log("[barbershop_controller.dart][BarbershopListStateController][retrieveSingleBarbershop] - retrieveSingleBarbershop Exception.");
+      state = AsyncValue.error(e);
+    }
+  }
+
 
 }
 

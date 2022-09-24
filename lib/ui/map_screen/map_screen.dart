@@ -48,7 +48,6 @@ class MapScreen extends ConsumerWidget {
                     },
                   ),
                   AutoComplete(optionsState, ref),
-                  MultiSelectionMine(ref),
                 ]
           ),
           error: (e, _) => Text("faszom"),

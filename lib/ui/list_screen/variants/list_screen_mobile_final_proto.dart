@@ -6,12 +6,12 @@ import '../../../controllers/barbershop_controller/barbershop_providers.dart';
 import '../../pagination/providers.dart';
 import '../widgets/shopTile.dart';
 
-final currentShop4 = Provider<Barbershop>((_) {
+final currentShop5 = Provider<Barbershop>((_) {
   throw UnimplementedError();
 });
 
-class ListScreen_mobile_services extends ConsumerWidget {
-  ListScreen_mobile_services({Key? key}) : super(key: key);
+class ListScreen_mobile_final_proto extends ConsumerWidget {
+  ListScreen_mobile_final_proto({Key? key}) : super(key: key);
 
   final ScrollController scrollController = ScrollController();
 
@@ -29,9 +29,9 @@ class ListScreen_mobile_services extends ConsumerWidget {
     });
     //endregion
     return Scaffold(
-      floatingActionButton: ScrollToTopButton(
+/*      floatingActionButton: ScrollToTopButton(
         scrollController: scrollController,
-      ),
+      ),*/
       body: CustomScrollView(
         controller: scrollController,
         restorationId: "items List",
@@ -39,54 +39,35 @@ class ListScreen_mobile_services extends ConsumerWidget {
           SliverAppBar(
             centerTitle: true,
             pinned: true,
-            title: Text('Services Test'),
+            title: Text('List final proto Test'),
           ),
           //region ez itt opcionális
           SliverToBoxAdapter(
-              child: Container(
-                color: Colors.red,
-                height: 20,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  child: Text(
+                      "Discover Budapest",
+                      style: TextStyle(
+                        fontSize: 35
+                      ),
+                  ),
+                ),
               )
           ),
+
+
           SliverToBoxAdapter(
             child: MultiSelectionMine(ref),
           ),
           //endregion ez itt opcionális
           ItemsList(),
-          //NoMoreItems(),
-          //OnGoingBottomWidget(),
         ],
       ),
     );
   }
 }
 
-class NoMoreItems extends ConsumerWidget {
-  const NoMoreItems({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(itemsProviderMine);
-
-    return SliverToBoxAdapter(
-      child: state.maybeWhen(
-          orElse: () => const SizedBox.shrink(),
-          data: (items) {
-            final nomoreItems = ref.read(itemsProviderMine.notifier).noMoreItems;
-            return nomoreItems
-                ? const Padding(
-              padding: EdgeInsets.only(bottom: 20),
-              child: Text(
-                "Ennyi üzlettel tudunk szolgálni",
-                textAlign: TextAlign.center,
-              ),
-            )
-                : const SizedBox.shrink();
-            //: const SizedBox(height: 200,);
-          }),
-    );
-  }
-}
 
 class ItemsList extends ConsumerWidget {
   const ItemsList({Key? key}) : super(key: key);
@@ -153,9 +134,16 @@ class ItemsListBuilder extends ConsumerWidget {
     return SliverList(
       delegate: SliverChildBuilderDelegate((context, index) {
         return ProviderScope(
-            overrides: [currentShop4.overrideWithValue(items[index])],
+            overrides: [currentShop5.overrideWithValue(items[index])],
             child: ShopTile()
         );
+
+        // return Container(
+        //   height: 300,
+        //   child: ListTile(
+        //     title: Text("Item ${index + 1}"),
+        //   ),
+        // );
       },
         childCount: items.length,
       ),
@@ -163,46 +151,4 @@ class ItemsListBuilder extends ConsumerWidget {
   }
 }
 
-
-//region ScrollToTopButton
-class ScrollToTopButton extends StatelessWidget {
-  const ScrollToTopButton({
-    Key? key,
-    required this.scrollController,
-  }) : super(key: key);
-
-  final ScrollController scrollController;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: scrollController,
-      builder: (context, child) {
-        double scrollOffset = scrollController.offset;
-        return AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          transitionBuilder: (child, animation) {
-            return ScaleTransition(scale: animation, child: child);
-          },
-          child: scrollOffset > MediaQuery.of(context).size.height * 0.5
-              ? FloatingActionButton(
-            tooltip: "Scroll to top",
-            child: const Icon(
-              Icons.arrow_upward,
-            ),
-            onPressed: () async {
-              scrollController.animateTo(
-                0,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
-            },
-          )
-              : const SizedBox.shrink(),
-        );
-      },
-    );
-  }
-}
-//endregion ScrollToTopButton
 
