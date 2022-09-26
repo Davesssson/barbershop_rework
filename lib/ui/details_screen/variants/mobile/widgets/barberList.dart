@@ -18,7 +18,7 @@ class BarberList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    final barbersContent = ref.watch(barberListContentProvider);
+    final barbersContent = ref.watch(barberListForShopContentProvider);
 
     return Container(
       height: 151,

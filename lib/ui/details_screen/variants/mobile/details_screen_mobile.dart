@@ -37,7 +37,7 @@ class DetailWidget_mobile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final barbersState = ref.watch(barberListStateProvider);
+    final barbersState = ref.watch(barberListForShopStateProvider);
     final servicesState = ref.watch(serviceListStateProvider);
     final List<Service> items = ref.watch(serviceListContentProvider);
 

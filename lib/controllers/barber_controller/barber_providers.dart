@@ -18,7 +18,26 @@ final barberListContentProvider = Provider<List<Barber>>((ref) {
   );
 });
 
+final barberListForShopContentProvider = Provider<List<Barber>>((ref) {
+  developer.log("[barber_providers.dart][-][barberListContentProvider] - barberListContentProvider.");
+  final barbersListState = ref.watch(barberListForShopStateProvider);
+  return barbersListState.maybeWhen(
+    data: (barbers) {
+      switch ("asd") {
+        default:
+          return barbers;
+      }
+    },
+    orElse: () => [],
+  );
+});
+
 final barberListStateProvider = StateNotifierProvider<BarberListStateController, AsyncValue<List<Barber>>>((ref) {
   developer.log("[barber_providers.dart][-][barberListStateProvider] - barberListStateProvider.");
   return BarberListStateController(ref.read);
+},);
+
+final barberListForShopStateProvider = StateNotifierProvider<BarberListStateController, AsyncValue<List<Barber>>>((ref) {
+  developer.log("[barber_providers.dart][-][barberListStateProvider] - barberListStateProvider.");
+  return BarberListStateController.forShop(ref.read);
 },);
