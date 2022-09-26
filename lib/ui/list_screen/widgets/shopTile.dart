@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/controllers/service_controller/service_providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../controllers/barber_controller/barber_providers.dart';
+import '../../../models/barbershop/barbershop_model.dart';
 import '../../details_screen/details_screen.dart';
 import '../variants/list_screen_mobile_final_proto.dart';
 import '../variants/list_screen_mobile_pagination_mine.dart';
@@ -9,11 +10,12 @@ import '../variants/list_screen_mobile_services.dart';
 
 class ShopTile extends HookConsumerWidget {
 
-  const ShopTile({Key? key}) : super(key: key);
+  const ShopTile({required this.shopToWatch,Key? key}) : super(key: key);
+  final Provider<Barbershop> shopToWatch;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final barbershop = ref.watch(currentShop5);
+    final barbershop = ref.watch(shopToWatch);
     return Card(
       color:Colors.grey,
       clipBehavior: Clip.antiAlias,
@@ -61,7 +63,7 @@ class ShopTile2 extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final barbershop = ref.watch(currentShop6);
+    final barbershop = ref.watch(featuredShop);
     return Card(
       color:Colors.grey,
       clipBehavior: Clip.antiAlias,

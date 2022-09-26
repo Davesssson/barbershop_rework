@@ -164,7 +164,7 @@ class ItemsListBuilder extends ConsumerWidget {
       delegate: SliverChildBuilderDelegate((context, index) {
         return ProviderScope(
             overrides: [currentShop3.overrideWithValue(items[index])],
-            child: ShopTile()
+            child: ShopTile(shopToWatch: currentShop3)
         );
 
         // return Container(
