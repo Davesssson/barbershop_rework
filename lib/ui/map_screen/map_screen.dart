@@ -3,14 +3,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import '../../controllers/city_controller/city_providers.dart';
 import '../../controllers/marker_controller/marker_providers.dart';
-import '../list_screen/widgets/chipSelection.dart';
 
 //https://github.com/themaaz32/auto_complete/blob/main/lib/main.dart
 //https://pub.dev/packages/google_maps_cluster_manager
 class MapScreen extends ConsumerWidget {
   final _controller = Completer();
+  Location location = Location();
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(47.2475177, 19.1855499),
     zoom: 8.25,
@@ -20,6 +21,8 @@ class MapScreen extends ConsumerWidget {
       target: LatLng(37.43296265331129, -122.08832357078792),
       tilt: 59.440717697143555,
       zoom: 19.151926040649414);
+
+
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -54,8 +57,9 @@ class MapScreen extends ConsumerWidget {
           loading: () => CircularProgressIndicator()
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: Text('To the lake!'),
+        extendedPadding:EdgeInsets.fromLTRB(0, 0, 0, 50),
+        onPressed: _animateToUser,
+        label: Text('To the asdasdasdasdasda!'),
         icon: Icon(Icons.directions_boat),
       ),
     );
@@ -165,4 +169,14 @@ class MapScreen extends ConsumerWidget {
         zoom: 12.5);
     controller.animateCamera(CameraUpdate.newCameraPosition(pointToGo));
   }
+
+  Future<void> _animateToUser() async {
+    var pos = await location.getLocation();
+    print(pos.toString());
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: LatLng(pos.latitude!, pos.longitude!))
+    ));
+  }
+
 }

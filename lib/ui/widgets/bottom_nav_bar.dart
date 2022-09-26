@@ -116,7 +116,7 @@ class BottomNavBar extends StatelessWidget {
       hideNavigationBarWhenKeyboardShows: true,
       margin: EdgeInsets.all(20.0),
       popActionScreens: PopActionScreensType.all,
-      bottomScreenMargin: 0.0, //ez állítja hogy mennyire legyen a content feltolva
+      bottomScreenMargin: 30.0, //ez állítja hogy mennyire legyen a content feltolva
       //region onWillPop
       // onWillPop: (context) async {
       //   await showDialog(

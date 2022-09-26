@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/models/responses/marker_response_item.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../general_providers.dart';
@@ -72,7 +73,46 @@ class CitiesRepository implements BaseCitiesRepository {
         );
       }).toSet();
       developer.log("[markers = " + markers.toString());
+      retrieveCityMarkersGeoLocation();
       return markers;
+    } on FirebaseException catch (e) {
+      developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkers2] - retrieveCityMarkers retrieved exception.");
+      throw CustomException(message: e.message);
+    }
+  }
+  Future<void> retrieveCityMarkersGeoLocation()async {
+    developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkers2] - retrieveCityMarkers2 retrieved.");
+    Geoflutterfire geo = Geoflutterfire();
+    GeoFirePoint center = geo.point(latitude: 47.497913, longitude:19.040236);
+    try {
+      final collectionReference = await _read(firebaseFirestoreProvider).collection('barbershops');
+      double radius = 100;
+      String field = 'point';
+      print("itt vagyok");
+      Stream<List<DocumentSnapshot>> stream = geo.collection(collectionRef: collectionReference)
+          .within(center: center, radius: radius, field: field);
+
+/*      Set<MarkerResponseItem>> items =await
+          stream.last.map((e) {
+          GeoPoint gp = e['location'];
+          return MarkerResponseItem(
+              city : e['city'],
+              marker : Marker(
+                markerId: MarkerId(e.id),
+                position: LatLng(gp.latitude,gp.longitude),
+              )
+          );
+        });
+
+      print("items"+items.toString());
+      return items;*/
+
+      stream.forEach((element) {
+        element.forEach((element2) {print("printing"+element2.data().toString()); });
+      });
+            //print(stream.toString());
+
+
     } on FirebaseException catch (e) {
       developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkers2] - retrieveCityMarkers retrieved exception.");
       throw CustomException(message: e.message);
