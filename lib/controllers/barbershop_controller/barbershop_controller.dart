@@ -12,6 +12,11 @@ class BarbershopListStateController extends StateNotifier<AsyncValue<List<Barber
     retrieveBarbershops();
   }
 
+  BarbershopListStateController.featured(this._read):super(AsyncValue.loading()){
+    developer.log("[barbershop_controller.dart][BarbershopListStateController][BarbershopListStateController] - BarbershopListStateController Constructed.");
+    retrieveFeaturedBarbershops();
+  }
+
   Future<void> retrieveBarbershops({bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
