@@ -9,6 +9,9 @@ class ServiceListStateController extends StateNotifier<AsyncValue<List<Service>>
   ServiceListStateController(this._read):super(AsyncValue.loading()){
     retrieveServiceTags();
   }
+  ServiceListStateController.forShop(this._read):super(AsyncValue.loading()){
+    retrieveServicesFromShop("asd");
+  }
 
   Future<void> retrieveServiceTags({bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
@@ -25,7 +28,7 @@ class ServiceListStateController extends StateNotifier<AsyncValue<List<Service>>
     }
   }
 
-  Future<void> retrieveServiceTagsFromShop(String shopId,{bool isRefreshing = false}) async {
+  Future<void> retrieveServicesFromShop(String shopId,{bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
       developer.log("[service_controller.dart][ServiceListStateController][retrieveServiceTags] - retrieveServiceTags ");

@@ -12,6 +12,16 @@ final serviceTagsProvider = FutureProvider<List<String>>((ref) async {
 
 final serviceTagsFilterProvider = StateProvider<List<String>>((_) => []);
 
+final serviceListForShopContentProvider = Provider<List<Service>>((ref){
+  final serviceTagsState = ref.watch(serviceListForShopStateProvider);
+  return serviceTagsState.maybeWhen(
+    data:(tags){
+      return tags;
+    } ,
+    orElse: ()=> [],
+  );
+});
+
 final serviceListContentProvider = Provider<List<Service>>((ref){
   final serviceTagsState = ref.watch(serviceListStateProvider);
   return serviceTagsState.maybeWhen(
@@ -26,4 +36,10 @@ final serviceListStateProvider = StateNotifierProvider<ServiceListStateControlle
   developer.log("[service_providers.dart][-][serviceListStateProvider] - serviceListStateProvider");
     return ServiceListStateController(ref.read);
   },
+);
+
+final serviceListForShopStateProvider = StateNotifierProvider<ServiceListStateController, AsyncValue<List<Service>>>((ref) {
+  developer.log("[service_providers.dart][-][serviceListStateProvider] - serviceListStateProvider");
+  return ServiceListStateController.forShop(ref.read);
+},
 );

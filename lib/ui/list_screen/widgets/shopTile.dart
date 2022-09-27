@@ -21,7 +21,7 @@ class ShopTile extends HookConsumerWidget {
         onTap: (){
           ref.read(barberListForShopStateProvider.notifier).retrieveBarbersFromShop2(barbershop.id!);
           ref.read(barberListStateProvider.notifier).retrieveBarbersFromShop2(barbershop.id!);
-          ref.read(serviceListStateProvider.notifier).retrieveServiceTagsFromShop(barbershop.id!);
+          ref.read(serviceListForShopStateProvider.notifier).retrieveServicesFromShop(barbershop.id!);
           Navigator.push(
             context,
             MaterialPageRoute(
