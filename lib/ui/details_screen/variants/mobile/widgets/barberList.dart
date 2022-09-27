@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 import '../../../../../controllers/barber_controller/barber_providers.dart';
-import '../../../../../models/barbershop/barbershop_model.dart';
 import '../details_screen_mobile.dart';
 import 'barberHead.dart';
 
 class BarberList extends ConsumerWidget {
   const BarberList({
     Key? key,
-    required this.barbershop,
   }) : super(key: key);
-
-  final Barbershop barbershop;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

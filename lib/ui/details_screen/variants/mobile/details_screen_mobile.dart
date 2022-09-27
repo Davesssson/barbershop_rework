@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping_list/controllers/service_controller/service_providers.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
-import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/barberHead.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/barberList.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/header.dart';
+import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/serviceList.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:developer' as developer;
-import '../../../../controllers/barber_controller/barber_providers.dart';
 import '../../../../models/barber/barber_model.dart';
 import '../../../../models/service/service_model.dart';
 
@@ -47,11 +45,10 @@ class DetailWidget_mobile extends ConsumerWidget {
         color: Colors.red,
         child: Text("Ide jon még az elérhetőség"),
       ),
-      ServiceList(),
-      BarberList(
-        barbershop: bs,
-      ),
       buildCoworkers(),
+      BarberList(),
+      buildServices(),
+      ServiceList(),
       SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -103,6 +100,21 @@ class DetailWidget_mobile extends ConsumerWidget {
     ]);
   }
 
+  Padding buildServices() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+      child: Container(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Szolgáltatások",
+            style: GoogleFonts.notoSansAnatolianHieroglyphs(
+                fontWeight: FontWeight.bold,
+                color: Colors.white60,
+                fontSize: 30),
+          )),
+    );
+  }
+
   Padding buildCoworkers() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
@@ -113,51 +125,9 @@ class DetailWidget_mobile extends ConsumerWidget {
             style: GoogleFonts.notoSansAnatolianHieroglyphs(
                 fontWeight: FontWeight.bold,
                 color: Colors.white60,
-                fontSize: 15),
+                fontSize: 30),
           )),
     );
-  }
-}
-
-class ServiceList extends ConsumerWidget {
-  const ServiceList({
-    Key? key,
-  }) : super(key: key);
-
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final serviceListContent = ref.watch(serviceListForShopContentProvider);
-    final serviceListState = ref.watch(serviceListForShopStateProvider);
-
-    return serviceListState.when(
-        data: (data) => data.isEmpty
-          ? const Center(child : Text('sajnos nem tudtuk a szolgáltatásokat behúzni'))
-            : Container(
-              height: 151,
-              child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              itemCount: serviceListContent.length,
-              itemBuilder: (BuildContext context, int index) {
-                final service = serviceListContent[index];
-                return ProviderScope(
-                    overrides: [currentService.overrideWithValue(service)],
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: ListTile(
-                        title: Text(service.serviceTitle!),
-                        subtitle: Text(service.serviceDescription!),
-                      ),
-                    )
-                );
-              }
-              ),
-        ),
-        error: (e,_)=>Text(e.toString()),
-        loading: () =>CircularProgressIndicator()
-    );
-
   }
 }
 
