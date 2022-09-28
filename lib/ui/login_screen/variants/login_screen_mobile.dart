@@ -63,7 +63,7 @@ class LoginScreen_mobile extends HookConsumerWidget{
                                 ),
                               ),
                               TextFormField(
-
+                                controller: emailController,
                                 style: TextStyle(color: Colors.black),
                                 cursorColor: Colors.black,
                                 decoration: InputDecoration(
@@ -105,7 +105,10 @@ class LoginScreen_mobile extends HookConsumerWidget{
                                 ),
                               ),
                               TextFormField(
-
+                                obscureText: true,
+                                enableSuggestions: false,
+                                autocorrect: false,
+                                controller: passwordController,
                                 style: TextStyle(color: Colors.black),
                                 cursorColor: Colors.black,
                                 decoration: InputDecoration(
@@ -139,7 +142,13 @@ class LoginScreen_mobile extends HookConsumerWidget{
                           height: MediaQuery.of(context).size.height/12,
                           child: Align(
                             alignment: Alignment.center,
-                            child: Text("Login"),
+                            child: TextButton(
+                               child:Text( "Login"),
+                              onPressed: (){
+                                ref.watch(authControllerProvider.notifier).signInAnonymously();
+                                Navigator.pushNamed(context,"/home");
+                              },
+                            ),
                           ),
                         ),
                       ),
