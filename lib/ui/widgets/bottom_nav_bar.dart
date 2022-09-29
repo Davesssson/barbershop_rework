@@ -10,7 +10,7 @@ import '../proba.dart';
 class BottomNavBar extends StatelessWidget {
   BottomNavBar({Key? key}) : super(key: key);
 
-  late PersistentTabController _controller= PersistentTabController(initialIndex: 0);
+  late PersistentTabController _controller= PersistentTabController(initialIndex: 2);
   late bool _hideNavBar= false;
 
   List<Widget> _buildScreens() {

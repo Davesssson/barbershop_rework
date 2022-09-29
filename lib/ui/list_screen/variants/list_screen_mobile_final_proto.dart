@@ -12,9 +12,7 @@ final serviceShop = Provider<Barbershop>((_) {
   throw UnimplementedError();
 });
 
-final featuredShop = Provider<Barbershop>((_) {
-  throw UnimplementedError();
-});
+
 
 class ListScreen_mobile_final_proto extends ConsumerWidget {
   ListScreen_mobile_final_proto({Key? key}) : super(key: key);
@@ -71,7 +69,7 @@ class ListScreen_mobile_final_proto extends ConsumerWidget {
           ItemsList2(
               stateProvider: barbershopListStateProvider,
               contentProvider: barbershopListContentProvider,
-              shopToWatch: featuredShop
+              shopToWatch: serviceShop
           ),
         ],
       ),

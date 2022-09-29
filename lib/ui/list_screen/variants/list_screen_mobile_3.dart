@@ -30,28 +30,8 @@ class ListScreen_mobile3 extends HookConsumerWidget {
         },
       ),
       body: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Autocomplete<String>(
-              optionsBuilder: (TextEditingValue textEditingValue) async {
-                if (textEditingValue.text == '') {
-                  return const Iterable<String>.empty();
-                }
-                return optionsState.when(
-                    data: (data){
-                      return data.where((String option){
-                        return option.contains(textEditingValue.text.toLowerCase());
-                      });
-                    },
-                    error: (error,_)=>const Iterable<String>.empty(),
-                    loading: () => const Iterable<String>.empty()
-                );
-              },
-              onSelected:(String selected){
-                ref.read(cityListFilterProvider.notifier).state = selected;
-                print("a beallitott allapot a barberlistanak a :");
-                print(selected);
-              }
-          ),
           barbershopsState.when(
               data: (shops) => shops.isEmpty
               ? const Center(
@@ -60,16 +40,20 @@ class ListScreen_mobile3 extends HookConsumerWidget {
                   style: TextStyle(fontSize: 20.0),
                 ),
               )
-              : ListView.builder(
-                shrinkWrap: true,
-                itemCount: barbershopsContent.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final item = barbershopsContent[index];
-                  return ProviderScope(
-                    overrides: [currentShop.overrideWithValue(item)],
-                    child:  ShopTile(),
-                  );
-                },
+              : SizedBox(
+                height: 100,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: barbershopsContent.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final item = barbershopsContent[index];
+                    return ProviderScope(
+                      overrides: [currentShop.overrideWithValue(item)],
+                      child: ShopTile()
+                    );
+                  },
+                ),
               ),
               error: (error,_)=>Text("errpr in details screen"),
               loading: () => const Center(child: CircularProgressIndicator())
@@ -100,10 +84,13 @@ class ShopTile extends HookConsumerWidget {
           ),
         );
       }, //TODO ITT KELL MEGADNI HOGY MILYEN APARMÉTERT ADUNK ÁT ÉS ARRA KELL FETCHELNI A DETAILSBAN
-      child: ListTile(
-        key: ValueKey(barbershop.id), //ez nemtudom mit csinal
-        title: Text(barbershop.name!),
-        subtitle: Text(barbershop.city!),
+      child: Container(
+        width: 500,
+        child: ListTile(
+          key: ValueKey(barbershop.id), //ez nemtudom mit csinal
+          title: Text(barbershop.name!),
+          subtitle: Text(barbershop.city!),
+        ),
       ),
     );
   }

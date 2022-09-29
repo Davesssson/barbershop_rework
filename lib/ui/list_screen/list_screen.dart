@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_3.dart';
+import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_final.dart';
 import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_final_proto.dart';
 import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_pagination_mine.dart';
 import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_services.dart';
@@ -11,7 +13,8 @@ class ListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ScreenTypeLayout(
-      mobile: ListScreen_mobile_final_proto(),
+      mobile: ListScreen_mobile_final(),
+      //mobile: ListScreen_mobile_final_proto(),
       desktop: Container(color: Colors.blue),
     );
   }

@@ -21,117 +21,55 @@ class ListScreen_mobile_final extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
-    final optionsState = ref.watch(cityListStateProvider);
-    final barbershopsFeaturedState = ref.watch(barbershopListFeaturedStateProvider);
-    final barbershopsFeaturedContent = ref.watch(barbershopListFeaturedContentProvider);
-    final barbershopsNearYouState = ref.watch(barbershopListStateProvider);
-    final barbershopsNearYouContent = ref.watch(barbershopListContentProvider);
-
     return Scaffold(
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(height: 25),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.all(8),
-              child: Text(
-                "Discover _______",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40,
-                  color: Colors.black,
-
-                ),
-              )
-            ),
-          ),
-          SizedBox(height: 25),
-          barbershopsFeaturedState.when(
-              data: (shops) => shops.isEmpty
-                  ? const Center(
-                child: Text(
-                  'no barbershop to display',
-                  style: TextStyle(fontSize: 20.0),
-                ),
-              )
-                  : SizedBox(
-                height: MediaQuery.of(context).size.height/3,
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: barbershopsFeaturedContent.length,
-                  separatorBuilder: (context, index){
-                    return const SizedBox(width: 20);
-                  },
-                  itemBuilder: (BuildContext context, int index) {
-                    final item = barbershopsFeaturedContent[index];
-                    return ProviderScope(
-                        overrides: [currentShop_final.overrideWithValue(item)],
-                        child: Hero(tag:'asd',child: ShopTile3(shopToWatch:currentShop_final))
-                    );
-                  },
-                ),
-              ),
-              error: (error,_)=>Text("errpr in details screen"),
-              loading: () => const Center(child: CircularProgressIndicator())
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
+      body: ListView(
+        children:[// Column( //TODO ha valami összefossa magát akkor a ListViewt cseréld ki Column-ra és állítsd be a
+          //mainAxisSize: MainAxisSize.min,
+         // children: [
+            SizedBox(height: 25),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
                 padding: EdgeInsets.all(8),
                 child: Text(
-                  "Near you",
+                  "Discover _______",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 30,
+                    fontSize: 40,
                     color: Colors.black,
 
                   ),
                 )
-            ),
-          ),
-          barbershopsNearYouState.when(
-              data: (shops) => shops.isEmpty
-                  ? const Center(
-                child: Text(
-                  'no barbershop to display',
-                  style: TextStyle(fontSize: 20.0),
-                ),
-              )
-                  : SizedBox(
-                height: MediaQuery.of(context).size.height/3,
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: barbershopsNearYouContent.length,
-                  separatorBuilder: (context, index){
-                    return const SizedBox(width: 20);
-                  },
-                  itemBuilder: (BuildContext context, int index) {
-                    final item = barbershopsNearYouContent[index];
-                    return ProviderScope(
-                        overrides: [currentShop_final.overrideWithValue(item)],
-                        child: ShopTile3(shopToWatch:currentShop_final)
-                    );
-                  },
-                ),
               ),
-              error: (error,_)=>Text("errpr in details screen"),
-              loading: () => const Center(child: CircularProgressIndicator())
-          ),
-          HorizontalList(
-              stateProvider:barbershopListStateProvider ,
-              contentProvider: barbershopListContentProvider,
-              shopToWatch: featuredShop
-          )
+            ),  //Discover
+            SizedBox(height: 25),
+            HorizontalList(
+                stateProvider: barbershopListFeaturedStateProvider,
+                contentProvider: barbershopListFeaturedContentProvider,
+                shopToWatch: featuredShop
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Text(
+                    "Near you",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                      color: Colors.black,
 
-
-        ],
-      ),
-
+                    ),
+                  )
+              ),
+            ), //Near You
+            HorizontalList(
+                stateProvider: barbershopListStateProvider, //TODO Cseréld ki ténylegesen a Near You-ra
+                contentProvider: barbershopListContentProvider,
+                shopToWatch: nearYouShop
+            ),
+          ],
+        ),
     );
   }
 }
@@ -158,7 +96,7 @@ class HorizontalList extends ConsumerWidget{
           return data.isEmpty
               ? SizedBox(height: 100, child: Text("Sanjnos nincsen adat a horizontalList-ben"),)
               : SizedBox(
-                  height: MediaQuery.of(context).size.height/3,
+                  height: MediaQuery.of(context).size.height/3.2,
                   child: ListView.separated(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
@@ -182,3 +120,9 @@ class HorizontalList extends ConsumerWidget{
   }
 
 }
+final featuredShop = Provider<Barbershop>((_) {
+  throw UnimplementedError();
+});
+final nearYouShop = Provider<Barbershop>((_) {
+  throw UnimplementedError();
+});
