@@ -45,16 +45,14 @@ class ShopTile3 extends HookConsumerWidget {
                       fit:BoxFit.contain,
                     ),
                   ),
-                  Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                            colors: [Colors.black,Colors.transparent]
-                          )
-                        ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [Colors.black,Colors.transparent]
                       )
+                    ),
                   ),
                   Positioned(
                     bottom: 50,

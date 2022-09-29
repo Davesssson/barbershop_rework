@@ -56,7 +56,7 @@ class serviceTile2 extends StatelessWidget {
       height: MediaQuery.of(context).size.height/10,
       width: MediaQuery.of(context).size.width,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -85,6 +85,7 @@ class serviceTile2 extends StatelessWidget {
               )
             ],
           ),
+          SizedBox(width: 30),
           Container(
             decoration: BoxDecoration(
               border: Border.all(

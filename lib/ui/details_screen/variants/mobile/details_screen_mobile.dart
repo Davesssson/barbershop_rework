@@ -18,7 +18,7 @@ class DetailsScreen_mobile extends HookConsumerWidget {
         ModalRoute.of(context)?.settings.arguments as Barbershop;
 
     return Scaffold(
-        extendBodyBehindAppBar: true,
+        //extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
