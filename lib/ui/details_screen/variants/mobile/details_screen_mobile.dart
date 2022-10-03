@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
+import 'package:flutter_shopping_list/ui/calendar_screen/calendar_screen.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/barberList.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/header.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/serviceList.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'dart:developer' as developer;
 import '../../../../models/barber/barber_model.dart';
 import '../../../../models/service/service_model.dart';
@@ -49,6 +51,16 @@ class DetailWidget_mobile extends ConsumerWidget {
       BarberList(),
       buildServices(),
       ServiceList(),
+      TextButton(
+          onPressed: () {
+            pushNewScreenWithRouteSettings(
+              context,
+              settings: RouteSettings(name: '/calendar'),
+              screen: calendarScreen(),
+            );
+          },
+          child: Text("kattints ram")
+      ),
       SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
