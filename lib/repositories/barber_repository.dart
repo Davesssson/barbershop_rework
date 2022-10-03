@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_shopping_list/models/availability/availability_time_slot_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../general_providers.dart';
 import '../models/barber/barber_model.dart';
@@ -77,6 +78,33 @@ class BarberRepository implements BaseBarberRepository{
     developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop2] - Barbers retrieved from shop.");
     try {//EZ JÓ DE CSAK 10 IG MUKODIK
       final snap = await _read(firebaseFirestoreProvider).collection('barbers').where('barbershop_id', isEqualTo: shopId).get();
+      asd('a');
+      return snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
+    } on FirebaseException catch (e) {
+      developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers retrieve exception.");
+      throw CustomException(message: e.message);
+    }
+  }
+
+  Future<List<Barber>> asd(String shopId) async{
+    developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop2] - Barbers retrieved from shop.");
+    try {//EZ JÓ DE CSAK 10 IG MUKODIK
+      final snap = await _read(firebaseFirestoreProvider).collection('barbers').doc('8KyCYKVgBtKd6Rfec4ZD').collection('availability').get();
+
+      Iterable<String> keys = [];
+      snap.docs.forEach((element) {
+        keys = element.data().keys;
+      });
+      print(keys);
+      List<AvailabilityTimeSlot> timeslots =[];
+      snap.docs.forEach((doc) {
+        keys.forEach((key) {
+          print(doc[key]);
+          timeslots.add( AvailabilityTimeSlot.fromJson(doc[key]));
+        });
+      });
+      print("namost");
+      print(timeslots.toString());
       return snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
       developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers retrieve exception.");
