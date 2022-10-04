@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
-import 'package:flutter_shopping_list/ui/calendar_screen/calendar_screen.dart';
+import 'package:flutter_shopping_list/ui/book_screen/choose_barber.dart';
+import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/about.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/barberList.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/header.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/serviceList.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_place/google_place.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'dart:developer' as developer;
+import '../../../../controllers/place_controller.dart';
 import '../../../../models/barber/barber_model.dart';
 import '../../../../models/service/service_model.dart';
 
@@ -18,7 +21,6 @@ class DetailsScreen_mobile extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final Barbershop barbershop =
         ModalRoute.of(context)?.settings.arguments as Barbershop;
-
     return Scaffold(
         //extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -35,11 +37,63 @@ class DetailsScreen_mobile extends HookConsumerWidget {
 
 class DetailWidget_mobile extends ConsumerWidget {
   final Barbershop bs;
-  const DetailWidget_mobile({Key? key, required this.bs}) : super(key: key);
+  DetailWidget_mobile({Key? key, required this.bs}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //TODO EZT KELL ÁTÍRNI ÚGY, HOGY A WIDGET BUILDELJEN, CSAK AZ ADOTT KONTÉNER MUTASSON MÁST
+    return DefaultTabController(
+        length: 4,
+        child: NestedScrollView(
+          scrollDirection: Axis.vertical,
+          headerSliverBuilder: (context, innerBoxIsScrolled) => [
+              SliverToBoxAdapter(
+                  child:Column(
+                      children: [
+                        Header(bs: bs),
+                        Container(
+                          height: 50,
+                          color: Colors.red,
+                          child: Text("Ide jon még az elérhetőség"),
+                        ),
+                        buildCoworkers(),
+                        BarberList(),
+                        //buildServices(),
+                        //ServiceList(),
+                        TextButton(
+                            onPressed: () {
+                              pushNewScreenWithRouteSettings(
+                                context,
+                                settings: RouteSettings(name: '/book'),
+                                screen: chooseBarber(),
+                              );
+                            },
+                            child: Text("kattints ram")
+                        ),
+                        TabBar(
+                          tabs: [
+                            Tab(child:Text('General')),
+                            Tab(child:Text('Szolgáltatások')),
+                            Tab(child:Text('Termékek')),
+                            Tab(child:Text('Reviews')),
+                          ],
+                        )
+                      ]
+                  )
+              )
+            ],
+          body: TabBarView(
+            children: [
+              buildAbout(),
+              ServiceList(),
+              //Container(color: Colors.blue,height: 200,),
+              buildReviews(),
+              //Container(color: Colors.red,height: 200,),
+              Container(color: Colors.green,height: 200,),
+            ],
+          ),
+        ),
+    );
+
     return ListView(children: [
       Header(bs: bs),
       Container(
@@ -55,59 +109,11 @@ class DetailWidget_mobile extends ConsumerWidget {
           onPressed: () {
             pushNewScreenWithRouteSettings(
               context,
-              settings: RouteSettings(name: '/calendar'),
-              screen: calendarScreen(),
+              settings: RouteSettings(name: '/book'),
+              screen: chooseBarber(),
             );
           },
           child: Text("kattints ram")
-      ),
-      SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              Container(
-                height: 40,
-                width: 100,
-                color: Colors.blue,
-              ),
-              Container(
-                height: 40,
-                width: 100,
-                color: Colors.red,
-              ),
-              Container(
-                height: 40,
-                width: 100,
-                color: Colors.green,
-              ),
-              Container(
-                height: 40,
-                width: 100,
-                color: Colors.blue,
-              ),
-              Container(
-                height: 40,
-                width: 100,
-                color: Colors.grey,
-              ),
-              Container(
-                height: 40,
-                width: 100,
-                color: Colors.green,
-              ),
-            ],
-          )),
-      Container(
-        height: 300,
-        color: Colors.red,
-      ),
-      Container(
-        height: 300,
-        color: Colors.blue,
-      ),
-      Container(
-        height: 300,
-        color: Colors.green,
       ),
     ]);
   }
@@ -142,6 +148,80 @@ class DetailWidget_mobile extends ConsumerWidget {
     );
   }
 }
+
+class buildReviews extends ConsumerWidget {
+  const buildReviews({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context,WidgetRef ref) {
+    final detailsResult = ref.watch(detailsResultProvider('ChIJP6SRA2bcQUcRd4Q6z-4PUTI'));
+
+    return detailsResult.when(
+        data: (DetailsResult d){
+          return ListView.builder(
+            itemCount: d.reviews!.length,
+            itemBuilder: (context,index){
+              final currentReview = d.reviews![index];
+              return Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Expanded(
+                        child: Image.network(
+                          currentReview.profilePhotoUrl!,
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            currentReview.authorName!,
+                            //style: FlutterFlowTheme.of(context).subtitle1,
+                          ),
+                          Text(
+                            currentReview.time!.toString(),
+                            //style: FlutterFlowTheme.of(context).bodyText2,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
+                    child: Icon(
+                      Icons.arrow_right,
+                      color: Colors.black,
+                      size: 24,
+                    ),
+                  ),
+                ],
+              );
+
+            },
+          );
+        } ,
+        error: (e,_){return Text("fos");},
+        loading: (){return CircularProgressIndicator();}
+    );
+  }
+}
+
+
 
 final currentBarber = Provider<Barber>((_) {
   developer.log("[item_list_screen_mobile.dart][currentItem] - ??????.");
