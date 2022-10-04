@@ -9,7 +9,6 @@ class AvailabilityTimeSlot with _$AvailabilityTimeSlot{
   const AvailabilityTimeSlot._();
 
   factory AvailabilityTimeSlot({
-    String? id,
     bool? available,
     int? end,
     int? start,
@@ -17,7 +16,7 @@ class AvailabilityTimeSlot with _$AvailabilityTimeSlot{
 
   factory AvailabilityTimeSlot.fromDocument(DocumentSnapshot doc) {
     final data = doc.data()!;
-    return AvailabilityTimeSlot.fromJson(data as Map<String,dynamic>).copyWith(id: doc.id);
+    return AvailabilityTimeSlot.fromJson(data as Map<String,dynamic>);
   }
 
   factory AvailabilityTimeSlot.fromJson(Map<String, dynamic> json) => _$AvailabilityTimeSlotFromJson(json);

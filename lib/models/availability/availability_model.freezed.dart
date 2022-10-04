@@ -20,12 +20,8 @@ Availability _$AvailabilityFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Availability {
-  String? get barbershop_id => throw _privateConstructorUsedError;
   String? get id => throw _privateConstructorUsedError;
-  String? get name => throw _privateConstructorUsedError;
-  String? get description => throw _privateConstructorUsedError;
-  String? get prof_pic => throw _privateConstructorUsedError;
-  List<String>? get works => throw _privateConstructorUsedError;
+  List<AvailabilityTimeSlot>? get slots => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -38,13 +34,7 @@ abstract class $AvailabilityCopyWith<$Res> {
   factory $AvailabilityCopyWith(
           Availability value, $Res Function(Availability) then) =
       _$AvailabilityCopyWithImpl<$Res>;
-  $Res call(
-      {String? barbershop_id,
-      String? id,
-      String? name,
-      String? description,
-      String? prof_pic,
-      List<String>? works});
+  $Res call({String? id, List<AvailabilityTimeSlot>? slots});
 }
 
 /// @nodoc
@@ -57,38 +47,18 @@ class _$AvailabilityCopyWithImpl<$Res> implements $AvailabilityCopyWith<$Res> {
 
   @override
   $Res call({
-    Object? barbershop_id = freezed,
     Object? id = freezed,
-    Object? name = freezed,
-    Object? description = freezed,
-    Object? prof_pic = freezed,
-    Object? works = freezed,
+    Object? slots = freezed,
   }) {
     return _then(_value.copyWith(
-      barbershop_id: barbershop_id == freezed
-          ? _value.barbershop_id
-          : barbershop_id // ignore: cast_nullable_to_non_nullable
-              as String?,
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String?,
-      name: name == freezed
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-      description: description == freezed
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
-      prof_pic: prof_pic == freezed
-          ? _value.prof_pic
-          : prof_pic // ignore: cast_nullable_to_non_nullable
-              as String?,
-      works: works == freezed
-          ? _value.works
-          : works // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+      slots: slots == freezed
+          ? _value.slots
+          : slots // ignore: cast_nullable_to_non_nullable
+              as List<AvailabilityTimeSlot>?,
     ));
   }
 }
@@ -100,13 +70,7 @@ abstract class _$$_AvailabilityCopyWith<$Res>
           _$_Availability value, $Res Function(_$_Availability) then) =
       __$$_AvailabilityCopyWithImpl<$Res>;
   @override
-  $Res call(
-      {String? barbershop_id,
-      String? id,
-      String? name,
-      String? description,
-      String? prof_pic,
-      List<String>? works});
+  $Res call({String? id, List<AvailabilityTimeSlot>? slots});
 }
 
 /// @nodoc
@@ -122,38 +86,18 @@ class __$$_AvailabilityCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? barbershop_id = freezed,
     Object? id = freezed,
-    Object? name = freezed,
-    Object? description = freezed,
-    Object? prof_pic = freezed,
-    Object? works = freezed,
+    Object? slots = freezed,
   }) {
     return _then(_$_Availability(
-      barbershop_id: barbershop_id == freezed
-          ? _value.barbershop_id
-          : barbershop_id // ignore: cast_nullable_to_non_nullable
-              as String?,
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String?,
-      name: name == freezed
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-      description: description == freezed
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
-      prof_pic: prof_pic == freezed
-          ? _value.prof_pic
-          : prof_pic // ignore: cast_nullable_to_non_nullable
-              as String?,
-      works: works == freezed
-          ? _value._works
-          : works // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+      slots: slots == freezed
+          ? _value._slots
+          : slots // ignore: cast_nullable_to_non_nullable
+              as List<AvailabilityTimeSlot>?,
     ));
   }
 }
@@ -161,33 +105,19 @@ class __$$_AvailabilityCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_Availability extends _Availability {
-  _$_Availability(
-      {this.barbershop_id,
-      this.id,
-      this.name,
-      this.description,
-      this.prof_pic,
-      final List<String>? works})
-      : _works = works,
+  _$_Availability({this.id, final List<AvailabilityTimeSlot>? slots})
+      : _slots = slots,
         super._();
 
   factory _$_Availability.fromJson(Map<String, dynamic> json) =>
       _$$_AvailabilityFromJson(json);
 
   @override
-  final String? barbershop_id;
-  @override
   final String? id;
+  final List<AvailabilityTimeSlot>? _slots;
   @override
-  final String? name;
-  @override
-  final String? description;
-  @override
-  final String? prof_pic;
-  final List<String>? _works;
-  @override
-  List<String>? get works {
-    final value = _works;
+  List<AvailabilityTimeSlot>? get slots {
+    final value = _slots;
     if (value == null) return null;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
@@ -195,7 +125,7 @@ class _$_Availability extends _Availability {
 
   @override
   String toString() {
-    return 'Availability(barbershop_id: $barbershop_id, id: $id, name: $name, description: $description, prof_pic: $prof_pic, works: $works)';
+    return 'Availability(id: $id, slots: $slots)';
   }
 
   @override
@@ -203,26 +133,16 @@ class _$_Availability extends _Availability {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Availability &&
-            const DeepCollectionEquality()
-                .equals(other.barbershop_id, barbershop_id) &&
             const DeepCollectionEquality().equals(other.id, id) &&
-            const DeepCollectionEquality().equals(other.name, name) &&
-            const DeepCollectionEquality()
-                .equals(other.description, description) &&
-            const DeepCollectionEquality().equals(other.prof_pic, prof_pic) &&
-            const DeepCollectionEquality().equals(other._works, _works));
+            const DeepCollectionEquality().equals(other._slots, _slots));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(barbershop_id),
       const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(name),
-      const DeepCollectionEquality().hash(description),
-      const DeepCollectionEquality().hash(prof_pic),
-      const DeepCollectionEquality().hash(_works));
+      const DeepCollectionEquality().hash(_slots));
 
   @JsonKey(ignore: true)
   @override
@@ -239,29 +159,17 @@ class _$_Availability extends _Availability {
 
 abstract class _Availability extends Availability {
   factory _Availability(
-      {final String? barbershop_id,
-      final String? id,
-      final String? name,
-      final String? description,
-      final String? prof_pic,
-      final List<String>? works}) = _$_Availability;
+      {final String? id,
+      final List<AvailabilityTimeSlot>? slots}) = _$_Availability;
   _Availability._() : super._();
 
   factory _Availability.fromJson(Map<String, dynamic> json) =
       _$_Availability.fromJson;
 
   @override
-  String? get barbershop_id;
-  @override
   String? get id;
   @override
-  String? get name;
-  @override
-  String? get description;
-  @override
-  String? get prof_pic;
-  @override
-  List<String>? get works;
+  List<AvailabilityTimeSlot>? get slots;
   @override
   @JsonKey(ignore: true)
   _$$_AvailabilityCopyWith<_$_Availability> get copyWith =>
