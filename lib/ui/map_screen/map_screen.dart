@@ -7,6 +7,7 @@ import 'package:location/location.dart';
 import '../../controllers/city_controller/city_providers.dart';
 import '../../controllers/marker_controller/marker_providers.dart';
 
+//https://blog.bal.al/how-to-fix-cors-error-for-your-flutter-web-app
 //https://github.com/themaaz32/auto_complete/blob/main/lib/main.dart
 //https://pub.dev/packages/google_maps_cluster_manager
 class MapScreen extends ConsumerWidget {
@@ -58,7 +59,7 @@ class MapScreen extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         extendedPadding:EdgeInsets.fromLTRB(0, 0, 0, 50),
-        onPressed: _animateToUser,
+        onPressed: placesAPI,
         label: Text('To the asdasdasdasdasda!'),
         icon: Icon(Icons.directions_boat),
       ),
