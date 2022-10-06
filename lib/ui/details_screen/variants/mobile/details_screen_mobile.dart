@@ -38,7 +38,7 @@ class DetailsScreen_mobile extends HookConsumerWidget {
 class DetailWidget_mobile extends ConsumerWidget {
   final Barbershop bs;
   DetailWidget_mobile({Key? key, required this.bs}) : super(key: key);
-
+  final items = List<String>.generate(10000, (i) => 'Item $i');
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultTabController(
@@ -88,7 +88,18 @@ class DetailWidget_mobile extends ConsumerWidget {
               //Container(color: Colors.blue,height: 200,),
               buildReviews(),
               //Container(color: Colors.red,height: 200,),
-              Container(color: Colors.green,height: 200,),
+              GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                  ),
+                  itemCount: 4,
+                  itemBuilder: (context,index){
+                    return Container(
+                      height: MediaQuery.of(context).size.height/2,
+                      width: MediaQuery.of(context).size.width/2,
+                      child: Text(items[index].toString()),
+                    );
+                  })
             ],
           ),
         ),
@@ -156,60 +167,21 @@ class buildReviews extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context,WidgetRef ref) {
-    final detailsResult = ref.watch(detailsResultProvider('ChIJP6SRA2bcQUcRd4Q6z-4PUTI'));
+    final detailsResponse = ref.watch(detailsResultProvider('ChIJP6SRA2bcQUcRd4Q6z-4PUTI'));
 
-    return detailsResult.when(
-        data: (DetailsResult d){
+    return detailsResponse.when(
+        data: (DetailsResponse d){
           return ListView.builder(
-            itemCount: d.reviews!.length,
+            itemCount: d.result!.reviews!.length,
             itemBuilder: (context,index){
-              final currentReview = d.reviews![index];
-              return Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Expanded(
-                        child: Image.network(
-                          currentReview.profilePhotoUrl!,
-                          width: 60,
-                          height: 60,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            currentReview.authorName!,
-                            //style: FlutterFlowTheme.of(context).subtitle1,
-                          ),
-                          Text(
-                            currentReview.time!.toString(),
-                            //style: FlutterFlowTheme.of(context).bodyText2,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
-                    child: Icon(
-                      Icons.arrow_right,
-                      color: Colors.black,
-                      size: 24,
-                    ),
-                  ),
-                ],
+              final currentReview = d.result!.reviews![index];
+              return ListTile(
+                //leading: Image.network(currentReview.profilePhotoUrl!),
+                title: Padding(
+                  padding: const EdgeInsets.only(top:3,bottom: 3),
+                  child: Text(currentReview.authorName!),
+                ),
+                subtitle: Text(currentReview.text!),
               );
 
             },
