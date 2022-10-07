@@ -6,6 +6,8 @@ import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../controllers/barber_controller/barber_providers.dart';
+import '../../controllers/timeslot/timeslot_controller.dart';
+import '../../controllers/timeslot/timeslot_providers.dart';
 import '../../models/availability/availability_model.dart';
 
 class chooseTime extends ConsumerWidget {
@@ -13,9 +15,10 @@ class chooseTime extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final details = ref.watch(availabilityProvider);
+    final details = ref.watch(AvailabilityListStateProvider);
     final barbersState = ref.watch(barberListForShopStateProvider);
     final barbersContent = ref.watch(barberListForShopContentProvider);
+    final chooseTime = ref.watch(AvailabilityListContentProvider);
     
     List<DateTime> list = [];
     
@@ -28,16 +31,40 @@ class chooseTime extends ConsumerWidget {
               children:[
                   SfDateRangePicker(
                     enablePastDates: false,
+                    allowViewNavigation: true,
                     enableMultiView: false,
                     monthViewSettings: DateRangePickerMonthViewSettings(
-                        blackoutDates:[
-                          ...data.map((e) { // ide még kell egy csekk, hogy csak akkor legyen engedélyezett hogyha van szabad timeslot
-                            final asd = e.id!.split("-");
-                            print(asd);
-                            return DateTime(int.parse(asd[0]),int.parse(asd[1]),int.parse(asd[2]));
-                          }).toList()
-                        ]
+                      firstDayOfWeek: 7,
+                      numberOfWeeksInView: 1,
+                      blackoutDates:[
+                        ...data.map((e) { // ide még kell egy csekk, hogy csak akkor legyen engedélyezett hogyha van szabad timeslot
+                          final asd = e.id!.split("-");
+                          print(asd);
+                          return DateTime(int.parse(asd[0]),int.parse(asd[1]),int.parse(asd[2]));
+                        }).toList()
+                      ],
                     ),
+                    onSelectionChanged: (DateRangePickerSelectionChangedArgs arg){
+                      final date = arg.value.toString().split(" ");
+                      final dateComponents = date[0].split("-");
+                      print("date");
+                      print(date.toString());
+                      print("dateComponents");
+                      print(dateComponents.toString());
+                      print("AvailabilityFilterProvider state = ");
+                      print(ref.read(availabilityFilterProvider.notifier).state.toString());
+                      print("most állítom át");
+                      ref.read(availabilityFilterProvider.notifier).state = DateTime(int.parse(dateComponents[0]),int.parse(dateComponents[1]),int.parse(dateComponents[2]));
+                      print("átállított után");
+                      print(ref.read(availabilityFilterProvider.notifier).state);
+                      print(arg.value.toString());
+                    },
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 80,
+                  color: Colors.green,
+                  child: Text(chooseTime.slots!.length.toString()),
                 ),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,

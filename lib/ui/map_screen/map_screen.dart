@@ -59,7 +59,7 @@ class MapScreen extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         extendedPadding:EdgeInsets.fromLTRB(0, 0, 0, 50),
-        onPressed: placesAPI,
+        onPressed: _animateToUser,
         label: Text('To the asdasdasdasdasda!'),
         icon: Icon(Icons.directions_boat),
       ),

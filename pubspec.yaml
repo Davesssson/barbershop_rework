@@ -46,6 +46,11 @@ dependencies:
   geoflutterfire: ^3.0.3
   location: ^4.4.0
   google_fonts: ^3.0.1
+  google_place: ^0.4.7
+  cloud_functions: ^3.3.9
+  syncfusion_flutter_calendar: ^20.3.47
+  http: ^0.13.5
+  syncfusion_flutter_datepicker: ^20.3.48
 
 dev_dependencies:
   flutter_test:
