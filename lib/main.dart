@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/constants/theme_data.dart';
 import 'package:flutter_shopping_list/controllers/theme_controller.dart';
+import 'package:flutter_shopping_list/ui/admin_screen/admin_screen.dart';
 import 'package:flutter_shopping_list/ui/details_screen/details_screen.dart';
 import 'package:flutter_shopping_list/ui/home_screen.dart';
 import 'package:flutter_shopping_list/ui/login_screen/login_screen.dart';
@@ -25,11 +26,14 @@ class MyApp extends ConsumerWidget {
       themeMode:ref.watch(ThemeModeProvider),
       theme: ThemeClass.light,
       darkTheme: ThemeClass.dark,
-      initialRoute:'/login' ,
+      initialRoute:'/admin' ,
       routes:{
         '/details':(context)=>DetailsScreen(),
         '/login':(context)=> LoginScreen(),
         '/home':(context)=>HomeScreen(),
+        '/admin':(context)=>adminScreen(),
+
+
         //'/navbar':(context)=>NavBar()
        } ,
     );
