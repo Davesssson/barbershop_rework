@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_shopping_list/ui/admin_screen/edit_barber_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import '../../controllers/barber_controller/barber_providers.dart';
 
 
 class admin_barbers extends ConsumerWidget {
-  const admin_barbers({
+   admin_barbers({
     Key? key,
   }) : super(key: key);
+
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,10 +21,38 @@ class admin_barbers extends ConsumerWidget {
         data: (barbers){
            return barbers.isEmpty
               ? Container(child: Text("Hat tesom, neked nincsenek barbereid. Veszel fel?"),color: Colors.red,)
-              :ListView(
+              : Container(
+                child: GridView.builder(
+                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                     maxCrossAxisExtent: 400,
+                     childAspectRatio: 3 / 2,
+                     crossAxisSpacing: 20,
+                     mainAxisSpacing: 20
+                 ),
+                 itemCount: barberContent.length,
+                 itemBuilder: (BuildContext context, index) {
+                   final barber = barberContent[index];
+                   return InkWell(
+                     onTap: (){},
+                     child: Container(
+                       alignment: Alignment.center,
+                       decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                barber.prof_pic!
+                              )
+                            ),
+                           color: Colors.amber,
+                           borderRadius: BorderRadius.circular(15)),
+                       child: Text(barber.name!),
+                     ),
+                   );
+                 }
+                ),
+              );
+          /*ListView(
                 children:[
                   DataTable(
-                  sortAscending: true,
                   border: TableBorder.all(),
                   columns: [
                     DataColumn(label: Text("Name")),
@@ -31,8 +62,14 @@ class admin_barbers extends ConsumerWidget {
                   rows: [
                     ...barbers.map((e) {
                       return DataRow(
+                          onSelectChanged: (_){
+
+                          },
                           cells: [
-                            DataCell(Text(e.name!)),
+                            DataCell(
+                                Text(e.name!),
+                              onTap:
+                            ),
                             DataCell(Text("asd")),
                             DataCell(Text("asd")),
                           ]
@@ -48,7 +85,7 @@ class admin_barbers extends ConsumerWidget {
                   )
 
                 ]
-              );
+              );*/
         },
         error: (e,_){return Text(e.toString());},
         loading: (){return CircularProgressIndicator();}
