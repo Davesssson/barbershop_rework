@@ -8,6 +8,8 @@ import '../models/barber/barber_model.dart';
 import 'custom_exception.dart';
 import 'dart:developer' as developer;
 
+//https://firebase.google.com/docs/firestore/manage-data/add-data
+
 abstract class BaseBarberRepository {
   Future<List<Barber>> retrieveBarbers();
   Future<Barber> retrieveSingleBarbersFromShop(String id);
@@ -101,6 +103,46 @@ class BarberRepository implements BaseBarberRepository{
       return snap.docs.map((doc) => Availability.fromDocumentCustom(doc)).toList();
     } on FirebaseException catch (e) {
       developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers retrieve exception.");
+      throw CustomException(message: e.message);
+    }
+  }
+
+  Future<void> updateBarber({required Barber barber}) async {
+    developer.log("[itemrepository.dart][itemRepository][updateItem] - Item updated.");
+    try {
+      await _read(firebaseFirestoreProvider)
+          .collection('barbers')
+          .doc(barber.id)
+          .update(barber.toDocument());
+    } on FirebaseException catch (e) {
+      developer.log("[itemrepository.dart][itemRepository][updateItem] - Update item exception.");
+      throw CustomException(message: e.message);
+    }
+  }
+
+  @override
+  Future<String> createItem({
+    //required String userId,
+    required Barber newBarber,
+  }) async {
+    developer.log("[itemrepository.dart][itemRepository][createItem] - Item created.");
+    try {
+      final docRef = await _read(firebaseFirestoreProvider)
+          .collection('barbers')
+          .add(newBarber.toDocument());
+      final addToShop = await _read(firebaseFirestoreProvider)
+          .collection('barbershops')
+          .doc(newBarber.barbershop_id)
+          .update({
+              "barbers":FieldValue.arrayUnion([docRef.id])
+           });
+
+    
+      //print(addToShop.get().then((value) => value['barbers']));
+      return docRef.id;
+      return "asd";
+    } on FirebaseException catch (e) {
+      developer.log("[itemrepository.dart][itemRepository][createItem] - Item create exception.");
       throw CustomException(message: e.message);
     }
   }

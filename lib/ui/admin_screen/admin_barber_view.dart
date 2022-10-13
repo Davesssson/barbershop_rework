@@ -5,23 +5,64 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import '../../controllers/barber_controller/barber_providers.dart';
-
+import '../../models/barber/barber_model.dart';
 
 class admin_barbers extends ConsumerWidget {
-   admin_barbers({
+  admin_barbers({
     Key? key,
   }) : super(key: key);
-
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final barberState = ref.watch(barberListForShopStateProvider);
     final barberContent = ref.watch(barberListForShopContentProvider);
-    return barberState.when(
-        data: (barbers){
-           return barbers.isEmpty
-              ? Container(child: Text("Hat tesom, neked nincsenek barbereid. Veszel fel?"),color: Colors.red,)
-              : Container(
+    return barberState.when(data: (barbers) {
+      return barbers.isEmpty
+          ? Container(
+              child: Text("Hat tesom, neked nincsenek barbereid. Veszel fel?"),
+              color: Colors.red,
+            )
+          : GridView.count(
+              mainAxisSpacing: 20,
+              crossAxisSpacing: 20,
+              crossAxisCount: (MediaQuery.of(context).size.width / 350).toInt(),
+              children: [
+                ...barberContent.map((existingBarber) {
+                  return InkWell(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context){
+                            return editView( barberUnderEdit: existingBarber, );
+                          }
+                      ));
+                    },
+                    child: Container(
+                      height: 50,
+                      width: 50,
+                      color: Colors.black,
+                      child: Text(existingBarber.name!),
+                    ),
+                  );
+                }).toList(),
+                InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context){
+                          return editView( barberUnderEdit: null,);
+                        }
+                    ));
+                  },
+                  child: Container(
+                    height: 50,
+                    width: 50,
+                    color: Colors.black,
+                    child: Text("add new"),
+                  ),
+                ),
+              ],
+            );
+      //region GridView
+      /* : Container(
                 child: GridView.builder(
                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                      maxCrossAxisExtent: 400,
@@ -49,8 +90,10 @@ class admin_barbers extends ConsumerWidget {
                    );
                  }
                 ),
-              );
-          /*ListView(
+              );*/
+      //endregion GridView
+      //region Table
+      /*ListView(
                 children:[
                   DataTable(
                   border: TableBorder.all(),
@@ -86,10 +129,12 @@ class admin_barbers extends ConsumerWidget {
 
                 ]
               );*/
-        },
-        error: (e,_){return Text(e.toString());},
-        loading: (){return CircularProgressIndicator();}
-    );
+      //endregion Table
+    }, error: (e, _) {
+      return Text(e.toString());
+    }, loading: () {
+      return CircularProgressIndicator();
+    });
   }
 }
 
@@ -100,8 +145,8 @@ class AddItemDialog extends HookConsumerWidget {
       builder: (context) => AddItemDialog(),
     );
   }
-  const AddItemDialog({Key? key}) : super(key: key);
 
+  const AddItemDialog({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -121,11 +166,9 @@ class AddItemDialog extends HookConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                ),
-                onPressed: () {
-                },
-                child: Text( 'Add'),
+                style: ElevatedButton.styleFrom(),
+                onPressed: () {},
+                child: Text('Add'),
               ),
             ),
           ],
@@ -134,4 +177,3 @@ class AddItemDialog extends HookConsumerWidget {
     );
   }
 }
-

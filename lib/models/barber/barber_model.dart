@@ -23,5 +23,7 @@ class Barber with _$Barber{
     return Barber.fromJson(data as Map<String,dynamic>).copyWith(id: doc.id);
   }
 
+  Map<String, dynamic> toDocument() => toJson()..remove('id');
+
   factory Barber.fromJson(Map<String, dynamic> json) => _$BarberFromJson(json);
 }

@@ -13,7 +13,8 @@ class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
 
   BarberListStateController.forShop( this._read):super(AsyncValue.loading()){
     developer.log("[barber_controller.dart][BarberListStateController][BarberListStateController] - BarberListStateController constructed.");
-    retrieveBarbersFromShop2("asd");
+    //retrieveBarbersFromShop2("asd");
+    retrieveBarbersFromShopOnlyForAdmin();
   }
 
   Future<void> retrieveBarbers({bool isRefreshing = false}) async {
@@ -45,12 +46,11 @@ class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
       state = AsyncValue.error(e);
     }
   }
-
-  Future<void> retrieveBarbersFromShop(List<String> ids, {bool isRefreshing = false}) async {
+  Future<void> retrieveBarbersFromShopOnlyForAdmin( {bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
       developer.log("[barber_controller.dart][BarberListStateController][retrieveBarbersFromShop] - retrieveBarbersFromShop.");
-      final items = await _read(barberRepositoryProvider).retrieveBarbersFromShop(ids);
+      final items = await _read(barberRepositoryProvider).retrieveBarbersFromShop2('7HTJ8DF8hFwUnrL566Wc');
       if (mounted) {
         state = AsyncValue.data(items);
       }
@@ -70,6 +70,43 @@ class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
     } on CustomException catch (e) {
       developer.log("[barber_controller.dart][BarberListStateController][retrieveBarbersFromShop2] - retrieveBarbersFromShop Exception.");
       state = AsyncValue.error(e);
+    }
+  }
+  Future<void> updateBarber({required Barber updatedBarber}) async {
+    try {
+      developer.log("[item_list_controller.dart][ItemListController][updateItem] - updateItem ");
+      await _read(barberRepositoryProvider)
+          .updateBarber(barber: updatedBarber);
+      state.whenData((barbers) {
+        state = AsyncValue.data([
+          for (final barber in barbers)
+            if (barber.id == updatedBarber.id) updatedBarber else barber
+        ]);
+      });
+    } on CustomException catch (e) {
+      developer.log("[item_list_controller.dart][ItemListController][updateItem] - updateItem Exception ");
+
+      // _read(itemListExceptionProvider).state = e;
+    }
+  }
+
+  Future<void> addBarber({
+    required String name,
+    required String description,
+    required String shopId
+  }) async {
+    try {
+      developer.log("[item_list_controller.dart][ItemListController][addItem] - addItem ");
+      final newBarber = Barber(name: name, description: description, barbershop_id: shopId );
+      final createdBarberId = await _read(barberRepositoryProvider).createItem(
+        //userId: _userId!,
+        newBarber: newBarber,
+      );
+      state.whenData((items) =>
+      state = AsyncValue.data(items..add(newBarber.copyWith(id: createdBarberId))));
+    } on CustomException catch (e) {
+      developer.log("[item_list_controller.dart][ItemListController][addItem] - addItem Exception");
+      //_read(itemListExceptionProvider).state = e;
     }
   }
 
