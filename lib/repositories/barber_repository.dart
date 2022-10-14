@@ -3,8 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_shopping_list/models/availability/availability_model.dart';
 import 'package:flutter_shopping_list/models/availability/availability_time_slot_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../general_providers.dart';
 import '../models/barber/barber_model.dart';
+import '../models/work_day_availability/work_day_availability_model.dart';
 import 'custom_exception.dart';
 import 'dart:developer' as developer;
 
@@ -107,6 +109,24 @@ class BarberRepository implements BaseBarberRepository{
     }
   }
 
+  Future<List<WorkDayAvailability>> retrieveWorkDayAvailability(String barberId) async{
+    developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop2] - Barbers retrieved from shop.");
+    try {
+      //final snap = await _read(firebaseFirestoreProvider).collection('barbers').doc(barberId).collection('availability').get();
+      final snap = await _read(firebaseFirestoreProvider)
+          .collection('barbers')
+          .doc('8KyCYKVgBtKd6Rfec4ZD')
+          .collection('work_day_availability')
+          .where('__name__',isGreaterThanOrEqualTo: '2022-10-02')
+          .get();
+      print("itt kell nezni");print(snap.docs.toString());
+      return snap.docs.map((doc) => WorkDayAvailability.fromDocument(doc)).toList();
+    } on FirebaseException catch (e) {
+      developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers retrieve exception.");
+      throw CustomException(message: e.message);
+    }
+  }
+
   Future<void> updateBarber({required Barber barber}) async {
     developer.log("[itemrepository.dart][itemRepository][updateItem] - Item updated.");
     try {
@@ -114,6 +134,36 @@ class BarberRepository implements BaseBarberRepository{
           .collection('barbers')
           .doc(barber.id)
           .update(barber.toDocument());
+    } on FirebaseException catch (e) {
+      developer.log("[itemrepository.dart][itemRepository][updateItem] - Update item exception.");
+      throw CustomException(message: e.message);
+    }
+  }
+
+  Future<void> updateWorkDayAvailability({required String barberId, required Appointment appointment}) async {
+    developer.log("[itemrepository.dart][itemRepository][updateItem] - Item updated.");
+    final startsplit = appointment.startTime.toString().split(" ");
+    final startsplit2 = startsplit[1].split(":");
+    String startHour = startsplit2[0];
+    String startMinute = startsplit2[1];
+    int start = int.parse(startHour+startMinute);
+
+    final endsplit = appointment.endTime.toString().split(" ");
+    final endsplit2 = endsplit[1].split(":");
+    String endHour = endsplit2[0];
+    String endMinute = endsplit2[1];
+    int end=int.parse(endHour+endMinute);
+
+    print("start =" + start.toString());
+    print("end =" + end.toString());
+
+    try {
+      await _read(firebaseFirestoreProvider)
+          .collection('barbers')
+          .doc(barberId)
+          .collection('work_day_availability')
+          .doc(appointment.id.toString())
+          .update({"start":start, "end":end});
     } on FirebaseException catch (e) {
       developer.log("[itemrepository.dart][itemRepository][updateItem] - Update item exception.");
       throw CustomException(message: e.message);

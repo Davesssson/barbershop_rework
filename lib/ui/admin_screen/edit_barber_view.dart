@@ -1,3 +1,5 @@
+import 'package:flutter_shopping_list/controllers/work_day_availability_controller/work_day_availability_providers.dart';
+import 'package:flutter_shopping_list/models/work_day_availability/work_day_availability_model.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -21,8 +23,13 @@ class editView extends HookConsumerWidget {
     final textNameController = useTextEditingController(text: barberUnderEdit?.name ?? 'Default Name');
     final textDescriptionController = useTextEditingController(
         text: barberUnderEdit?.description ?? 'Default Description');
+
     final availbilityState = ref.watch(AvailabilityListStateProvider);
     final availabilityContent = ref.watch(AvailabilityListContentProvider);
+
+    final workDayAvailabilityState = ref.watch(WorkDayAvailabilityListStateProvider);
+    final workDayAvailabilityContent = ref.watch(WorkDayAvailabilityListContentProvider);
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.green,
@@ -72,9 +79,10 @@ class editView extends HookConsumerWidget {
                       ? Text("hozz Létre és adj hozzá egy fodrászt")
                       : Text("mentsd el a fodrász változtatásait")),
               TextButton(
-                child: Text("updateld a calendart!"),
+                child: Text("updateld a calendart!",style: TextStyle(color:Colors.black),),
                 onPressed: (){
-
+                  print("megnyomtam");
+                  ref.read(WorkDayAvailabilityListStateProvider.notifier).updateBarberWorkDayAvailability(changes: changedElements, barberId: barberUnderEdit!.id!);
                 },
               ),
               Expanded(
@@ -84,18 +92,19 @@ class editView extends HookConsumerWidget {
                   allowAppointmentResize: true,
                   onAppointmentResizeEnd: (AppointmentResizeEndDetails details){
                     changedElements.add(details.appointment);
-                    print(details.startTime.toString());
-                    print(details.endTime.toString());
-                    print(details.resource.toString());
-                    print(details.appointment.toString());
+                    print("AppointmentResizeEndDetails startTime " + details.startTime.toString());
+                    print("AppointmentResizeEndDetails endTime " + details.endTime.toString());
+                    print("AppointmentResizeEndDetails resource " + details.resource.toString());
+                    print("AppointmentResizeEndDetails appointments " + details.appointment.toString());
+                    print("content of the changedElements = "+ changedElements.toString());
                   },
                   onTap: (CalendarTapDetails details){
-                    print(details.resource.toString());
-                    print(details.appointments.toString());
-                    print(details.targetElement.toString());
-                    print(details.date.toString());
+                    print("CalendarTapDetails details " + details.resource.toString());
+                    print("CalendarTapDetails appointments " + details.appointments.toString());
+                    print("CalendarTapDetails targetElement " + details.targetElement.toString());
+                    print("CalendarTapDetails date " + details.date.toString());
                   },
-                  dataSource: _getCalendarDataSource(availbilityState,availabilityContent),
+                  dataSource: _getCalendarDataSource2(workDayAvailabilityState,workDayAvailabilityContent),
                 ),
               )
             ],
@@ -103,7 +112,48 @@ class editView extends HookConsumerWidget {
         )
     );
   }
-  _AppointmentDataSource _getCalendarDataSource(AsyncValue<List<Availability>> state, Availability content) {
+
+  _AppointmentDataSource _getCalendarDataSource2(AsyncValue<List<WorkDayAvailability>> state, WorkDayAvailability content) {
+    List<Appointment> appointments = <Appointment>[];
+    var uuid = Uuid();
+    state.when(
+        data: (data){
+          data.forEach((workDayAvailability) {
+            final List<String> date_split = workDayAvailability.id!.split("-");
+            final int start_hour = int.parse(workDayAvailability.start.toString().substring(0,2));
+            final int start_min = int.parse(workDayAvailability.start.toString().substring(2));
+            final int end_hour = int.parse(workDayAvailability.end.toString().substring(0,2));
+            final int end_min = int.parse(workDayAvailability.end.toString().substring(2));
+            final asd =  Appointment(
+              id: workDayAvailability.id,
+              startTime: DateTime(
+                int.parse(date_split[0]),
+                int.parse(date_split[1]),
+                int.parse(date_split[2]),
+                start_hour,
+                start_min,
+              ),
+              endTime: DateTime(
+                int.parse(date_split[0]),
+                int.parse(date_split[1]),
+                int.parse(date_split[2]),
+                end_hour,
+                end_min,
+              ),
+            );
+            print("eztfigyeld");
+            print(asd);
+            appointments.add(asd);
+          });
+        },
+        error: (e,_){print("fos");},
+        loading: (){}
+    );
+    return _AppointmentDataSource(appointments);
+  }
+}
+//region old implementation
+/*  _AppointmentDataSource _getCalendarDataSource(AsyncValue<List<Availability>> state, Availability content) {
     List<Appointment> appointments = <Appointment>[];
     var uuid = Uuid();
     state.when(
@@ -139,18 +189,11 @@ class editView extends HookConsumerWidget {
         error: (e,_){print("fos");},
         loading: (){}
     );
-/*    appointments.add(
-        Appointment(
-          startTime: DateTime.now(),
-          endTime: DateTime.now().add(Duration(minutes: 30)),
-          subject: 'Meeting',
-          color: Colors.blue,
-        )
-    );*/
-
     return _AppointmentDataSource(appointments);
-  }
-}
+  }*/
+//endregion old implementation
+
+
 
 
 
