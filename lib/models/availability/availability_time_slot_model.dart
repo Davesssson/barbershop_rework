@@ -9,6 +9,7 @@ class AvailabilityTimeSlot with _$AvailabilityTimeSlot{
   const AvailabilityTimeSlot._();
 
   factory AvailabilityTimeSlot({
+    String? id,
     bool? available,
     int? end,
     int? start,

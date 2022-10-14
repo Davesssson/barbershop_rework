@@ -124,7 +124,43 @@ class calendarView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SfCalendar(
-      view:CalendarView.schedule,
+      view: CalendarView.timelineDay,
+      dataSource: _getCalendarDataSource(),
+      resourceViewSettings: ResourceViewSettings(
+          visibleResourceCount: 4,
+          size: 150,
+          displayNameTextStyle: TextStyle(
+              fontStyle: FontStyle.italic,
+              fontSize: 15,
+              fontWeight: FontWeight.w400
+          )
+        ),
     );
   }
 }
+
+class DataSource extends CalendarDataSource {
+  DataSource(List<Appointment> source, List<CalendarResource> resourceColl) {
+    appointments = source;
+    resources = resourceColl;
+  }
+}
+DataSource _getCalendarDataSource() {
+  List<Appointment> appointments = <Appointment>[];
+  List<CalendarResource> resources = <CalendarResource>[];
+
+  appointments.add(Appointment(
+      startTime: DateTime.now(),
+      endTime: DateTime.now().add(Duration(hours: 2)),
+      isAllDay: false,
+      subject: 'Meeting',
+      color: Colors.blue,
+      resourceIds: <Object>['0001'],
+));
+
+  resources.add(
+      CalendarResource(displayName: 'John', id: '0001', color: Colors.red));
+
+  return DataSource(appointments, resources);
+}
+

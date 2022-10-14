@@ -20,6 +20,7 @@ AvailabilityTimeSlot _$AvailabilityTimeSlotFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$AvailabilityTimeSlot {
+  String? get id => throw _privateConstructorUsedError;
   bool? get available => throw _privateConstructorUsedError;
   int? get end => throw _privateConstructorUsedError;
   int? get start => throw _privateConstructorUsedError;
@@ -35,7 +36,7 @@ abstract class $AvailabilityTimeSlotCopyWith<$Res> {
   factory $AvailabilityTimeSlotCopyWith(AvailabilityTimeSlot value,
           $Res Function(AvailabilityTimeSlot) then) =
       _$AvailabilityTimeSlotCopyWithImpl<$Res>;
-  $Res call({bool? available, int? end, int? start});
+  $Res call({String? id, bool? available, int? end, int? start});
 }
 
 /// @nodoc
@@ -49,11 +50,16 @@ class _$AvailabilityTimeSlotCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? id = freezed,
     Object? available = freezed,
     Object? end = freezed,
     Object? start = freezed,
   }) {
     return _then(_value.copyWith(
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
       available: available == freezed
           ? _value.available
           : available // ignore: cast_nullable_to_non_nullable
@@ -77,7 +83,7 @@ abstract class _$$_AvailabilityTimeSlotCopyWith<$Res>
           $Res Function(_$_AvailabilityTimeSlot) then) =
       __$$_AvailabilityTimeSlotCopyWithImpl<$Res>;
   @override
-  $Res call({bool? available, int? end, int? start});
+  $Res call({String? id, bool? available, int? end, int? start});
 }
 
 /// @nodoc
@@ -93,11 +99,16 @@ class __$$_AvailabilityTimeSlotCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? id = freezed,
     Object? available = freezed,
     Object? end = freezed,
     Object? start = freezed,
   }) {
     return _then(_$_AvailabilityTimeSlot(
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
       available: available == freezed
           ? _value.available
           : available // ignore: cast_nullable_to_non_nullable
@@ -117,11 +128,14 @@ class __$$_AvailabilityTimeSlotCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_AvailabilityTimeSlot extends _AvailabilityTimeSlot {
-  _$_AvailabilityTimeSlot({this.available, this.end, this.start}) : super._();
+  _$_AvailabilityTimeSlot({this.id, this.available, this.end, this.start})
+      : super._();
 
   factory _$_AvailabilityTimeSlot.fromJson(Map<String, dynamic> json) =>
       _$$_AvailabilityTimeSlotFromJson(json);
 
+  @override
+  final String? id;
   @override
   final bool? available;
   @override
@@ -131,7 +145,7 @@ class _$_AvailabilityTimeSlot extends _AvailabilityTimeSlot {
 
   @override
   String toString() {
-    return 'AvailabilityTimeSlot(available: $available, end: $end, start: $start)';
+    return 'AvailabilityTimeSlot(id: $id, available: $available, end: $end, start: $start)';
   }
 
   @override
@@ -139,6 +153,7 @@ class _$_AvailabilityTimeSlot extends _AvailabilityTimeSlot {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_AvailabilityTimeSlot &&
+            const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.available, available) &&
             const DeepCollectionEquality().equals(other.end, end) &&
             const DeepCollectionEquality().equals(other.start, start));
@@ -148,6 +163,7 @@ class _$_AvailabilityTimeSlot extends _AvailabilityTimeSlot {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      const DeepCollectionEquality().hash(id),
       const DeepCollectionEquality().hash(available),
       const DeepCollectionEquality().hash(end),
       const DeepCollectionEquality().hash(start));
@@ -168,7 +184,8 @@ class _$_AvailabilityTimeSlot extends _AvailabilityTimeSlot {
 
 abstract class _AvailabilityTimeSlot extends AvailabilityTimeSlot {
   factory _AvailabilityTimeSlot(
-      {final bool? available,
+      {final String? id,
+      final bool? available,
       final int? end,
       final int? start}) = _$_AvailabilityTimeSlot;
   _AvailabilityTimeSlot._() : super._();
@@ -176,6 +193,8 @@ abstract class _AvailabilityTimeSlot extends AvailabilityTimeSlot {
   factory _AvailabilityTimeSlot.fromJson(Map<String, dynamic> json) =
       _$_AvailabilityTimeSlot.fromJson;
 
+  @override
+  String? get id;
   @override
   bool? get available;
   @override
