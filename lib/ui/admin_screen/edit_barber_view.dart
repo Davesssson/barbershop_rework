@@ -24,11 +24,18 @@ class editView extends HookConsumerWidget {
     final textDescriptionController = useTextEditingController(
         text: barberUnderEdit?.description ?? 'Default Description');
 
-    final workDayAvailabilityState = ref.watch(WorkDayAvailabilityListStateProvider);
-    final workDayAvailabilityContent = ref.watch(WorkDayAvailabilityListContentProvider);
+    final List<WorkDayAvailability> emptyList = [];
+    final workDayAvailabilityState;
+    if(barberUnderEdit!=null) {
+      workDayAvailabilityState = ref.watch(
+          WorkDayAvailabilityListStateProvider(barberUnderEdit!.id!));
+    }else{
+      workDayAvailabilityState =  AsyncValue.data(emptyList);
+    }
+    //final workDayAvailabilityContent = ref.watch(WorkDayAvailabilityListContentProvider(barberUnderEdit!.id!));
 
     //ez itt kurvára nincsen jó helyen, mert minden egyes resizenál elemehet addol a listába. :cc
-    late CalendarDataSource _events = _getCalendarDataSource2(workDayAvailabilityState, workDayAvailabilityContent);
+    late CalendarDataSource _events = _getCalendarDataSource2(workDayAvailabilityState/*, workDayAvailabilityContent*/);
 
     return Scaffold(
         appBar: AppBar(
@@ -80,7 +87,7 @@ class editView extends HookConsumerWidget {
                 onPressed: () async{
                   SnackBar sb_updated ;
                   SnackBar sb_added;
-                  bool didUpdate = await ref.read(WorkDayAvailabilityListStateProvider.notifier).updateBarberWorkDayAvailability(changes: changedElements, barberId: barberUnderEdit!.id!);
+                  bool didUpdate = await ref.read(WorkDayAvailabilityListStateProvider(barberUnderEdit!.id!).notifier).updateBarberWorkDayAvailability(changes: changedElements, barberId: barberUnderEdit!.id!);
                   if(didUpdate){
                     changedElements.clear();
                     sb_updated = SnackBar(
@@ -93,7 +100,7 @@ class editView extends HookConsumerWidget {
                   ScaffoldMessenger.of(context).showSnackBar(sb_updated);
                   print("vale of the change "+ didUpdate.toString());
 
-                  bool didAdd = await ref.read(WorkDayAvailabilityListStateProvider.notifier).addBarberWorkDayAvailability(addedAppointments: addedElements, barberId: barberUnderEdit!.id!);
+                  bool didAdd = await ref.read(WorkDayAvailabilityListStateProvider(barberUnderEdit!.id!).notifier).addBarberWorkDayAvailability(addedAppointments: addedElements, barberId: barberUnderEdit!.id!);
                   if(didAdd){
                     addedElements.clear();
                     sb_added = SnackBar(
@@ -176,10 +183,12 @@ class editView extends HookConsumerWidget {
     );
   }
 
-  _AppointmentDataSource _getCalendarDataSource2(AsyncValue<List<WorkDayAvailability>> state, WorkDayAvailability content) {
+  _AppointmentDataSource _getCalendarDataSource2(AsyncValue<List<WorkDayAvailability>> state/*, WorkDayAvailability content*/) {
     state.when(
         data: (data){
-          data.forEach((workDayAvailability) {
+          data.isEmpty
+          ?{print("ures vagyok")}
+          :data.forEach((workDayAvailability) {
             final List<String> date_split = workDayAvailability.id!.split("-");
             final int start_hour = int.parse(workDayAvailability.start.toString().substring(0,2));
             final int start_min = int.parse(workDayAvailability.start.toString().substring(2));

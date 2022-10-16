@@ -6,18 +6,22 @@ import '../../models/work_day_availability/work_day_availability_model.dart';
 
 final WorkDayAvailabilityFilterProvider = StateProvider<DateTime>((_) => DateTime.now());
 
-final WorkDayAvailabilityListContentProvider = Provider<WorkDayAvailability>((ref){
+final WorkDayAvailabilityListContentProvider = Provider.family<WorkDayAvailability,String>((ref,id){
   final filterDate = ref.watch(WorkDayAvailabilityFilterProvider);
-  final workdaysAvailable = ref.watch(WorkDayAvailabilityListStateProvider);
+  final workdaysAvailable = ref.watch(WorkDayAvailabilityListStateProvider(id));
   return workdaysAvailable.maybeWhen(
     data:(days){
+      print("beleptem ebbe az agba");
       print(days.where((day) => day.id.toString()==filterDate.toString().split(" ")[0]).first);
       return days.where((day) => day.id.toString()==filterDate.toString().split(" ")[0]).first;
       } ,
-    orElse: ()=> WorkDayAvailability(),
+    orElse: (){
+      print("beleptem a masik agba");
+      return WorkDayAvailability();
+    }
   );
 });
 
-final WorkDayAvailabilityListStateProvider = StateNotifierProvider<WorkDayAvailabilityListStateController, AsyncValue<List<WorkDayAvailability>>>((ref) {
-  return WorkDayAvailabilityListStateController(ref.read);
+final WorkDayAvailabilityListStateProvider = StateNotifierProvider.family<WorkDayAvailabilityListStateController, AsyncValue<List<WorkDayAvailability>>,String?>((ref,id) {
+  return WorkDayAvailabilityListStateController(ref.read,id);
 });

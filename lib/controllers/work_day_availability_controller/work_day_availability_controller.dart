@@ -6,14 +6,16 @@ import '../../repositories/barber_repository.dart';
 import 'dart:developer' as developer;
 class WorkDayAvailabilityListStateController extends StateNotifier<AsyncValue<List<WorkDayAvailability>>>{
   final Reader _read;
-  WorkDayAvailabilityListStateController(this._read):super(AsyncValue.loading()){
-    retrieveWorkDayAvailability();
+
+  WorkDayAvailabilityListStateController(this._read, String? barberId):super(AsyncValue.loading()){
+    retrieveWorkDayAvailability(barberId);
   }
 
-  Future<void> retrieveWorkDayAvailability({bool isRefreshing = false})async{
+  Future<void> retrieveWorkDayAvailability(String? barberId,{ bool isRefreshing = false})async{
     if(isRefreshing) state = AsyncValue.loading();
+    if(barberId ==null) return ;
     try{
-      final items = await _read(barberRepositoryProvider).retrieveWorkDayAvailability('barberId');
+      final items = await _read(barberRepositoryProvider).retrieveWorkDayAvailability(barberId);
       if(mounted){
         state = AsyncValue.data(items);
         print("WorkDayAvailabilityListController state = " + state.toString());

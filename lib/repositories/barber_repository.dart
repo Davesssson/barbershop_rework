@@ -115,7 +115,7 @@ class BarberRepository implements BaseBarberRepository{
       //final snap = await _read(firebaseFirestoreProvider).collection('barbers').doc(barberId).collection('availability').get();
       final snap = await _read(firebaseFirestoreProvider)
           .collection('barbers')
-          .doc('8KyCYKVgBtKd6Rfec4ZD')
+          .doc(barberId)
           .collection('work_day_availability')
           .where('__name__',isGreaterThanOrEqualTo: '2022-10-02')
           .get();

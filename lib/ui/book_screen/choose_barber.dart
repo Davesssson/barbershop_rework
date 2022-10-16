@@ -35,7 +35,7 @@ class chooseBarber extends ConsumerWidget {
                       pushNewScreenWithRouteSettings(
                         context,
                         settings: RouteSettings(name: '/book'),
-                        screen: chooseTime(),
+                        screen: chooseTime(barberId:barber.id!),
                       );
                     },
                   );

@@ -13,8 +13,8 @@ import '../../models/availability/availability_model.dart';
 import '../../models/work_day_availability/work_day_availability_model.dart';
 
 class chooseTime extends ConsumerStatefulWidget{
-  const chooseTime({Key? key}):super(key:key);
-
+  const chooseTime( {Key? key,required this.barberId}):super(key:key);
+  final barberId;
   @override
   ConsumerState<chooseTime> createState()=>_chooseTimeState();
 }
@@ -53,25 +53,31 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
 
 
     List<Widget> prepareChipChoices(WorkDayAvailability availability){
-      List<Widget> temp= [];
-      DateTime start = DateTime(2022,10,14,int.parse(availability.start.toString().substring(0,2)),int.parse(availability.start.toString().substring(2)));
-      DateTime end = DateTime(2022,10,14,int.parse(availability.end.toString().substring(0,2)),int.parse(availability.end.toString().substring(2)));
-      for(start;start.isBefore(end);){
-        DateTime improved2 = start.add(Duration(minutes:30));
-        start=improved2;
+    //if(availability.id!=null) {
+      List<Widget> temp = [];
+      DateTime start = DateTime(2022, 10, 14,
+          int.parse(availability.start.toString().substring(0, 2)),
+          int.parse(availability.start.toString().substring(2)));
+      DateTime end = DateTime(
+          2022, 10, 14, int.parse(availability.end.toString().substring(0, 2)),
+          int.parse(availability.end.toString().substring(2)));
+      for (start; start.isBefore(end);) {
+        DateTime improved2 = start.add(Duration(minutes: 30));
+        start = improved2;
         temp.add(Chip(label: Text("${start.hour}:${start.minute}")));
       }
 
-    print(start);
-    print(end);
-    return temp;
+      print(start);
+      print(end);
+      return temp;
+    //}else return [];
     }
 
   @override
   Widget build(BuildContext context) {
 
-    final workDayAvailabilityListState = ref.watch(WorkDayAvailabilityListStateProvider);
-    final workDayAvailabilityListContent = ref.watch(WorkDayAvailabilityListContentProvider);
+    final workDayAvailabilityListState = ref.watch(WorkDayAvailabilityListStateProvider(widget.barberId));
+    final workDayAvailabilityListContent = ref.watch(WorkDayAvailabilityListContentProvider(widget.barberId));
 
     return Scaffold(
       body:workDayAvailabilityListState.when(
