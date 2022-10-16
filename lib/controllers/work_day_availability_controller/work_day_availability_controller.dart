@@ -23,28 +23,21 @@ class WorkDayAvailabilityListStateController extends StateNotifier<AsyncValue<Li
     }
   }
 
-  Future<void> updateBarberWorkDayAvailability({required List<Appointment>? changes, required String barberId }) async {
+  Future<bool> updateBarberWorkDayAvailability({required List<Appointment>? changes, required String barberId }) async {
     try {
-      developer.log("[barber_controller.dart][BarberListStateController][updateBarberWorkDayAvailability] - updateBarberWorkDayAvailability ");
+      developer.log("[work_day_controller.dart][WorkDayAvailabilityListStateController][updateBarberWorkDayAvailability] - updateBarberWorkDayAvailability ");
       print("changes"+changes.toString());
-      if(changes!.isEmpty) return
-        print("itt mar nem fut le");
+      if(changes!.isEmpty) {
+        developer.log("There has been no modification to the working hours");
+        return false;
+      }
       changes.forEach((appointment) async {
-        final startsplit = appointment.startTime.toString().split(" ");
-        final startsplit2 = startsplit[1].split(":");
-        String startHour = startsplit2[0];
-        String startMinute = startsplit2[1];
-        int start = int.parse(startHour+startMinute);
+        int newStart = calculateNewTime(appointment.startTime);
+        int newEnd = calculateNewTime(appointment.endTime);
 
-        final endsplit = appointment.endTime.toString().split(" ");
-        final endsplit2 = endsplit[1].split(":");
-        String endHour = endsplit2[0];
-        String endMinute = endsplit2[1];
-        int end=int.parse(endHour+endMinute);
         await _read(barberRepositoryProvider)
-            .updateWorkDayAvailability(barberId: barberId,appointment: appointment);
-
-        WorkDayAvailability neww = WorkDayAvailability(id: appointment.id.toString(),start: start,end:end);
+            .updateWorkDayAvailability(barberId: barberId,appointmentId: appointment.id.toString(), newStart: newStart, newEnd: newEnd);
+        WorkDayAvailability neww = WorkDayAvailability(id: appointment.id.toString(),start: newStart,end:newEnd);
 
         state.whenData((days) {
           state = AsyncValue.data([
@@ -52,15 +45,48 @@ class WorkDayAvailabilityListStateController extends StateNotifier<AsyncValue<Li
               if (day.id == appointment.id) neww else day
           ]);
         });
-
       });
-
-
+      return true;
     } on CustomException catch (e) {
       developer.log("[item_list_controller.dart][ItemListController][updateItem] - updateItem Exception ");
-
+      return false;
       // _read(itemListExceptionProvider).state = e;
     }
+  }
+
+  Future<bool> addBarberWorkDayAvailability({required List<Appointment>? addedAppointments, required String barberId }) async {
+    try {
+      developer.log("[work_day_controller.dart][WorkDayAvailabilityListStateController][updateBarberWorkDayAvailability] - updateBarberWorkDayAvailability ");
+      print("added changes"+addedAppointments.toString());
+      if(addedAppointments!.isEmpty) {
+        developer.log("There has been no new added appointments");
+        return false;
+      }
+      addedAppointments.forEach((appointment) async {
+        int start = calculateNewTime(appointment.startTime);
+        int end = calculateNewTime(appointment.endTime);
+
+        await _read(barberRepositoryProvider)
+            .addWorkDayAvailability(barberId: barberId, appointmentId: appointment.id.toString(), start: start, end: end);
+        WorkDayAvailability neww = WorkDayAvailability(id: appointment.id.toString(), start: start,end:end);
+
+        state.whenData((items) =>
+        state = AsyncValue.data(items..add(neww.copyWith(id: neww.id))));
+      });
+      return true;
+    } on CustomException catch (e) {
+      developer.log("[item_list_controller.dart][ItemListController][updateItem] - updateItem Exception ");
+      return false;
+      // _read(itemListExceptionProvider).state = e;
+    }
+  }
+
+  int calculateNewTime(DateTime initialTime) {
+    final startsplit = initialTime.toString().split(" ");
+    final startsplit2 = startsplit[1].split(":");
+    String startHour = startsplit2[0];
+    String startMinute = startsplit2[1];
+    return int.parse(startHour+startMinute);
   }
 
 

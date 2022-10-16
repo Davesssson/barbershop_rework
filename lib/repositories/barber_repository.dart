@@ -128,49 +128,50 @@ class BarberRepository implements BaseBarberRepository{
   }
 
   Future<void> updateBarber({required Barber barber}) async {
-    developer.log("[itemrepository.dart][itemRepository][updateItem] - Item updated.");
+    developer.log("[barber_repository.dart][BarberRepository][updateBarber] - Updateing Barber...");
     try {
       await _read(firebaseFirestoreProvider)
           .collection('barbers')
           .doc(barber.id)
           .update(barber.toDocument());
     } on FirebaseException catch (e) {
-      developer.log("[itemrepository.dart][itemRepository][updateItem] - Update item exception.");
+      developer.log("[barber_repository.dart][BarberRepository][updateBarber] - Failure during Barber update.");
       throw CustomException(message: e.message);
     }
   }
 
-  Future<void> updateWorkDayAvailability({required String barberId, required Appointment appointment}) async {
-    developer.log("[itemrepository.dart][itemRepository][updateItem] - Item updated.");
-    final startsplit = appointment.startTime.toString().split(" ");
-    final startsplit2 = startsplit[1].split(":");
-    String startHour = startsplit2[0];
-    String startMinute = startsplit2[1];
-    int start = int.parse(startHour+startMinute);
-
-    final endsplit = appointment.endTime.toString().split(" ");
-    final endsplit2 = endsplit[1].split(":");
-    String endHour = endsplit2[0];
-    String endMinute = endsplit2[1];
-    int end=int.parse(endHour+endMinute);
-
-    print("start =" + start.toString());
-    print("end =" + end.toString());
-
+  Future<void> updateWorkDayAvailability({required String barberId, required String appointmentId, required int newStart, required int newEnd}) async {
+    developer.log("[barber_repository.dart][BarberRepository][updateBarber] - Updating WokrDayAvailability...");
     try {
       await _read(firebaseFirestoreProvider)
           .collection('barbers')
           .doc(barberId)
           .collection('work_day_availability')
-          .doc(appointment.id.toString())
-          .update({"start":start, "end":end});
+          .doc(appointmentId)
+          .update({"start":newStart, "end":newEnd})
+          .then((value) => developer.log("Working hour succesfully modified to start:${newStart} end: ${newEnd}"));
     } on FirebaseException catch (e) {
-      developer.log("[itemrepository.dart][itemRepository][updateItem] - Update item exception.");
+      developer.log("[barber_repository.dart][BarberRepository][updateBarber] - Failure during Working hour update.");
       throw CustomException(message: e.message);
     }
   }
 
-  @override
+  Future<void> addWorkDayAvailability({required String barberId, required String appointmentId, required int start, required int end}) async {
+    developer.log("[barber_repository.dart][BarberRepository][updateBarber] - Adding WokrDayAvailability...");
+    try {
+      await _read(firebaseFirestoreProvider)
+          .collection('barbers')
+          .doc(barberId)
+          .collection('work_day_availability')
+          .doc(appointmentId)
+          .set({"start":start, "end":end})
+          .then((value) => developer.log("New availability successfully added to ${appointmentId} start:${start} end: ${end}"));
+    } on FirebaseException catch (e) {
+      developer.log("[barber_repository.dart][BarberRepository][updateBarber] - Failure during adding Working hour update.");
+      throw CustomException(message: e.message);
+    }
+  }
+
   Future<String> createItem({
     //required String userId,
     required Barber newBarber,

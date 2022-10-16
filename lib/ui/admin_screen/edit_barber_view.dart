@@ -1,22 +1,22 @@
 import 'package:flutter_shopping_list/controllers/work_day_availability_controller/work_day_availability_providers.dart';
 import 'package:flutter_shopping_list/models/work_day_availability/work_day_availability_model.dart';
-import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_shopping_list/controllers/barber_controller/barber_providers.dart';
-import 'package:flutter_shopping_list/general_providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-
-import '../../controllers/timeslot/timeslot_providers.dart';
-import '../../models/availability/availability_model.dart';
 import '../../models/barber/barber_model.dart';
 //https://stackoverflow.com/questions/68369473/how-to-split-two-times-using-frequency-in-dart
 
 class editView extends HookConsumerWidget {
   final Barber? barberUnderEdit;
   editView({Key? key, this.barberUnderEdit}) : super(key: key);
+
+
+  List<Appointment> appointments = <Appointment>[];
   final List<Appointment> changedElements = [];
+  final List<Appointment> addedElements = [];
+
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,11 +24,11 @@ class editView extends HookConsumerWidget {
     final textDescriptionController = useTextEditingController(
         text: barberUnderEdit?.description ?? 'Default Description');
 
-    final availbilityState = ref.watch(AvailabilityListStateProvider);
-    final availabilityContent = ref.watch(AvailabilityListContentProvider);
-
     final workDayAvailabilityState = ref.watch(WorkDayAvailabilityListStateProvider);
     final workDayAvailabilityContent = ref.watch(WorkDayAvailabilityListContentProvider);
+
+    //ez itt kurvára nincsen jó helyen, mert minden egyes resizenál elemehet addol a listába. :cc
+    late CalendarDataSource _events = _getCalendarDataSource2(workDayAvailabilityState, workDayAvailabilityContent);
 
     return Scaffold(
         appBar: AppBar(
@@ -41,9 +41,7 @@ class editView extends HookConsumerWidget {
           child: Column(
             children: [
               Text("Name"),
-              TextFormField(
-                controller: textNameController,
-              ),
+              TextFormField(controller: textNameController),
               Text("Description"),
               TextFormField(
                 controller: textDescriptionController,
@@ -51,7 +49,6 @@ class editView extends HookConsumerWidget {
               ),
               TextButton(
                   onPressed: () {
-                    // más providernél nem fog updatelődni amig ujra le nem kérik
                     barberUnderEdit != null
                         ? {
                             print("nem vagyok nulla, tudok updatelődni"),
@@ -80,10 +77,38 @@ class editView extends HookConsumerWidget {
                       : Text("mentsd el a fodrász változtatásait")),
               TextButton(
                 child: Text("updateld a calendart!",style: TextStyle(color:Colors.black),),
-                onPressed: (){
-                  print("megnyomtam");
-                  ref.read(WorkDayAvailabilityListStateProvider.notifier).updateBarberWorkDayAvailability(changes: changedElements, barberId: barberUnderEdit!.id!);
-                },
+                onPressed: () async{
+                  SnackBar sb_updated ;
+                  SnackBar sb_added;
+                  bool didUpdate = await ref.read(WorkDayAvailabilityListStateProvider.notifier).updateBarberWorkDayAvailability(changes: changedElements, barberId: barberUnderEdit!.id!);
+                  if(didUpdate){
+                    changedElements.clear();
+                    sb_updated = SnackBar(
+                      content: const Text("Working hours updated"),
+                    );
+
+                  }else {
+                    sb_updated = SnackBar(content: const Text("No modifications took place"));
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(sb_updated);
+                  print("vale of the change "+ didUpdate.toString());
+
+                  bool didAdd = await ref.read(WorkDayAvailabilityListStateProvider.notifier).addBarberWorkDayAvailability(addedAppointments: addedElements, barberId: barberUnderEdit!.id!);
+                  if(didAdd){
+                    addedElements.clear();
+                    sb_added = SnackBar(
+                      content: const Text("New Working hour updated"),
+                    );
+
+                  }else {
+                    sb_added = SnackBar(content: const Text("No addition took place"));
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(sb_added);
+
+                }
+
+
+
               ),
               Expanded(
                 child: SfCalendar(
@@ -92,19 +117,57 @@ class editView extends HookConsumerWidget {
                   allowAppointmentResize: true,
                   onAppointmentResizeEnd: (AppointmentResizeEndDetails details){
                     changedElements.add(details.appointment);
+                    //region printing
                     print("AppointmentResizeEndDetails startTime " + details.startTime.toString());
                     print("AppointmentResizeEndDetails endTime " + details.endTime.toString());
                     print("AppointmentResizeEndDetails resource " + details.resource.toString());
                     print("AppointmentResizeEndDetails appointments " + details.appointment.toString());
                     print("content of the changedElements = "+ changedElements.toString());
+                    //endregion
                   },
                   onTap: (CalendarTapDetails details){
-                    print("CalendarTapDetails details " + details.resource.toString());
-                    print("CalendarTapDetails appointments " + details.appointments.toString());
-                    print("CalendarTapDetails targetElement " + details.targetElement.toString());
-                    print("CalendarTapDetails date " + details.date.toString());
+                    String year = details.date!.year.toString();
+                    String month = details.date!.month.toString();
+                    String day = details.date!.day.toString();
+                    String id = year + "-" + month + "-" + day;
+                    if(!hasAppointmentWithId(id)) {
+                      int startHour = details.date!.hour;
+                      int startMin = details.date!.minute;
+                      DateTime start = DateTime(
+                          int.parse(year), int.parse(month), int.parse(day),
+                          startHour, startMin);
+                      DateTime end = DateTime(
+                          int.parse(year), int.parse(month), int.parse(day),
+                          startHour + 8, startMin);
+                      final Appointment newAppointment = Appointment(
+                          id: id,
+                          startTime: start,
+                          endTime: end
+                      );
+                      appointments.add(newAppointment);
+                      print("sajat" + newAppointment.toString());
+
+                      _events.notifyListeners(
+                          CalendarDataSourceAction.add,
+                          <Appointment>[newAppointment]);
+                      addedElements.add(newAppointment);
+                      //region printing
+                      print("CalendarTapDetails details " +
+                          details.resource.toString());
+                      print("CalendarTapDetails appointments " +
+                          details.appointments.toString());
+                      print("CalendarTapDetails targetElement " +
+                          details.targetElement.toString());
+                      print(
+                          "CalendarTapDetails date " + details.date.toString());
+                      //endregion
+                    }else{
+                      print("heloka");
+                    }
+
                   },
-                  dataSource: _getCalendarDataSource2(workDayAvailabilityState,workDayAvailabilityContent),
+                  //dataSource: _getCalendarDataSource2(workDayAvailabilityState,workDayAvailabilityContent),
+                  dataSource: _events
                 ),
               )
             ],
@@ -114,8 +177,6 @@ class editView extends HookConsumerWidget {
   }
 
   _AppointmentDataSource _getCalendarDataSource2(AsyncValue<List<WorkDayAvailability>> state, WorkDayAvailability content) {
-    List<Appointment> appointments = <Appointment>[];
-    var uuid = Uuid();
     state.when(
         data: (data){
           data.forEach((workDayAvailability) {
@@ -150,6 +211,16 @@ class editView extends HookConsumerWidget {
         loading: (){}
     );
     return _AppointmentDataSource(appointments);
+  }
+
+  bool hasAppointmentWithId(String id) {
+    bool listAlreadyHasAppointmentWithId = false;
+    appointments.forEach((element) {
+      if(element.id==id){
+        listAlreadyHasAppointmentWithId = true;
+      }
+    });
+    return listAlreadyHasAppointmentWithId;
   }
 }
 //region old implementation
