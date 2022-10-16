@@ -12,8 +12,10 @@ final WorkDayAvailabilityListContentProvider = Provider.family<WorkDayAvailabili
   return workdaysAvailable.maybeWhen(
     data:(days){
       print("beleptem ebbe az agba");
-      print(days.where((day) => day.id.toString()==filterDate.toString().split(" ")[0]).first);
-      return days.where((day) => day.id.toString()==filterDate.toString().split(" ")[0]).first;
+      if(days.any((element) => element.id==filterDate.toString().split(" ")[0])){
+        print(days.where((day) => day.id.toString()==filterDate.toString().split(" ")[0]).first);
+        return days.where((day) => day.id.toString()==filterDate.toString().split(" ")[0]).first;
+      }else return days.first;
       } ,
     orElse: (){
       print("beleptem a masik agba");

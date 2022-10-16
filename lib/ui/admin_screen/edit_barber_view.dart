@@ -59,24 +59,24 @@ class editView extends HookConsumerWidget {
                     barberUnderEdit != null
                         ? {
                             print("nem vagyok nulla, tudok updatelődni"),
-                            ref
-                                .read(barberListForShopStateProvider.notifier)
-                                .updateBarber(
+                            ref.read(barberListForShopStateProvider.notifier)
+                               .updateBarber(
                                     updatedBarber: barberUnderEdit!.copyWith(
                                         name: textNameController.text.trim(),
                                         description: textDescriptionController
                                             .text
-                                            .trim()))
+                                            .trim()
+                                    )
+                                  )
                           }
                         : {
                             print("nulla vagyok, nem tudok updatelődni"),
-                            ref
-                                .read(barberListForShopStateProvider.notifier)
-                                .addBarber(
+                            ref.read(barberListForShopStateProvider.notifier)
+                               .addBarber(
                                     name: textNameController.text.trim(),
-                                    description:
-                                        textDescriptionController.text.trim(),
-                                    shopId: '7HTJ8DF8hFwUnrL566Wc')
+                                    description:textDescriptionController.text.trim(),
+                                    shopId: '7HTJ8DF8hFwUnrL566Wc'
+                                )
                           };
                   },
                   child: barberUnderEdit == null
@@ -93,29 +93,22 @@ class editView extends HookConsumerWidget {
                     sb_updated = SnackBar(
                       content: const Text("Working hours updated"),
                     );
-
-                  }else {
+                  } else {
                     sb_updated = SnackBar(content: const Text("No modifications took place"));
                   }
                   ScaffoldMessenger.of(context).showSnackBar(sb_updated);
                   print("vale of the change "+ didUpdate.toString());
-
                   bool didAdd = await ref.read(WorkDayAvailabilityListStateProvider(barberUnderEdit!.id!).notifier).addBarberWorkDayAvailability(addedAppointments: addedElements, barberId: barberUnderEdit!.id!);
                   if(didAdd){
                     addedElements.clear();
                     sb_added = SnackBar(
                       content: const Text("New Working hour updated"),
                     );
-
                   }else {
                     sb_added = SnackBar(content: const Text("No addition took place"));
                   }
                   ScaffoldMessenger.of(context).showSnackBar(sb_added);
-
                 }
-
-
-
               ),
               Expanded(
                 child: SfCalendar(
@@ -123,14 +116,7 @@ class editView extends HookConsumerWidget {
                   allowDragAndDrop: true,
                   allowAppointmentResize: true,
                   onAppointmentResizeEnd: (AppointmentResizeEndDetails details){
-                    changedElements.add(details.appointment);
-                    //region printing
-                    print("AppointmentResizeEndDetails startTime " + details.startTime.toString());
-                    print("AppointmentResizeEndDetails endTime " + details.endTime.toString());
-                    print("AppointmentResizeEndDetails resource " + details.resource.toString());
-                    print("AppointmentResizeEndDetails appointments " + details.appointment.toString());
-                    print("content of the changedElements = "+ changedElements.toString());
-                    //endregion
+                    changedElements.add(details.appointment); //TODO Mi van akkor, hogyha többször resizeolja és hozzáadódiK????
                   },
                   onTap: (CalendarTapDetails details){
                     String year = details.date!.year.toString();
@@ -158,20 +144,9 @@ class editView extends HookConsumerWidget {
                           CalendarDataSourceAction.add,
                           <Appointment>[newAppointment]);
                       addedElements.add(newAppointment);
-                      //region printing
-                      print("CalendarTapDetails details " +
-                          details.resource.toString());
-                      print("CalendarTapDetails appointments " +
-                          details.appointments.toString());
-                      print("CalendarTapDetails targetElement " +
-                          details.targetElement.toString());
-                      print(
-                          "CalendarTapDetails date " + details.date.toString());
-                      //endregion
                     }else{
                       print("heloka");
                     }
-
                   },
                   //dataSource: _getCalendarDataSource2(workDayAvailabilityState,workDayAvailabilityContent),
                   dataSource: _events
