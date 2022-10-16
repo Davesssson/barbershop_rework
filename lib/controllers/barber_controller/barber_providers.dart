@@ -18,6 +18,7 @@ final barberListContentProvider = Provider<List<Barber>>((ref) {
   );
 });
 
+//ezt át lehetne írni úgy, hogy a barberListProviderből returnol egy listát, az alapján, hogy a shopId megegyezik e kért shoppal
 final barberListForShopContentProvider = Provider<List<Barber>>((ref) {
   developer.log("[barber_providers.dart][-][barberListContentProvider] - barberListContentProvider.");
   final barbersListState = ref.watch(barberListForShopStateProvider);
