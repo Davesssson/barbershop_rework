@@ -5,6 +5,7 @@ import 'package:flutter_shopping_list/models/resource_view_model/resource_view_m
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../general_providers.dart';
 import '../models/barber/barber_model.dart';
+import '../models/booking/booking_model.dart';
 import '../models/work_day_availability/work_day_availability_model.dart';
 import 'custom_exception.dart';
 import 'dart:developer' as developer;
@@ -197,23 +198,48 @@ class BarberRepository implements BaseBarberRepository{
     }
   }
 
+  Future<List<Booking>> retrieveBookings(String barberId) async{
+    developer.log("[barber_repository.dart][BarberRepository][retrieveWorkDayAvailability] - Barbers Booking retrieved.");
+    try {
+      //final snap = await _read(firebaseFirestoreProvider).collection('barbers').doc(barberId).collection('availability').get();
+      final snap = await _read(firebaseFirestoreProvider)
+          .collection('barbers')
+          .doc(barberId)
+          .collection('bookings')
+          .where('__name__',isGreaterThanOrEqualTo: '2022-10-02')
+          .get();
+      print("itt kell nezni");print(snap.docs.toString());
+      return snap.docs.map((doc) => Booking.fromDocument(doc)).toList();
+    } on FirebaseException catch (e) {
+      developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers booking retrieve exception.");
+      throw CustomException(message: e.message);
+    }
+  }
+
   Future<List<ResourceViewModel>> retrieveResourceView() async{
     developer.log("[barber_repository.dart][BarberRepository][retrieveWorkDayAvailability] - Barbers Work day availability retrieved.");
     try {
       //final snap = await _read(firebaseFirestoreProvider).collection('barbers').doc(barberId).collection('availability').get();
 
       List<Barber> barbers =  await retrieveBarbersFromShop2('7HTJ8DF8hFwUnrL566Wc');
-      // EZ JÓ final helo = barbers.then((barberList) => barberList.map((barber) {return ResourceViewModel(barber: barber,workDayAvailability: WorkDayAvailability())}).toList());
+
       List<Future<List<WorkDayAvailability>>> list_workday= barbers.map((barber)  {
         return  retrieveWorkDayAvailability(barber.id!);
       }).toList();
 
-      final result = await Future.wait(list_workday);
+      List<Future<List<Booking>>> list_bookings= barbers.map((barber)  {
+        return  retrieveBookings(barber.id!);
+      }).toList();
+
+      final result_availability = await Future.wait(list_workday);
+      final result_booking = await Future.wait(list_bookings);
+
       final List<ResourceViewModel> resViewresult =[];
-      for(int i=0; i<result.length;i++){
+      for(int i=0; i<result_availability.length;i++){
         final item = ResourceViewModel(
           barber: barbers[i],
-          workDayAvailability: result[i],
+          workDayAvailability: result_availability[i],
+          bookings: result_booking[i]
         );
         resViewresult.add(item);
       }
