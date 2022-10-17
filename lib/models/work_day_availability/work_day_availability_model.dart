@@ -10,6 +10,7 @@ class WorkDayAvailability with _$WorkDayAvailability{
 
   factory WorkDayAvailability({
     String? id,
+    String? barberId,
     int? start,
     int? end
 

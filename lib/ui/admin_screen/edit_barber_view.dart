@@ -138,7 +138,6 @@ class editView extends HookConsumerWidget {
                           endTime: end
                       );
                       appointments.add(newAppointment);
-                      print("sajat" + newAppointment.toString());
 
                       _events.notifyListeners(
                           CalendarDataSourceAction.add,
@@ -186,8 +185,6 @@ class editView extends HookConsumerWidget {
                 end_min,
               ),
             );
-            print("eztfigyeld");
-            print(asd);
             appointments.add(asd);
           });
         },

@@ -110,8 +110,9 @@ class BarberRepository implements BaseBarberRepository{
   }
 
   Future<List<WorkDayAvailability>> retrieveWorkDayAvailability(String barberId) async{
-    developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop2] - Barbers retrieved from shop.");
+    developer.log("[barber_repository.dart][BarberRepository][retrieveWorkDayAvailability] - Barbers Work day availability retrieved.");
     try {
+      asd();
       //final snap = await _read(firebaseFirestoreProvider).collection('barbers').doc(barberId).collection('availability').get();
       final snap = await _read(firebaseFirestoreProvider)
           .collection('barbers')
@@ -194,6 +195,25 @@ class BarberRepository implements BaseBarberRepository{
       return "asd";
     } on FirebaseException catch (e) {
       developer.log("[itemrepository.dart][itemRepository][createItem] - Item create exception.");
+      throw CustomException(message: e.message);
+    }
+  }
+
+  Future<void> asd() async{
+    developer.log("[barber_repository.dart][BarberRepository][retrieveWorkDayAvailability] - Barbers Work day availability retrieved.");
+    try {
+      //final snap = await _read(firebaseFirestoreProvider).collection('barbers').doc(barberId).collection('availability').get();
+      List<String> ids = [];
+      List<Barber> barbers= await retrieveBarbersFromShop2('7HTJ8DF8hFwUnrL566Wc');
+      barbers.forEach((element) {ids.add(element.id!);});
+      final snap = await _read(firebaseFirestoreProvider)
+          .collectionGroup('work_day_availability')
+          .where('barberId',whereIn: ids)
+          //.where('__name__',isGreaterThanOrEqualTo:'2022-10-02')
+          .get();
+      print("asd"+ snap.docs.map((doc) => Availability.fromDocumentCustom(doc)).toString());
+    } on FirebaseException catch (e) {
+      developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers retrieve exception.");
       throw CustomException(message: e.message);
     }
   }

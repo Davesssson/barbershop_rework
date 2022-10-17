@@ -25,5 +25,6 @@ final WorkDayAvailabilityListContentProvider = Provider.family<WorkDayAvailabili
 });
 
 final WorkDayAvailabilityListStateProvider = StateNotifierProvider.family<WorkDayAvailabilityListStateController, AsyncValue<List<WorkDayAvailability>>,String?>((ref,id) {
+  print(id);
   return WorkDayAvailabilityListStateController(ref.read,id);
 });

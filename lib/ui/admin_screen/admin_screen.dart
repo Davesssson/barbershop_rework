@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import 'admin_barber_view.dart';
+import 'admin_resource_view.dart';
 
 class adminScreen extends StatefulWidget {
   adminScreen({Key? key}) : super(key: key);
@@ -115,63 +116,4 @@ class _adminScreenState extends State<adminScreen> {
 }
 
 
-
-class calendarView extends StatelessWidget {
-  const calendarView({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SfCalendar(
-      view: CalendarView.timelineDay,
-      dataSource: _getCalendarDataSource(),
-      resourceViewSettings: ResourceViewSettings(
-          visibleResourceCount: 4,
-          size: 150,
-          displayNameTextStyle: TextStyle(
-              fontStyle: FontStyle.italic,
-              fontSize: 15,
-              fontWeight: FontWeight.w400
-          )
-        ),
-    );
-  }
-}
-
-class DataSource extends CalendarDataSource {
-  DataSource(List<Appointment> source, List<CalendarResource> resourceColl) {
-    appointments = source;
-    resources = resourceColl;
-  }
-}
-DataSource _getCalendarDataSource() {
-  List<Appointment> appointments = <Appointment>[];
-  List<CalendarResource> resources = <CalendarResource>[];
-
-  appointments.add(
-    Appointment(
-      startTime: DateTime.now(),
-      endTime: DateTime.now().add(Duration(hours: 2)),
-      isAllDay: false,
-      subject: 'Meeting',
-      color: Colors.blue,
-      resourceIds: <Object>['0001'],
-    ),
-  );
-  appointments.add(
-    Appointment(
-      startTime: DateTime.now(),
-      endTime: DateTime.now().add(Duration(hours: 6)),
-      isAllDay: false,
-      subject: 'Meeting',
-      color: Colors.red,
-      resourceIds: <Object>['0001'],
-    ),
-  );
-
-  resources.add(CalendarResource(displayName: 'John', id: '0001', color: Colors.red));
-
-  return DataSource(appointments, resources);
-}
 

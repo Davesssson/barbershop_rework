@@ -8,6 +8,7 @@ class WorkDayAvailabilityListStateController extends StateNotifier<AsyncValue<Li
   final Reader _read;
 
   WorkDayAvailabilityListStateController(this._read, String? barberId):super(AsyncValue.loading()){
+    developer.log("WorkDayAvailabilityListStateController constructed for ${barberId}");
     retrieveWorkDayAvailability(barberId);
   }
 
