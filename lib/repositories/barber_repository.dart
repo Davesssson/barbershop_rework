@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_shopping_list/models/availability/availability_model.dart';
-import 'package:flutter_shopping_list/models/availability/availability_time_slot_model.dart';
+import 'package:flutter_shopping_list/models/resource_view_model/resource_view_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../general_providers.dart';
 import '../models/barber/barber_model.dart';
 import '../models/work_day_availability/work_day_availability_model.dart';
@@ -112,7 +111,6 @@ class BarberRepository implements BaseBarberRepository{
   Future<List<WorkDayAvailability>> retrieveWorkDayAvailability(String barberId) async{
     developer.log("[barber_repository.dart][BarberRepository][retrieveWorkDayAvailability] - Barbers Work day availability retrieved.");
     try {
-      asd();
       //final snap = await _read(firebaseFirestoreProvider).collection('barbers').doc(barberId).collection('availability').get();
       final snap = await _read(firebaseFirestoreProvider)
           .collection('barbers')
@@ -199,19 +197,29 @@ class BarberRepository implements BaseBarberRepository{
     }
   }
 
-  Future<void> asd() async{
+  Future<List<ResourceViewModel>> retrieveResourceView() async{
     developer.log("[barber_repository.dart][BarberRepository][retrieveWorkDayAvailability] - Barbers Work day availability retrieved.");
     try {
       //final snap = await _read(firebaseFirestoreProvider).collection('barbers').doc(barberId).collection('availability').get();
-      List<String> ids = [];
-      List<Barber> barbers= await retrieveBarbersFromShop2('7HTJ8DF8hFwUnrL566Wc');
-      barbers.forEach((element) {ids.add(element.id!);});
-      final snap = await _read(firebaseFirestoreProvider)
-          .collectionGroup('work_day_availability')
-          .where('barberId',whereIn: ids)
-          //.where('__name__',isGreaterThanOrEqualTo:'2022-10-02')
-          .get();
-      print("asd"+ snap.docs.map((doc) => Availability.fromDocumentCustom(doc)).toString());
+
+      List<Barber> barbers =  await retrieveBarbersFromShop2('7HTJ8DF8hFwUnrL566Wc');
+      // EZ JÓ final helo = barbers.then((barberList) => barberList.map((barber) {return ResourceViewModel(barber: barber,workDayAvailability: WorkDayAvailability())}).toList());
+      List<Future<List<WorkDayAvailability>>> list_workday= barbers.map((barber)  {
+        return  retrieveWorkDayAvailability(barber.id!);
+      }).toList();
+
+      final result = await Future.wait(list_workday);
+      final List<ResourceViewModel> resViewresult =[];
+      for(int i=0; i<result.length;i++){
+        final item = ResourceViewModel(
+          barber: barbers[i],
+          workDayAvailability: result[i],
+        );
+        resViewresult.add(item);
+      }
+      print("mukodjel kerlek" + resViewresult.toString());
+      return resViewresult;
+      //return asd
     } on FirebaseException catch (e) {
       developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers retrieve exception.");
       throw CustomException(message: e.message);
