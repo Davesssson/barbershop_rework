@@ -63,16 +63,17 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
   List<Widget> prepareChipChoices(WorkDayAvailability availability) {
     if (availability.id != null) {
       List<Widget> temp = [];
+      List<String> splitDate = availability.id!.split("-");
       DateTime start = DateTime(
-          2022,
-          10,
-          17,
+          int.parse(splitDate[0]),
+          int.parse(splitDate[1]),
+          int.parse(splitDate[2]),
           int.parse(availability.start.toString().substring(0, 2)),
           int.parse(availability.start.toString().substring(2)));
       DateTime end = DateTime(
-          2022,
-          10,
-          17,
+          int.parse(splitDate[0]),
+          int.parse(splitDate[1]),
+          int.parse(splitDate[2]),
           int.parse(availability.end.toString().substring(0, 2)),
           int.parse(availability.end.toString().substring(2)));
       for (start; start.isBefore(end);) {
@@ -173,7 +174,7 @@ class CustomChip extends StatelessWidget {
         print(int.parse(startt));
         ref.read(barberListForShopStateProvider.notifier).addBooking(
           dateId: date,
-          uId: "uniqueId2",
+          uId: "uniqueId3",
           barberId: barberId,
           start: int.parse(startt),
           end:2000,

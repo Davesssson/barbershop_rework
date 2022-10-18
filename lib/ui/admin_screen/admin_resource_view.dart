@@ -78,32 +78,36 @@ DataSource _getCalendarDataSource(AsyncValue<List<ResourceViewModel>> state) {
                 );
               });
             }else {print("ures voltam");}
+
             if(resource.bookings != null) {
               resource.bookings!.forEach((booking) {
-                int year = int.parse(booking.dateId.toString().split("-")[0]);
-                int month = int.parse(booking.dateId.toString().split("-")[1]);
-                int day = int.parse(booking.dateId.toString().split("-")[2]);
-                int startHour = int.parse(
-                    booking.start.toString().substring(0, 2));
-                int startMinute = int.parse(
-                    booking.start.toString().substring(2));
-                int endHour = int.parse(
-                    booking.end.toString().substring(0, 2));
-                int endMinute = int.parse(
-                    booking.end.toString().substring(2));
-                appointments.add(
-                  Appointment(
-                    startTime: DateTime(
-                        year, month, day, startHour, startMinute),
-                    endTime: DateTime(year, month, day, endHour, endMinute),
-                    isAllDay: false,
-                    subject: 'Booking',
-                    color: Colors.purple,
-                    resourceIds: <Object>[resource.barber!.id!],
-                  ),
-                );
+                booking.bookings!.forEach((oneBooking) {
+                  int year = int.parse(oneBooking.dateId.toString().split("-")[0]);
+                  int month = int.parse(oneBooking.dateId.toString().split("-")[1]);
+                  int day = int.parse(oneBooking.dateId.toString().split("-")[2]);
+                  int startHour = int.parse(
+                      oneBooking.start.toString().substring(0, 2));
+                  int startMinute = int.parse(
+                      oneBooking.start.toString().substring(2));
+                  int endHour = int.parse(
+                      oneBooking.end.toString().substring(0, 2));
+                  int endMinute = int.parse(
+                      oneBooking.end.toString().substring(2));
+                  appointments.add(
+                    Appointment(
+                      startTime: DateTime(
+                          year, month, day, startHour, startMinute),
+                      endTime: DateTime(year, month, day, endHour, endMinute),
+                      isAllDay: false,
+                      subject: 'Booking',
+                      color: Colors.purple,
+                      resourceIds: <Object>[resource.barber!.id!],
+                    ),
+                  );
+                });
               });
             }else {print("ures bookings voltam");}
+
 
 
           });

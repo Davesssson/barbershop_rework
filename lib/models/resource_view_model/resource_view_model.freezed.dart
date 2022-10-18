@@ -23,7 +23,7 @@ mixin _$ResourceViewModel {
   Barber? get barber => throw _privateConstructorUsedError;
   List<WorkDayAvailability>? get workDayAvailability =>
       throw _privateConstructorUsedError;
-  List<Booking>? get bookings => throw _privateConstructorUsedError;
+  List<BookingDay>? get bookings => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -39,7 +39,7 @@ abstract class $ResourceViewModelCopyWith<$Res> {
   $Res call(
       {Barber? barber,
       List<WorkDayAvailability>? workDayAvailability,
-      List<Booking>? bookings});
+      List<BookingDay>? bookings});
 
   $BarberCopyWith<$Res>? get barber;
 }
@@ -71,7 +71,7 @@ class _$ResourceViewModelCopyWithImpl<$Res>
       bookings: bookings == freezed
           ? _value.bookings
           : bookings // ignore: cast_nullable_to_non_nullable
-              as List<Booking>?,
+              as List<BookingDay>?,
     ));
   }
 
@@ -97,7 +97,7 @@ abstract class _$$_ResourceViewModelCopyWith<$Res>
   $Res call(
       {Barber? barber,
       List<WorkDayAvailability>? workDayAvailability,
-      List<Booking>? bookings});
+      List<BookingDay>? bookings});
 
   @override
   $BarberCopyWith<$Res>? get barber;
@@ -132,7 +132,7 @@ class __$$_ResourceViewModelCopyWithImpl<$Res>
       bookings: bookings == freezed
           ? _value._bookings
           : bookings // ignore: cast_nullable_to_non_nullable
-              as List<Booking>?,
+              as List<BookingDay>?,
     ));
   }
 }
@@ -143,7 +143,7 @@ class _$_ResourceViewModel extends _ResourceViewModel {
   _$_ResourceViewModel(
       {this.barber,
       final List<WorkDayAvailability>? workDayAvailability,
-      final List<Booking>? bookings})
+      final List<BookingDay>? bookings})
       : _workDayAvailability = workDayAvailability,
         _bookings = bookings,
         super._();
@@ -162,9 +162,9 @@ class _$_ResourceViewModel extends _ResourceViewModel {
     return EqualUnmodifiableListView(value);
   }
 
-  final List<Booking>? _bookings;
+  final List<BookingDay>? _bookings;
   @override
-  List<Booking>? get bookings {
+  List<BookingDay>? get bookings {
     final value = _bookings;
     if (value == null) return null;
     // ignore: implicit_dynamic_type
@@ -213,7 +213,7 @@ abstract class _ResourceViewModel extends ResourceViewModel {
   factory _ResourceViewModel(
       {final Barber? barber,
       final List<WorkDayAvailability>? workDayAvailability,
-      final List<Booking>? bookings}) = _$_ResourceViewModel;
+      final List<BookingDay>? bookings}) = _$_ResourceViewModel;
   _ResourceViewModel._() : super._();
 
   factory _ResourceViewModel.fromJson(Map<String, dynamic> json) =
@@ -224,7 +224,7 @@ abstract class _ResourceViewModel extends ResourceViewModel {
   @override
   List<WorkDayAvailability>? get workDayAvailability;
   @override
-  List<Booking>? get bookings;
+  List<BookingDay>? get bookings;
   @override
   @JsonKey(ignore: true)
   _$$_ResourceViewModelCopyWith<_$_ResourceViewModel> get copyWith =>

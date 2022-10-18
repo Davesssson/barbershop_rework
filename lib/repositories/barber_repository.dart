@@ -5,6 +5,7 @@ import 'package:flutter_shopping_list/models/resource_view_model/resource_view_m
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../general_providers.dart';
 import '../models/barber/barber_model.dart';
+import '../models/booking/booking_day_model.dart';
 import '../models/booking/booking_model.dart';
 import '../models/work_day_availability/work_day_availability_model.dart';
 import 'custom_exception.dart';
@@ -172,17 +173,18 @@ class BarberRepository implements BaseBarberRepository{
     }
   }
 
-  Future<void> addBooking({required String barberId, required String appointmentId, required int start}) async {
+  Future<void> addBooking({required String barberId, required String dateId, required int start, required String uId}) async {
     developer.log("[barber_repository.dart][BarberRepository][updateBarber] - Adding WokrDayAvailability...");
     try {
       await _read(firebaseFirestoreProvider)
           .collection('barbers')
           .doc(barberId)
           .collection('bookings')
-          .doc(appointmentId)
-          .set({"start":1700, "end":1730})
-          .then((value) => developer.log("New availability successfully added to ${appointmentId} start:${start} end: "));
+          .doc(dateId)
+          .set({uId:{"barberId":barberId, "dateId":dateId,"start":start,"end":start+30,"uId":uId}})
+          .then((value) => developer.log("New availability successfully added to ${dateId} start:${start} end: "));
     } on FirebaseException catch (e) {
+      //nem tudja azt kezelni, hogyha updatelni akarunk egy olyan dokumentumot, ami nem létezik
       developer.log("[barber_repository.dart][BarberRepository][updateBarber] - Failure during adding Working hour update.");
       throw CustomException(message: e.message);
     }
@@ -214,7 +216,7 @@ class BarberRepository implements BaseBarberRepository{
     }
   }
 
-  Future<List<Booking>> retrieveBookings(String barberId) async{
+  Future<List<BookingDay>> retrieveBookings(String barberId) async{
     developer.log("[barber_repository.dart][BarberRepository][retrieveWorkDayAvailability] - Barbers Booking retrieved.");
     try {
       //final snap = await _read(firebaseFirestoreProvider).collection('barbers').doc(barberId).collection('availability').get();
@@ -225,7 +227,8 @@ class BarberRepository implements BaseBarberRepository{
           .where('__name__',isGreaterThanOrEqualTo: '2022-10-02')
           .get();
       print("itt kell nezni");print(snap.docs.toString());
-      return snap.docs.map((doc) => Booking.fromDocument(doc)).toList();
+       return snap.docs.map((doc) => BookingDay.fromDocumentCustom(doc)).toList();
+      //return snap.docs.map((doc) => Booking.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
       developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers booking retrieve exception.");
       throw CustomException(message: e.message);
@@ -243,7 +246,7 @@ class BarberRepository implements BaseBarberRepository{
         return  retrieveWorkDayAvailability(barber.id!);
       }).toList();
 
-      List<Future<List<Booking>>> list_bookings= barbers.map((barber)  {
+      List<Future<List<BookingDay>>> list_bookings= barbers.map((barber)  {
         return  retrieveBookings(barber.id!);
       }).toList();
 

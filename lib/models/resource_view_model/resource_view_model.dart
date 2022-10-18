@@ -3,6 +3,7 @@ import 'package:flutter_shopping_list/models/work_day_availability/work_day_avai
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../barber/barber_model.dart';
+import '../booking/booking_day_model.dart';
 import '../booking/booking_model.dart';
 
 part 'resource_view_model.freezed.dart';
@@ -15,7 +16,7 @@ class ResourceViewModel with _$ResourceViewModel{
   factory ResourceViewModel({
     Barber? barber,
     List<WorkDayAvailability>? workDayAvailability,
-    List<Booking>? bookings,
+    List<BookingDay>? bookings,
   })= _ResourceViewModel;
 
   factory ResourceViewModel.fromDocument(DocumentSnapshot doc) {

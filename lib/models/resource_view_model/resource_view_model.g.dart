@@ -15,7 +15,7 @@ _$_ResourceViewModel _$$_ResourceViewModelFromJson(Map<String, dynamic> json) =>
           ?.map((e) => WorkDayAvailability.fromJson(e as Map<String, dynamic>))
           .toList(),
       bookings: (json['bookings'] as List<dynamic>?)
-          ?.map((e) => Booking.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => BookingDay.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

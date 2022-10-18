@@ -121,8 +121,9 @@ class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
     try {
       developer.log("[item_list_controller.dart][ItemListController][addItem] - addItem ");
        await _read(barberRepositoryProvider).addBooking(
-        appointmentId: dateId,
+        dateId: dateId,
         barberId: barberId,
+        uId:uId,
         start: start
       );
 
