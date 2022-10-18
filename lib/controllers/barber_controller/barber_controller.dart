@@ -1,5 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../models/barber/barber_model.dart';
+import '../../models/booking/booking_model.dart';
 import '../../repositories/barber_repository.dart';
 import '../../repositories/custom_exception.dart';
 import 'dart:developer' as developer;
@@ -110,5 +111,25 @@ class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
     }
   }
 
+  Future<void> addBooking({
+    required String dateId,
+    required String uId,
+    required String barberId,
+    required int start,
+    required int end
+  }) async {
+    try {
+      developer.log("[item_list_controller.dart][ItemListController][addItem] - addItem ");
+       await _read(barberRepositoryProvider).addBooking(
+        appointmentId: dateId,
+        barberId: barberId,
+        start: start
+      );
+
+    } on CustomException catch (e) {
+      developer.log("[item_list_controller.dart][ItemListController][addItem] - addItem Exception");
+      //_read(itemListExceptionProvider).state = e;
+    }
+  }
 
 }

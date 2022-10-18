@@ -172,6 +172,22 @@ class BarberRepository implements BaseBarberRepository{
     }
   }
 
+  Future<void> addBooking({required String barberId, required String appointmentId, required int start}) async {
+    developer.log("[barber_repository.dart][BarberRepository][updateBarber] - Adding WokrDayAvailability...");
+    try {
+      await _read(firebaseFirestoreProvider)
+          .collection('barbers')
+          .doc(barberId)
+          .collection('bookings')
+          .doc(appointmentId)
+          .set({"start":1700, "end":1730})
+          .then((value) => developer.log("New availability successfully added to ${appointmentId} start:${start} end: "));
+    } on FirebaseException catch (e) {
+      developer.log("[barber_repository.dart][BarberRepository][updateBarber] - Failure during adding Working hour update.");
+      throw CustomException(message: e.message);
+    }
+  }
+
   Future<String> createItem({
     //required String userId,
     required Barber newBarber,

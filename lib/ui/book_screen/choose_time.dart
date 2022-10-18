@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/controllers/barber_controller/barber_providers.dart';
 import 'package:flutter_shopping_list/controllers/work_day_availability_controller/work_day_availability_providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../models/work_day_availability/work_day_availability_model.dart';
+
+StateProvider<DateTime> selectedDate = StateProvider<DateTime>((_) => DateTime(2020));
+
+
+
+
 
 class chooseTime extends ConsumerStatefulWidget {
   const chooseTime({Key? key, required this.barberId}) : super(key: key);
@@ -30,7 +37,6 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
       final DateTime workDayDateTime = DateTime(int.parse(workDayString[0]),
           int.parse(workDayString[1]), int.parse(workDayString[2]));
       print(workDayDateTime);
-      print(list);
       list.removeWhere((element) {
         final List<String> dateInTheListString = element.toString().split(" ");
         final List<String> asd22 = dateInTheListString[0].toString().split("-");
@@ -38,7 +44,6 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
             int.parse(asd22[0]), int.parse(asd22[1]), int.parse(asd22[2]));
         return date2 == workDayDateTime;
       });
-      print(list);
     });
   }
 
@@ -61,19 +66,21 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
       DateTime start = DateTime(
           2022,
           10,
-          14,
+          17,
           int.parse(availability.start.toString().substring(0, 2)),
           int.parse(availability.start.toString().substring(2)));
       DateTime end = DateTime(
           2022,
           10,
-          14,
+          17,
           int.parse(availability.end.toString().substring(0, 2)),
           int.parse(availability.end.toString().substring(2)));
       for (start; start.isBefore(end);) {
         DateTime improved2 = start.add(Duration(minutes: 30));
         start = improved2;
-        temp.add(Chip(label: Text("${start.hour}:${start.minute}")));
+        temp.add(
+          CustomChip(ref: ref, start: start,barberId:widget.barberId),
+        );
       }
       return temp;
     } else
@@ -106,6 +113,15 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
             ],
           ),
           onSelectionChanged: (DateRangePickerSelectionChangedArgs arg) {
+            print("inital date selected" + ref.read(selectedDate).toString());
+            final date = arg.value.toString().split(" ");
+            final dateComponents = date[0].split("-");
+            int year = int.parse(dateComponents[0]);
+            int month = int.parse(dateComponents[1]);
+            int day = int.parse(dateComponents[2]);
+            DateTime overrideWith = DateTime(year,month,day);
+            ref.read(selectedDate.notifier).state=overrideWith;
+            print("after changing date selected" +ref.read(selectedDate).toString());
             displayNewChips(arg);
           },
         ),
@@ -122,6 +138,50 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
     }, loading: () {
       return CircularProgressIndicator();
     }));
+  }
+}
+
+class CustomChip extends StatelessWidget {
+  const CustomChip({
+    Key? key,
+    required this.barberId,
+    required this.ref,
+    required this.start,
+  }) : super(key: key);
+  final String barberId;
+  final WidgetRef ref;
+  final DateTime start;
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: (){
+        if(ref.read(selectedDate).year==2020)return;
+        print("helobelo");
+        print(start.toString());
+        final date = start.toString().split(" ")[0];
+        final time = start.toString().split(" ")[1];
+        final date_split = date.split("-");
+        final time_split = time.split(":");
+        int year = int.parse(date_split[0]);
+        int month = int.parse(date_split[1]);
+        int day = int.parse(date_split[2]);
+        int hour = int.parse(time_split[0]);
+        int minute = int.parse(time_split[1]);
+        String startt = hour.toString()+minute.toString();
+        print(date);
+        print(barberId);
+        print(int.parse(startt));
+        ref.read(barberListForShopStateProvider.notifier).addBooking(
+          dateId: date,
+          uId: "uniqueId2",
+          barberId: barberId,
+          start: int.parse(startt),
+          end:2000,
+        );
+      },
+      child: Chip(
+        label: Text("${start.hour}:${start.minute}")),
+    );
   }
 }
 
