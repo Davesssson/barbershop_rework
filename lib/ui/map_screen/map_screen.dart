@@ -5,11 +5,17 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import '../../controllers/city_controller/city_providers.dart';
+import '../../controllers/item_list_controller.dart';
 import '../../controllers/marker_controller/marker_providers.dart';
+import '../../models/barbershop/barbershop_model.dart';
+import 'info_window.dart';
 
 //https://blog.bal.al/how-to-fix-cors-error-for-your-flutter-web-app
 //https://github.com/themaaz32/auto_complete/blob/main/lib/main.dart
 //https://pub.dev/packages/google_maps_cluster_manager
+
+final cityFilterStateForMap = StateProvider<String>((_) => "");
+
 class MapScreen extends ConsumerWidget {
   final _controller = Completer();
   Location location = Location();
@@ -30,6 +36,8 @@ class MapScreen extends ConsumerWidget {
     final optionsState = ref.watch(cityListStateProvider);
     final markersState = ref.watch(markerListStateProvider);
     final markersContent = ref.watch(markerListContentProvider);
+    //final show = ref.watch(itemListFilterProvider);
+    final show = ref.watch(cityFilterStateForMap);
 
     late TextEditingController controller;
 
@@ -51,7 +59,10 @@ class MapScreen extends ConsumerWidget {
                       _controller.complete(controller);
                     },
                   ),
+                  infoWindow(),
+                  //buildBottomPart(show, ref),
                   AutoComplete(optionsState, ref),
+
                 ]
           ),
           error: (e, _) => Text("faszom"),
@@ -178,6 +189,25 @@ class MapScreen extends ConsumerWidget {
     controller.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: LatLng(pos.latitude!, pos.longitude!))
     ));
+  }
+
+  Widget buildBottomPart(String state,WidgetRef ref) {
+    //if(state == ItemListFilter.all){
+      return Positioned(
+          top:0,
+          child: Container(
+            height: 40,
+            width: 300,
+            color: Colors.yellow,
+            child: TextButton(
+              child: Text(state.toString()),
+              //icon: Icon(Icons.cancel),
+              onPressed:(){ ref.read(cityFilterStateForMap.notifier).state="";},
+            ),
+          )
+      );
+    //}
+    //return SizedBox();
   }
 
 }

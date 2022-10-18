@@ -133,6 +133,40 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
             children: [...prepareChipChoices(workDayAvailabilityListContent)],
           ),
         ),
+        Center(
+          child: ElevatedButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.grey,
+                useRootNavigator: false,
+                builder: (context) => Center(
+                  child: Column(
+                    children: [
+                      Text("sikeres foglalás, ügyes vagy"),
+                      Text("INSERT BARBERSHOP HERE"),
+                      Text("INSERT BARBER NAME -hez"),
+                      Text("INSERT BOOKING TIME -ra"),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).popAndPushNamed('/login');
+                        },
+                        child: Text(
+                          "Exit",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+            child: Text(
+              "Push bottom sheet BEHIND the Nav Bar",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
       ]);
     }, error: (e, _) {
       return Text("asdasdasd");
