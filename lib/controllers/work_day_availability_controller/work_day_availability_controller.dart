@@ -4,6 +4,8 @@ import 'package:riverpod/riverpod.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../../repositories/barber_repository.dart';
 import 'dart:developer' as developer;
+
+import '../../utils/logger.dart';
 class WorkDayAvailabilityListStateController extends StateNotifier<AsyncValue<List<WorkDayAvailability>>>{
   final Reader _read;
 
@@ -47,11 +49,11 @@ class WorkDayAvailabilityListStateController extends StateNotifier<AsyncValue<Li
             for (final day in days)
               if (day.id == appointment.id) neww else day
           ]);
+          MyLogger.singleton.logger().i("WorkDayAvailability state = "+state.toString());
         });
       });
       return true;
     } on CustomException catch (e) {
-      developer.log("[item_list_controller.dart][ItemListController][updateItem] - updateItem Exception ");
       return false;
       // _read(itemListExceptionProvider).state = e;
     }
@@ -75,10 +77,10 @@ class WorkDayAvailabilityListStateController extends StateNotifier<AsyncValue<Li
 
         state.whenData((items) =>
         state = AsyncValue.data(items..add(neww.copyWith(id: neww.id))));
+        MyLogger.singleton.logger().i("WorkDayAvailability state = "+state.toString());
       });
       return true;
     } on CustomException catch (e) {
-      developer.log("[item_list_controller.dart][ItemListController][updateItem] - updateItem Exception ");
       return false;
       // _read(itemListExceptionProvider).state = e;
     }

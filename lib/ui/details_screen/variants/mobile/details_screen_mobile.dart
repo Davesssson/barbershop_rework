@@ -10,6 +10,7 @@ import 'package:google_place/google_place.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'dart:developer' as developer;
+import '../../../../controllers/auth_controller.dart';
 import '../../../../controllers/place_controller.dart';
 import '../../../../models/barber/barber_model.dart';
 import '../../../../models/service/service_model.dart';
@@ -41,6 +42,8 @@ class DetailWidget_mobile extends ConsumerWidget {
   final items = List<String>.generate(10000, (i) => 'Item $i');
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final authControllerState = ref.watch(authControllerProvider);
+
     return DefaultTabController(
         length: 4,
         child: NestedScrollView(
@@ -59,6 +62,8 @@ class DetailWidget_mobile extends ConsumerWidget {
                         BarberList(),
                         //buildServices(),
                         //ServiceList(),
+                        authControllerState!=null
+                            ?
                         TextButton(
                             onPressed: () {
                               pushNewScreenWithRouteSettings(
@@ -68,7 +73,17 @@ class DetailWidget_mobile extends ConsumerWidget {
                               );
                             },
                             child: Text("kattints ram")
-                        ),
+                        ):TextButton(
+                            onPressed: (){
+                              final snackBar = SnackBar(
+                                content: const Text('JELENTKEZZ BE KÖCSÖG'),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                            },
+                            child: Text("nem vagy bejelentkezve")
+                        )
+                        ,
                         TabBar(
                           tabs: [
                             Tab(child:Text('General')),

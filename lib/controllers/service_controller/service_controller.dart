@@ -31,14 +31,14 @@ class ServiceListStateController extends StateNotifier<AsyncValue<List<Service>>
   Future<void> retrieveServicesFromShop(String shopId,{bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
-      developer.log("[service_controller.dart][ServiceListStateController][retrieveServiceTags] - retrieveServiceTags ");
+      developer.log("[service_controller.dart][ServiceListStateController][retrieveServicesFromShop] - retrieveServicesFromShop ");
       final items = await _read(serviceRepositoryProvider).retrieveServicesFromShop(shopId);
       if (mounted) {
         state = AsyncValue.data(items);
         print("services state now = " + state.toString());
       }
     } on CustomException catch (e) {
-      developer.log("[service_controller.dart][ServiceListStateController][retrieveServiceTags] - retrieveServiceTags Exception");
+      developer.log("[service_controller.dart][ServiceListStateController][retrieveServicesFromShop] - retrieveServiceTags Exception");
       state = AsyncValue.error(e);
     }
   }

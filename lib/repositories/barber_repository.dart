@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../general_providers.dart';
 import '../models/barber/barber_model.dart';
 import '../models/booking/booking_day_model.dart';
-import '../models/booking/booking_model.dart';
 import '../models/work_day_availability/work_day_availability_model.dart';
 import 'custom_exception.dart';
 import 'dart:developer' as developer;
@@ -27,32 +26,31 @@ class BarberRepository implements BaseBarberRepository{
 
   @override
   Future<List<Barber>> retrieveBarbers() async {
-    developer.log("[barber_repository.dart][BarberRepository][retrieveBarbers] - Barbers retrieved.");
+    developer.log("[barber_repository.dart][BarberRepository][retrieveBarbers] - Retrieving barbers. . .");
     try {
       final snap =
       await _read(firebaseFirestoreProvider).collection('barbers').get();
       return snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
-      developer.log("[barber_repository.dart][BarberRepository][retrieveBarbers] - Barbers retrieve exception.");
+      developer.log("Barbers retrieve exception.");
       throw CustomException(message: e.message);
     }
   }
 
   @override
   Future<Barber> retrieveSingleBarbersFromShop(String id) async{
-    developer.log("[barber_repository.dart][BarberRepository][retrieveSingleBarbersFromShop] - Barbers retrieved.");
+    developer.log("[barber_repository.dart][BarberRepository][retrieveSingleBarbersFromShop] - Retrieving Single Barber.");
     try {
       final snap =
        await  _read(firebaseFirestoreProvider).collection('barbers').doc(id).get().then((value) => Barber.fromJson(value.data()!)); //QueryDocSnapshop
        return snap;
-      
     } on FirebaseException catch (e) {
-      developer.log("[barber_repository.dart][BarberRepository][retrieveSingleBarbersFromShop] - Barbers retrieve exception.");
+      developer.log("Failure during retrieving single Barber.");
       throw CustomException(message: e.message);
     }
 
   }
-
+  //NOT IN USE
   @override
   Future<List<Barber>> retrieveBarbersFromShop(List<String> ids) async{
     developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers retrieved from shop.");
@@ -80,17 +78,18 @@ class BarberRepository implements BaseBarberRepository{
     }
 
   }
+
   Future<List<Barber>> retrieveBarbersFromShop2(String shopId) async{
-    developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop2] - Barbers retrieved from shop.");
+    developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop2] - Retrieving barbers for shop ${shopId}. . .");
     try {//EZ JÓ DE CSAK 10 IG MUKODIK
       final snap = await _read(firebaseFirestoreProvider).collection('barbers').where('barbershop_id', isEqualTo: shopId).get();
-      retrieveAvailability('a');
       return snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
-      developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers retrieve exception.");
+      developer.log("Failure during retrieving barbersFromShop.");
       throw CustomException(message: e.message);
     }
   }
+
 
   Future<List<Availability>> retrieveAvailability(String barberId) async{
     developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop2] - Barbers retrieved from shop.");
@@ -111,19 +110,17 @@ class BarberRepository implements BaseBarberRepository{
   }
 
   Future<List<WorkDayAvailability>> retrieveWorkDayAvailability(String barberId) async{
-    developer.log("[barber_repository.dart][BarberRepository][retrieveWorkDayAvailability] - Barbers Work day availability retrieved.");
+    developer.log("[barber_repository.dart][BarberRepository][retrieveWorkDayAvailability] - Retrieving WorkDayAvailability. . .");
     try {
-      //final snap = await _read(firebaseFirestoreProvider).collection('barbers').doc(barberId).collection('availability').get();
       final snap = await _read(firebaseFirestoreProvider)
           .collection('barbers')
           .doc(barberId)
           .collection('work_day_availability')
           .where('__name__',isGreaterThanOrEqualTo: '2022-10-02')
           .get();
-      print("itt kell nezni");print(snap.docs.toString());
       return snap.docs.map((doc) => WorkDayAvailability.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
-      developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers retrieve exception.");
+      developer.log("Failure during retrieving WorkDayAvailability.");
       throw CustomException(message: e.message);
     }
   }
@@ -136,13 +133,13 @@ class BarberRepository implements BaseBarberRepository{
           .doc(barber.id)
           .update(barber.toDocument());
     } on FirebaseException catch (e) {
-      developer.log("[barber_repository.dart][BarberRepository][updateBarber] - Failure during Barber update.");
+      developer.log("Failure during Barber update.");
       throw CustomException(message: e.message);
     }
   }
 
   Future<void> updateWorkDayAvailability({required String barberId, required String appointmentId, required int newStart, required int newEnd}) async {
-    developer.log("[barber_repository.dart][BarberRepository][updateBarber] - Updating WokrDayAvailability...");
+    developer.log("[barber_repository.dart][BarberRepository][updateWorkDayAvailability] - Updating WokrDayAvailability for barber ${barberId}...");
     try {
       await _read(firebaseFirestoreProvider)
           .collection('barbers')
@@ -152,13 +149,13 @@ class BarberRepository implements BaseBarberRepository{
           .update({"start":newStart, "end":newEnd})
           .then((value) => developer.log("Working hour succesfully modified to start:${newStart} end: ${newEnd}"));
     } on FirebaseException catch (e) {
-      developer.log("[barber_repository.dart][BarberRepository][updateBarber] - Failure during Working hour update.");
+      developer.log("Failure during Working hour update.");
       throw CustomException(message: e.message);
     }
   }
 
   Future<void> addWorkDayAvailability({required String barberId, required String appointmentId, required int start, required int end}) async {
-    developer.log("[barber_repository.dart][BarberRepository][updateBarber] - Adding WokrDayAvailability...");
+    developer.log("[barber_repository.dart][BarberRepository][addWorkDayAvailability] - Adding WokrDayAvailability to barber ${barberId}. . .");
     try {
       await _read(firebaseFirestoreProvider)
           .collection('barbers')
@@ -168,13 +165,13 @@ class BarberRepository implements BaseBarberRepository{
           .set({"start":start, "end":end})
           .then((value) => developer.log("New availability successfully added to ${appointmentId} start:${start} end: ${end}"));
     } on FirebaseException catch (e) {
-      developer.log("[barber_repository.dart][BarberRepository][updateBarber] - Failure during adding Working hour update.");
+      developer.log("Failure during adding Working hour update.");
       throw CustomException(message: e.message);
     }
   }
 
   Future<void> addBooking({required String barberId, required String dateId, required int start, required String uId}) async {
-    developer.log("[barber_repository.dart][BarberRepository][updateBarber] - Adding WokrDayAvailability...");
+    developer.log("[barber_repository.dart][BarberRepository][addBooking] - Adding Booking for barber ${barberId}...");
     try {
       await _read(firebaseFirestoreProvider)
           .collection('barbers')
@@ -185,63 +182,53 @@ class BarberRepository implements BaseBarberRepository{
           .then((value) => developer.log("New availability successfully added to ${dateId} start:${start} end: "));
     } on FirebaseException catch (e) {
       //nem tudja azt kezelni, hogyha updatelni akarunk egy olyan dokumentumot, ami nem létezik
-      developer.log("[barber_repository.dart][BarberRepository][updateBarber] - Failure during adding Working hour update.");
+      developer.log("Failure during adding Working hour update.");
       throw CustomException(message: e.message);
     }
   }
 
-  Future<String> createItem({
-    //required String userId,
+  Future<String> createBarber({
     required Barber newBarber,
   }) async {
-    developer.log("[itemrepository.dart][itemRepository][createItem] - Item created.");
+    developer.log("[barber_repository.dart][BarberRepository][createItem] - Creating new barber. . .");
     try {
       final docRef = await _read(firebaseFirestoreProvider)
           .collection('barbers')
           .add(newBarber.toDocument());
+      //TODO KISZERVEZNI A BARBERSHOP REPOBA??
       final addToShop = await _read(firebaseFirestoreProvider)
           .collection('barbershops')
           .doc(newBarber.barbershop_id)
           .update({
               "barbers":FieldValue.arrayUnion([docRef.id])
            });
-
-    
-      //print(addToShop.get().then((value) => value['barbers']));
       return docRef.id;
-      return "asd";
     } on FirebaseException catch (e) {
-      developer.log("[itemrepository.dart][itemRepository][createItem] - Item create exception.");
+      developer.log("Failure during creating barber");
       throw CustomException(message: e.message);
     }
   }
 
   Future<List<BookingDay>> retrieveBookings(String barberId) async{
-    developer.log("[barber_repository.dart][BarberRepository][retrieveWorkDayAvailability] - Barbers Booking retrieved.");
+    developer.log("[barber_repository.dart][BarberRepository][retrieveBookings] - Retrieve bookings for barber ${barberId}. . .");
     try {
-      //final snap = await _read(firebaseFirestoreProvider).collection('barbers').doc(barberId).collection('availability').get();
       final snap = await _read(firebaseFirestoreProvider)
           .collection('barbers')
           .doc(barberId)
           .collection('bookings')
           .where('__name__',isGreaterThanOrEqualTo: '2022-10-02')
           .get();
-      print("itt kell nezni");print(snap.docs.toString());
        return snap.docs.map((doc) => BookingDay.fromDocumentCustom(doc)).toList();
-      //return snap.docs.map((doc) => Booking.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
-      developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers booking retrieve exception.");
+      developer.log("Failure during retrieving bookings");
       throw CustomException(message: e.message);
     }
   }
 
   Future<List<ResourceViewModel>> retrieveResourceView() async{
-    developer.log("[barber_repository.dart][BarberRepository][retrieveWorkDayAvailability] - Barbers Work day availability retrieved.");
+    developer.log("[barber_repository.dart][BarberRepository][retrieveResourceView] - Retrieving ResourceView data. . .");
     try {
-      //final snap = await _read(firebaseFirestoreProvider).collection('barbers').doc(barberId).collection('availability').get();
-
       List<Barber> barbers =  await retrieveBarbersFromShop2('7HTJ8DF8hFwUnrL566Wc');
-
       List<Future<List<WorkDayAvailability>>> list_workday= barbers.map((barber)  {
         return  retrieveWorkDayAvailability(barber.id!);
       }).toList();
@@ -262,11 +249,9 @@ class BarberRepository implements BaseBarberRepository{
         );
         resViewresult.add(item);
       }
-      print("mukodjel kerlek" + resViewresult.toString());
       return resViewresult;
-      //return asd
     } on FirebaseException catch (e) {
-      developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers retrieve exception.");
+      developer.log("Failure during retrieving Resource view data");
       throw CustomException(message: e.message);
     }
   }

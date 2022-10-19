@@ -26,7 +26,7 @@ class MyApp extends ConsumerWidget {
       themeMode:ref.watch(ThemeModeProvider),
       theme: ThemeClass.light,
       darkTheme: ThemeClass.dark,
-      initialRoute:'/admin' ,
+      initialRoute:'/login' ,
       routes:{
         '/details':(context)=>DetailsScreen(),
         '/login':(context)=> LoginScreen(),

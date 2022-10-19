@@ -145,7 +145,7 @@ class LoginScreen_mobile extends HookConsumerWidget{
                             child: TextButton(
                                child:Text( "Login"),
                               onPressed: (){
-                                ref.watch(authControllerProvider.notifier).signInAnonymously();
+                                //ref.watch(authControllerProvider.notifier).signInAnonymously();
                                 Navigator.pushNamed(context,"/home");
                               },
                             ),

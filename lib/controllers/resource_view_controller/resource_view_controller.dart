@@ -1,4 +1,5 @@
 import 'package:flutter_shopping_list/models/resource_view_model/resource_view_model.dart';
+import 'package:flutter_shopping_list/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../repositories/barber_repository.dart';
 import '../../repositories/custom_exception.dart';
@@ -8,7 +9,7 @@ import 'dart:developer' as developer;
 class ResourceViewListStateController extends StateNotifier<AsyncValue<List<ResourceViewModel>>>{
   final Reader _read;
   ResourceViewListStateController(this._read):super(AsyncValue.loading()){
-    developer.log("[barbershop_controller.dart][BarbershopListStateController][BarbershopListStateController] - BarbershopListStateController Constructed.");
+    developer.log("[resource_view_controller.dart][ResourceViewListStateController][retrieveResourceViews] - ResourceViewListStateController constructed .");
     retrieveResourceViews();
   }
 
@@ -16,13 +17,13 @@ class ResourceViewListStateController extends StateNotifier<AsyncValue<List<Reso
   Future<void> retrieveResourceViews({bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
-      developer.log("[barbershop_controller.dart][BarbershopListStateController][retrieveBarbershops] - retrieveBarbershops .");
+      developer.log("[resource_view_controller.dart][ResourceViewListStateController][retrieveResourceViews] - retrieve retrieveResourceViews .");
       final items = await _read(barberRepositoryProvider).retrieveResourceView();
       if (mounted) {
         state = AsyncValue.data(items);
+        MyLogger.singleton.logger().i("RespurceViewController state = "+state.toString());
       }
     } on CustomException catch (e) {
-      developer.log("[barbershop_controller.dart][BarbershopListStateController][retrieveBarbershops] - retrieveBarbershops Exception.");
       state = AsyncValue.error(e);
     }
   }
@@ -30,13 +31,14 @@ class ResourceViewListStateController extends StateNotifier<AsyncValue<List<Reso
   Future<void> updateAvailabilityInState(String barberId,{bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
-      developer.log("[barbershop_controller.dart][BarbershopListStateController][retrieveBarbershops] - retrieveBarbershops .");
+      developer.log("[resource_view_controller.dart][ResourceViewListStateController][retrieveResourceViews] -  updateAvailabilityInState .");
       final items = await _read(barberRepositoryProvider).retrieveResourceView();
       if (mounted) {
         state = AsyncValue.data(items);
+        MyLogger.singleton.logger().i("RespurceViewController state = "+state.toString());
+
       }
     } on CustomException catch (e) {
-      developer.log("[barbershop_controller.dart][BarbershopListStateController][retrieveBarbershops] - retrieveBarbershops Exception.");
       state = AsyncValue.error(e);
     }
   }

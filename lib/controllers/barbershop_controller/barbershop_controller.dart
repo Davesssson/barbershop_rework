@@ -1,4 +1,5 @@
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
+import 'package:flutter_shopping_list/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../repositories/barbershops_repository.dart';
 import '../../repositories/custom_exception.dart';
@@ -24,6 +25,7 @@ class BarbershopListStateController extends StateNotifier<AsyncValue<List<Barber
       final items = await _read(barbershopRepositoryProvider).retrieveBarbershops();
       if (mounted) {
         state = AsyncValue.data(items);
+        MyLogger.singleton.logger().d("Barbershop state = " + state.toString());
       }
     } on CustomException catch (e) {
       developer.log("[barbershop_controller.dart][BarbershopListStateController][retrieveBarbershops] - retrieveBarbershops Exception.");
@@ -41,7 +43,7 @@ class BarbershopListStateController extends StateNotifier<AsyncValue<List<Barber
         List<Barbershop> asd = [];
         asd.add(items);
         state = AsyncValue.data(asd);
-        //state = AsyncValue.data(List.from(items as List<Barbershop>)); //ez valamiért nem működik :(
+        MyLogger.singleton.logger().d("Barbershop state = " + state.toString());
       }
     } on CustomException catch (e) {
       developer.log("[barbershop_controller.dart][BarbershopListStateController][retrieveSingleBarbershop] - retrieveSingleBarbershop Exception.");
@@ -52,11 +54,11 @@ class BarbershopListStateController extends StateNotifier<AsyncValue<List<Barber
   Future<void> retrieveFeaturedBarbershops({bool isRefreshing = false}) async{
     if (isRefreshing) state = AsyncValue.loading();
     try {
-      developer.log("[barbershop_controller.dart][BarbershopListStateController][retrieveSingleBarbershop] - retrieve Single barbershop .");
+      developer.log("[barbershop_controller.dart][BarbershopListStateController][retrieveFeaturedBarbershops] -  retrieveFeaturedBarbershops .");
       final items = await _read(barbershopRepositoryProvider).retrieveFeaturedBarbershops();
       if (mounted) {
         state = AsyncValue.data(items);
-        //state = AsyncValue.data(List.from(items as List<Barbershop>)); //ez valamiért nem működik :(
+        MyLogger.singleton.logger().d("Barbershop state = " + state.toString());
       }
     } on CustomException catch (e) {
       developer.log("[barbershop_controller.dart][BarbershopListStateController][retrieveSingleBarbershop] - retrieveSingleBarbershop Exception.");

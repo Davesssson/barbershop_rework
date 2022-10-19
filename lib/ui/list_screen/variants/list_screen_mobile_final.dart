@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/controllers/barbershop_controller/barbershop_featured_provider.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_final_proto.dart';
+import 'package:flutter_shopping_list/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
+import '../../../controllers/auth_controller.dart';
 import '../../../controllers/barbershop_controller/barbershop_controller.dart';
 import '../../../controllers/barbershop_controller/barbershop_providers.dart';
 import '../../../controllers/city_controller/city_providers.dart';
@@ -41,7 +44,20 @@ class ListScreen_mobile_final extends HookConsumerWidget {
                   ),
                 )
               ),
-            ),  //Discover
+            ),
+            TextButton(
+                onPressed: (){
+                  ref.watch(authControllerProvider.notifier).signInAnonymously();
+                  MyLogger.singleton.logI("");
+                },
+                child: Text("login")
+            ),//Discover
+            TextButton(
+                onPressed: (){
+                  ref.watch(authControllerProvider.notifier).signOut();
+                },
+                child: Text("logout")
+            ),//
             SizedBox(height: 25),
             HorizontalList(
                 stateProvider: barbershopListFeaturedStateProvider,
@@ -90,7 +106,6 @@ class HorizontalList extends ConsumerWidget{
   Widget build(BuildContext context, WidgetRef ref) {
     final stateProvider = ref.watch(this.stateProvider);
     final contentProvider = ref.watch(this.contentProvider);
-
     return stateProvider.when(
         data: (data){
           return data.isEmpty

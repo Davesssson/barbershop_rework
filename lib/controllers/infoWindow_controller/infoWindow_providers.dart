@@ -7,9 +7,8 @@ import '../../ui/map_screen/map_screen.dart';
 import 'infoWindow_controller.dart';
 
 final barbershopForMapContentProvider = Provider<Barbershop?>((ref) {
-  developer.log("[city_providers.dart][-][cityListContentProvider] - cityListContentProvider.");
   final filter = ref.watch(cityFilterStateForMap);
-  final itemListState = ref.watch(barbershopForMapStateProvider(filter.split("(")[1].split(")")[0]));
+  final itemListState = ref.watch(barbershopForMapStateProvider(filter.split("(")[1].split(")")[0])); //tudom, hogy csúnya, de hidd el hogy ez kell
   return itemListState.maybeWhen(
     data: (items) {
       switch (filter) {
@@ -22,7 +21,7 @@ final barbershopForMapContentProvider = Provider<Barbershop?>((ref) {
 });
 
 final barbershopForMapStateProvider = StateNotifierProvider.family<infoWindowController, AsyncValue<Barbershop>,String>((ref,shopId) {
-  developer.log("[city_providers.dart][-][cityListStateProvider] - cityListStateProvider");
+  developer.log("[infoWindow_providers.dart][-][barbershopForMapStateProvider] - barbershopForMapStateProvider");
   return infoWindowController(ref.read,shopId);
 },
 );

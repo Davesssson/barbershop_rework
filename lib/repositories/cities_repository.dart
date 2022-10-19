@@ -24,20 +24,21 @@ class CitiesRepository implements BaseCitiesRepository {
 
   @override
   Future<List<String>> retrieveCities()async {
-    developer.log("[cities_repository.dart][CitiesRepository][retrieveCities] - retrieveCities retrieved.");
+    developer.log("[cities_repository.dart][CitiesRepository][retrieveCities] - Retrieving cities. . .");
     try {
       final snap = await _read(firebaseFirestoreProvider).collection('barbershops').get();
       final cities =  snap.docs.map((doc) => doc['city'].toString()).toSet().toList();
       developer.log("[cities = " + cities.toString());
       return cities;
     } on FirebaseException catch (e) {
-      developer.log("[barbershops_repository.dart][CitiesRepository][retrieveCities] - retrieveCities retrieved exception.");
+      developer.log("Failure during retrieving cities" + e.message!);
       throw CustomException(message: e.message);
     }
   }
 
+  //NOT IN USE
   Future<Set<Marker>> retrieveCityMarkers(String city)async {
-    developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkers] - retrieveCityMarkers retrieved.");
+    developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkers] - Retrieving cityMarkers. . .");
     try {
       print(city);
       final snap = await _read(firebaseFirestoreProvider).collection('barbershops').get();
@@ -50,18 +51,17 @@ class CitiesRepository implements BaseCitiesRepository {
           markerId: MarkerId(doc.id),
           position: LatLng(gp.latitude,gp.longitude),
         );
-        //position:LatLng( doc['location']['latitude'], doc['location']['longitude']))
       }).toSet();
       developer.log("[markers = " + markers.toString());
       return markers;
     } on FirebaseException catch (e) {
-      developer.log("[cities_repository.dart][CitiesRepository][retrieveCities] - retrieveCityMarkers retrieved exception.");
+      developer.log("[cities_repository.dart][CitiesRepository][retrieveCities] - Failure during retrieving city Markers.");
       throw CustomException(message: e.message);
     }
   }
-  Future<Set<MarkerResponseItem>> retrieveCityMarkers2()async {
-    developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkers2] - retrieveCityMarkers2 retrieved.");
 
+  Future<Set<MarkerResponseItem>> retrieveCityMarkers2()async {
+    developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkers2] - Retrieve cityMarkers. . .");
     try {
       final snap = await _read(firebaseFirestoreProvider).collection('barbershops').get();
       final markers =  snap.docs.map((doc) {
@@ -82,8 +82,9 @@ class CitiesRepository implements BaseCitiesRepository {
       throw CustomException(message: e.message);
     }
   }
+
   Future<Stream<List<DocumentSnapshot>>> retrieveCityMarkersGeoLocation()async {
-    developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkers2] - retrieveCityMarkers2 retrieved.");
+    developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkersGeoLocation] - Retrieving City Markers for geolocation. . .");
     Geoflutterfire geo = Geoflutterfire();
     GeoFirePoint center = geo.point(latitude: 47.497913, longitude:19.040236);
     try {
@@ -93,7 +94,6 @@ class CitiesRepository implements BaseCitiesRepository {
       print("itt vagyok");
        Stream<List<DocumentSnapshot>> stream = await geo.collection(collectionRef: collectionReference)
           .within(center: center, radius: radius, field: field);
-
 /*      Set<MarkerResponseItem>> items =await
           stream.last.map((e) {
           GeoPoint gp = e['location'];
@@ -108,22 +108,18 @@ class CitiesRepository implements BaseCitiesRepository {
 
       print("items"+items.toString());
       return items;*/
-
       stream.forEach((element) {
         element.forEach((element2) {print("printing"+element2.data().toString()); });
       });
-            //print(stream.toString());
       return stream;
-
-
     } on FirebaseException catch (e) {
-      developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkers2] - retrieveCityMarkers retrieved exception.");
+      developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkersGeoLocation] - Failure during retrieving city markers for geolaction.");
       throw CustomException(message: e.message);
     }
   }
 
   Future<Set<MarkerResponseItem>> retrieveCityMarkersGeoLocation2(LatLng middlePoint)async {
-    developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkers2] - retrieveCityMarkers2 retrieved.");
+    developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkersGeoLocation] - Retrieving City Markers for geolocation. . .");
     Geoflutterfire geo = Geoflutterfire();
     GeoFirePoint center = geo.point(latitude: 47.497913, longitude:19.040236);
     //GeoFirePoint center = geo.point(latitude:middlePoint.latitude, longitude: middlePoint.longitude);
@@ -131,11 +127,14 @@ class CitiesRepository implements BaseCitiesRepository {
       final collectionReference = await _read(firebaseFirestoreProvider).collection('barbershops');
       double radius = 100;
       String field = 'point';
-      print("itt vagyok");
-      Stream<List<DocumentSnapshot>> stream = geo.collection(collectionRef: collectionReference)
-          .within(center: center, radius: radius, field: field);
-
-      final asd = await stream.first.then((documents) => documents.map((doc) {
+      Stream<List<DocumentSnapshot>> stream = geo
+          .collection(collectionRef: collectionReference)
+          .within(
+            center: center,
+            radius: radius,
+            field: field
+      );
+      final markerResponseItems = await stream.first.then((documents) => documents.map((doc) {
         print(doc.data().toString());
         GeoPoint gp = doc['location'];
         return MarkerResponseItem(
@@ -145,17 +144,10 @@ class CitiesRepository implements BaseCitiesRepository {
               position: LatLng(gp.latitude,gp.longitude),
             )
         );
-      }
-
-      ).toSet());
-      print("na erre kiv");
-      asd.forEach((element) {print("element.toString()"+element.toString());});
-      //print(stream.toString());
-      return asd;
-
-
+      }).toSet());
+      return markerResponseItems;
     } on FirebaseException catch (e) {
-      developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkers2] - retrieveCityMarkers retrieved exception.");
+      developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkersGeoLocation] - Failure during retrieving city markers for geolaction.");
       throw CustomException(message: e.message);
     }
   }

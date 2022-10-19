@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/repositories/service_repository.dart';
+import 'package:flutter_shopping_list/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../general_providers.dart';
 import 'custom_exception.dart';
@@ -21,48 +22,46 @@ class BarbershopRepository implements BaseBarbershopRepository{
 
   @override
   Future<List<Barbershop>> retrieveBarbershops() async {
-    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Barbershops retrieved.");
+    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Retriving Barbershops.");
     try {
         final snap = await _read(firebaseFirestoreProvider).collection('barbershops')/*.limit(3)*/.get();
-        //this.retrieveCities();
         final asd = await _read(serviceRepositoryProvider).retrieveServiceTags();
         print(asd);
         return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
-        developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Barbershop retrieve exception.");
+        developer.log("Failure during retrieving barbershops" + e.message!);
         throw CustomException(message: e.message);
     }
   }
 
   Future<List<Barbershop>> retrieveMoreBarbershops(Barbershop? b) async {
-    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveMoreBarbershops] - More barbershops retrieved.");
+    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveMoreBarbershops] - Retrieving MORE barrbershops. . .");
     try {
       final previoussSnap = await  _read(firebaseFirestoreProvider).collection('barbershops').doc(b!.id).get();
       final snap = await _read(firebaseFirestoreProvider).collection('barbershops').startAfterDocument(previoussSnap).limit(3).get();
-      //this.retrieveCities();
       return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
-      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveMoreBarbershops] - More barbershop retrieve exception.");
+      developer.log("Failure during retrieving MORE barbershops" + e.message!);
       throw CustomException(message: e.message);
     }
   }
 
   @override
   Future<Barbershop> retrieveSingleBarbershop(String id)async {
-    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveSingleBarbershop] - Single Barbershop retrieved.");
+    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveSingleBarbershop] - Retrieving barbershop ${id}. . .");
     try {
       final snap =
           await  _read(firebaseFirestoreProvider).collection('barbershops').doc(id).get().then((value) => Barbershop.fromDocument(value)); //QueryDocSnapshop
       return snap;
     } on FirebaseException catch (e) {
-      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveSingleBarbershop] - Single Barbershop retrieve exception.");
+      developer.log("Failure during retrieving single barbershops" + e.message!);
       throw CustomException(message: e.message);
     }
 
   }
 
   Future<List<Barbershop>> retrievePaginatedBarbershops(Barbershop? item) async {
-    print(item);
+    developer.log("[barbershops_repository.dart][BarbershopRepository][retrievePaginatedBarbershops] - Retrieving paginated barbershops. . .");
     final itemsCollectionRef = await  _read(firebaseFirestoreProvider).collection('barbershops');
     try {
       print("try 1");
@@ -87,10 +86,12 @@ class BarbershopRepository implements BaseBarbershopRepository{
             .toList();
       }
     } on FirebaseException catch (e) {
+      developer.log("Failure during retrieving paginated barbershops" + e.message!);
       throw CustomException(message: e.message);
     }
   }
 
+  //NOT IN USE
   Future<List<Barbershop>> retrieveBarbershopsServices(List<String> tags) async {
     developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershopsServices] - retrieveBarbershopsServices retrieved.");
     try {
@@ -104,14 +105,14 @@ class BarbershopRepository implements BaseBarbershopRepository{
   }
 
   Future<List<Barbershop>> retrieveFeaturedBarbershops() async{
-    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveFeaturedBarbershops] - retrieveFeaturedBarbershops retrieved.");
+    developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveFeaturedBarbershops] - Retrieving Featured barbershops. . .");
     try {
       final snap = await _read(firebaseFirestoreProvider).collection('barbershops').where('featured',isEqualTo: true).get();
       print("snap fetured");
       print(snap.toString());
       return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
-      developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveFeaturedBarbershops] - retrieveFeaturedBarbershops exception.");
+      developer.log("Failure during retrieving paginated barbershops" + e.message!);
       throw CustomException(message: e.message);
     }
   }
