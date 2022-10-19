@@ -29,7 +29,6 @@ class BarberList extends ConsumerWidget {
                       itemCount: barbersContent.length,
                       itemBuilder: (BuildContext context, int index) {
                         final barber = barbersContent[index];
-                        //return Text(barber.name!);
                         return ProviderScope(
                             overrides: [currentBarber.overrideWithValue(barber)],
                             child: BarberHead(barber: barber));

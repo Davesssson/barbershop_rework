@@ -28,9 +28,14 @@ class BarberHead extends StatelessWidget {
           color:Theme.of(context).scaffoldBackgroundColor,
           child: Column(
             children: [
-              CircleAvatar(
+              barber.prof_pic!=null
+              ?CircleAvatar(
                 radius: MediaQuery.of(context).size.height/20, //Magic number, kb ez ad 40 es értéket, szélességtől nem függ
                 backgroundImage: NetworkImage(barber.prof_pic!),
+              )
+              :CircleAvatar(
+                radius: MediaQuery.of(context).size.height/20, //Magic number, kb ez ad 40 es értéket, szélességtől nem függ
+                backgroundColor: Colors.red,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
