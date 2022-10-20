@@ -178,7 +178,7 @@ class BarberRepository implements BaseBarberRepository{
           .doc(barberId)
           .collection('bookings')
           .doc(dateId)
-          .set({uId:{"barberId":barberId, "dateId":dateId,"start":start,"end":start+30,"uId":uId}})
+          .update({uId:{"barberId":barberId, "dateId":dateId,"start":start,"end":start+30,"uId":uId}})
           .then((value) => developer.log("New availability successfully added to ${dateId} start:${start} end: "));
     } on FirebaseException catch (e) {
       //nem tudja azt kezelni, hogyha updatelni akarunk egy olyan dokumentumot, ami nem létezik

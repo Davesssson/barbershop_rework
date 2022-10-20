@@ -3,17 +3,17 @@ import 'package:flutter_shopping_list/controllers/barber_controller/barber_provi
 import 'package:flutter_shopping_list/controllers/work_day_availability_controller/work_day_availability_providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:uuid/uuid.dart';
+import '../../models/barbershop/barbershop_model.dart';
 import '../../models/work_day_availability/work_day_availability_model.dart';
 
 StateProvider<DateTime> selectedDate = StateProvider<DateTime>((_) => DateTime(2020));
-
-
-
-
+StateProvider<CustomChip?> selectedChip = StateProvider<CustomChip?>((_) => null);
 
 class chooseTime extends ConsumerStatefulWidget {
-  const chooseTime({Key? key, required this.barberId}) : super(key: key);
+  const chooseTime({Key? key, required this.barberId,required this.barbershop}) : super(key: key);
   final barberId;
+  final Barbershop barbershop;
   @override
   ConsumerState<chooseTime> createState() => _chooseTimeState();
 }
@@ -94,6 +94,7 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
         ref.watch(WorkDayAvailabilityListStateProvider(widget.barberId));
     final workDayAvailabilityListContent =
         ref.watch(WorkDayAvailabilityListContentProvider(widget.barberId));
+    final chipSelected = ref.watch(selectedChip);
 
     return Scaffold(
         body: workDayAvailabilityListState.when(data: (data) {
@@ -124,18 +125,42 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
             ref.read(selectedDate.notifier).state=overrideWith;
             print("after changing date selected" +ref.read(selectedDate).toString());
             displayNewChips(arg);
+            ref.read(selectedChip.notifier).state=null;
           },
         ),
-        Container(
-          height: MediaQuery.of(context).size.height / 10,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: [...prepareChipChoices(workDayAvailabilityListContent)],
-          ),
-        ),
+        buildChipChoicesGridView(context, workDayAvailabilityListContent),//TODO itt dobja a render errort, majd később foglalkozok vele
         Center(
           child: ElevatedButton(
-            onPressed: () {
+
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            onPressed: chipSelected!=null ? () {
+              if(ref.read(selectedDate).year==2020)return;
+              print("helobelo");
+              final date = chipSelected.start.toString().split(" ")[0];
+              final time = chipSelected.start.toString().split(" ")[1];
+              final date_split = date.split("-");
+              final time_split = time.split(":");
+              int year = int.parse(date_split[0]);
+              int month = int.parse(date_split[1]);
+              int day = int.parse(date_split[2]);
+              int hour = int.parse(time_split[0]);
+              int minute = int.parse(time_split[1]);
+              String startt = hour.toString()+minute.toString();
+              print(date);
+              print(widget.barberId);
+              print(int.parse(startt));
+              Uuid uuid = Uuid();
+              ref.read(barberListForShopStateProvider.notifier).addBooking(
+                dateId: date,
+                uId: uuid.v4(),
+                barberId: widget.barberId,
+                start: int.parse(startt),
+                end:2000,
+              );
+
+
+
+
               showModalBottomSheet(
                 context: context,
                 backgroundColor: Colors.grey,
@@ -143,10 +168,10 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
                 builder: (context) => Center(
                   child: Column(
                     children: [
-                      Text("sikeres foglalás, ügyes vagy"),
+                      Text("sikeres foglalás ${widget.barbershop.name}ügyes vagy"),
                       Text("INSERT BARBERSHOP HERE"),
                       Text("INSERT BARBER NAME -hez"),
-                      Text("INSERT BOOKING TIME -ra"),
+                      Text("INSERT ${chipSelected.start} TIME -ra"),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.of(context, rootNavigator: true).popAndPushNamed('/login');
@@ -160,9 +185,9 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
                   ),
                 ),
               );
-            },
+            }:null,
             child: Text(
-              "Push bottom sheet BEHIND the Nav Bar",
+              "BOOK NOW ",
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -174,9 +199,34 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
       return CircularProgressIndicator();
     }));
   }
+
+  Flexible buildChipChoicesGridView(BuildContext context, WorkDayAvailability workDayAvailabilityListContent) {
+    return Flexible(
+        //height: MediaQuery.of(context).size.height/5,
+        child: GridView.count(
+          shrinkWrap: true,
+          mainAxisSpacing: 5,
+          crossAxisSpacing: 5,
+          crossAxisCount: (MediaQuery.of(context).size.width / 70).toInt(),
+          children: [
+            ...prepareChipChoices(workDayAvailabilityListContent)
+          ],
+        ),
+      );
+  }
+
+  Container buildChipChoicesScrollView(BuildContext context, WorkDayAvailability workDayAvailabilityListContent) {
+    return Container(
+        height: MediaQuery.of(context).size.height / 10,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: [...prepareChipChoices(workDayAvailabilityListContent)],
+        ),
+      );
+  }
 }
 
-class CustomChip extends StatelessWidget {
+class CustomChip extends ConsumerWidget {
   const CustomChip({
     Key? key,
     required this.barberId,
@@ -186,10 +236,13 @@ class CustomChip extends StatelessWidget {
   final String barberId;
   final WidgetRef ref;
   final DateTime start;
+
+
   @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: (){
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selected = ref.watch(selectedChip);
+    //return InkWell(
+     /* onTap: (){
         if(ref.read(selectedDate).year==2020)return;
         print("helobelo");
         print(start.toString());
@@ -206,17 +259,24 @@ class CustomChip extends StatelessWidget {
         print(date);
         print(barberId);
         print(int.parse(startt));
+        Uuid uuid = Uuid();
         ref.read(barberListForShopStateProvider.notifier).addBooking(
           dateId: date,
-          uId: "uniqueId3",
+          uId: uuid.v4(),
           barberId: barberId,
           start: int.parse(startt),
           end:2000,
         );
-      },
-      child: Chip(
-        label: Text("${start.hour}:${start.minute}")),
-    );
+      },*/
+      return ChoiceChip(
+        selected: selected?.start==this.start,
+        onSelected: (selected){
+          ref.read(selectedChip.notifier).state=this;
+
+        },
+        selectedColor: Colors.brown,
+        label: Text("${start.hour}:${start.minute}"));
+    //);
   }
 }
 

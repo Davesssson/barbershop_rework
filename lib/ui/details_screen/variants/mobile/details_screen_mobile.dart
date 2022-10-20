@@ -68,7 +68,7 @@ class DetailWidget_mobile extends ConsumerWidget {
                             onPressed: () {
                               pushNewScreenWithRouteSettings(
                                 context,
-                                settings: RouteSettings(name: '/book'),
+                                settings: RouteSettings(name: '/book', arguments: bs),
                                 screen: chooseBarber(),
                               );
                             },

@@ -47,12 +47,49 @@ class editView extends HookConsumerWidget {
           color: Colors.grey,
           child: Column(
             children: [
-              Text("Name"),
-              TextFormField(controller: textNameController),
-              Text("Description"),
-              TextFormField(
-                controller: textDescriptionController,
-                maxLines: 3,
+              Row(
+                children: [
+                  Column(
+                    children: [
+                      Text("Name"),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          width: MediaQuery.of(context).size.width/3,
+                          child: TextFormField(controller: textNameController),
+                        ),
+                      ),
+                      Text("Description"),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          width: MediaQuery.of(context).size.width/3,
+                          child: TextFormField(controller: textDescriptionController),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width/2.5,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: InkWell(
+                            onHover: (onHover){
+                               onHover?Container(color: Colors.red):Container(color:Colors.blue);
+                            },
+                            child: Image.network(barberUnderEdit!.prof_pic!)
+                        )
+                      )
+                    ],
+                  )
+                ],
               ),
               TextButton(
                   onPressed: () {
@@ -80,8 +117,8 @@ class editView extends HookConsumerWidget {
                           };
                   },
                   child: barberUnderEdit == null
-                      ? Text("hozz Létre és adj hozzá egy fodrászt")
-                      : Text("mentsd el a fodrász változtatásait")),
+                      ? Text("hozz Létre és adj hozzá egy fodrászt",style: TextStyle(color:Colors.black))
+                      : Text("mentsd el a fodrász változtatásait",style: TextStyle(color:Colors.black))),
               TextButton(
                 child: Text("updateld a calendart!",style: TextStyle(color:Colors.black),),
                 onPressed: () async{
