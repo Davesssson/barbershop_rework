@@ -5,14 +5,19 @@ import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile
 import 'package:flutter_shopping_list/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import '../../../controllers/auth_controller.dart';
 import '../../../controllers/barbershop_controller/barbershop_controller.dart';
 import '../../../controllers/barbershop_controller/barbershop_providers.dart';
 import '../../../controllers/city_controller/city_providers.dart';
 import 'dart:developer' as developer;
+import '../../../controllers/service_controller/service_providers.dart';
 import '../../details_screen/details_screen.dart';
+import '../../profile_screen/profile_screen.dart';
+import '../../services_scren/service_screen.dart';
 import '../widgets/shopTile.dart';
 import '../widgets/shopTile3.dart';
+import 'list_screen_mobile_services.dart';
 
 final currentShop_final = Provider<Barbershop>((_) {
   developer.log("[details_screen_mobile.dart][currentItem] - ??????.");
@@ -24,26 +29,53 @@ class ListScreen_mobile_final extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final authControllerState = ref.watch(authControllerProvider);
     return Scaffold(
       body: ListView(
         children:[// Column( //TODO ha valami összefossa magát akkor a ListViewt cseréld ki Column-ra és állítsd be a
           //mainAxisSize: MainAxisSize.min,
          // children: [
             SizedBox(height: 25),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: Text(
-                  "Discover _______",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 40,
-                    color: Colors.black,
+            Row(
+              children: [
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        "Discover _______",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                          color: Colors.black,
 
+                        ),
+                      )
+                    ),
                   ),
+                ),
+                authControllerState != null?
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InkWell(
+                    onTap: (){
+                      pushNewScreenWithRouteSettings(
+                        context,
+                        settings: RouteSettings(name: '/profile'),
+                        screen: profileScreen(),
+                      );
+                    },
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.green,
+                    ),
+                  ),
+                ):TextButton(
+                    onPressed: () {},
+                    child: Text("Sign In!")
                 )
-              ),
+              ],
             ),
             TextButton(
                 onPressed: (){
@@ -68,17 +100,46 @@ class ListScreen_mobile_final extends HookConsumerWidget {
               alignment: Alignment.centerLeft,
               child: Padding(
                   padding: EdgeInsets.all(8),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Find Services",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                          color: Colors.black,
+                        ),
+                      ),
+                      InkWell(
+                          onTap: (){
+                            pushNewScreenWithRouteSettings(
+                              context,
+                              settings: RouteSettings( name: '/services'),
+                              screen: ListScreen_mobile_services(),
+                            );
+                          },
+                        child: Text("sea all")
+                      )
+                    ],
+                  )
+              ),
+            ),
+            ServicesList(),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                  padding: EdgeInsets.all(8),
                   child: Text(
                     "Near you",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 30,
                       color: Colors.black,
-
                     ),
                   )
               ),
             ), //Near You
+
             HorizontalList(
                 stateProvider: barbershopListStateProvider, //TODO Cseréld ki ténylegesen a Near You-ra
                 contentProvider: barbershopListContentProvider,
@@ -89,6 +150,29 @@ class ListScreen_mobile_final extends HookConsumerWidget {
     );
   }
 }
+
+class ServicesList extends ConsumerWidget {
+  const ServicesList({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context,WidgetRef ref) {
+   final tags =  ref.watch(serviceTagsProvider);
+    return tags.when(
+        data: (tags){
+          return SingleChildScrollView(
+            child: Row(
+              children: [
+                ...tags.map((e) => Text(e.toString())).toList()
+              ],
+            ),
+          );
+        },
+        error: (e,_){return Text("service List error");},
+        loading: (){return CircularProgressIndicator();}
+    );
+  }
+}
+
 
 class HorizontalList extends ConsumerWidget{
   const HorizontalList({

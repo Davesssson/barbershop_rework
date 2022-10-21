@@ -24,7 +24,7 @@ class ListScreen_mobile_services extends ConsumerWidget {
       double delta = MediaQuery.of(context).size.width * 0.20;
       if (maxScroll - currentScroll <= delta) {
         //ref.read(itemsProvider.notifier).fetchNextBatch();
-        //ref.read(itemsProviderMine.notifier).fetchNextBatchMine();
+        ref.read(itemsProviderMine.notifier).fetchNextBatchMine();
       }
     });
     //endregion

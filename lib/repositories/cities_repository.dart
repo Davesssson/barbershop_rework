@@ -125,7 +125,7 @@ class CitiesRepository implements BaseCitiesRepository {
     //GeoFirePoint center = geo.point(latitude:middlePoint.latitude, longitude: middlePoint.longitude);
     try {
       final collectionReference = await _read(firebaseFirestoreProvider).collection('barbershops');
-      double radius = 100;
+      double radius = 10;
       String field = 'point';
       Stream<List<DocumentSnapshot>> stream = geo
           .collection(collectionRef: collectionReference)
@@ -134,7 +134,23 @@ class CitiesRepository implements BaseCitiesRepository {
             radius: radius,
             field: field
       );
+
+       final asd = stream.listen((List<DocumentSnapshot> documentList) {
+        documentList.map((doc)   {
+          print("heloka");
+          print(doc.data().toString());
+          GeoPoint gp = doc['location'];
+          return MarkerResponseItem(
+              city : doc['city'],
+              marker : Marker(
+                markerId: MarkerId(doc.id),
+                position: LatLng(gp.latitude,gp.longitude),
+              )
+          );
+        }).toSet();
+      });
       final markerResponseItems = await stream.first.then((documents) => documents.map((doc) {
+        print("heloka");
         print(doc.data().toString());
         GeoPoint gp = doc['location'];
         return MarkerResponseItem(
@@ -145,6 +161,7 @@ class CitiesRepository implements BaseCitiesRepository {
             )
         );
       }).toSet());
+      markerResponseItems.forEach((element) {print(element);});
       return markerResponseItems;
     } on FirebaseException catch (e) {
       developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkersGeoLocation] - Failure during retrieving city markers for geolaction.");

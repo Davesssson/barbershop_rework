@@ -110,13 +110,13 @@ class BottomNavBar extends StatelessWidget {
       confineInSafeArea: true,
       backgroundColor: Colors.blue,
       handleAndroidBackButtonPress: true,
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       stateManagement: true,
       navBarHeight: kBottomNavigationBarHeight,
       hideNavigationBarWhenKeyboardShows: true,
       margin: EdgeInsets.all(20.0),
       popActionScreens: PopActionScreensType.all,
-      bottomScreenMargin: 30.0, //ez állítja hogy mennyire legyen a content feltolva
+      bottomScreenMargin: 0, //ez állítja hogy mennyire legyen a content feltolva
       //region onWillPop
       // onWillPop: (context) async {
       //   await showDialog(
@@ -152,7 +152,7 @@ class BottomNavBar extends StatelessWidget {
         curve: Curves.ease,
         duration: Duration(milliseconds: 200),
       ),
-      navBarStyle:NavBarStyle.style11, // Choose the nav bar style with this property
+      navBarStyle:NavBarStyle.style1, // Choose the nav bar style with this property
     );
   }
 }

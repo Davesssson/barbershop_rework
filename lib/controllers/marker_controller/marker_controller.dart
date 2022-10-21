@@ -32,14 +32,14 @@ class MarkerListStateController extends StateNotifier<AsyncValue<Set<MarkerRespo
   Future<void> retrieveCityMarkersGeoQuery(LatLng middlePoint,{bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
-      developer.log("[marker_controller.dart][MarkerListStateController][retrieveCityMarkers] - retrieveMarkers ");
+      developer.log("[marker_controller.dart][MarkerListStateController][retrieveCityMarkersGeoQuery] - retrieveCityMarkersGeoQuery ");
       final markers =await _read(citiesRepositoryProvider).retrieveCityMarkersGeoLocation2(middlePoint);
       if (mounted) {
         state = AsyncValue.data(markers);
         MyLogger.singleton.logger().i("MarkerController state =" + state.toString());
       }
     } on CustomException catch (e) {
-      developer.log("[marker_controller.dart][MarkerListStateController][retrieveCityMarkers] - retrieveMarkers Exception");
+      developer.log("[marker_controller.dart][MarkerListStateController][retrieveCityMarkersGeoQuery] - retrieveCityMarkersGeoQuery Exception");
       state = AsyncValue.error(e);
     }
   }

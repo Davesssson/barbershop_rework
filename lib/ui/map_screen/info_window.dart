@@ -19,8 +19,9 @@ class infoWindow extends ConsumerWidget {
     return shop.when(
         data: (shop) {
             return Positioned(
-                bottom : 0,
-                left:0,
+                top: MediaQuery.of(context).size.height*0.6,
+                //bottom : 0,
+                //left:0,
                 child: InkWell(
                   onTap: (){
                     ref.read(barberListForShopStateProvider.notifier).retrieveBarbersFromShop2(shop.id!);
@@ -36,27 +37,30 @@ class infoWindow extends ConsumerWidget {
                       ),
                     );
                   },
-                  child: Container(
-                    margin: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width / 8),
+                  child: Padding(
+                    padding: const EdgeInsets.all(30.0),
+                    child: Container(
 
-                    width: MediaQuery.of(context).size.width/4,
-                    height: MediaQuery.of(context).size.height/4.5,
-                    color: Colors.red,
-                    child: Row(
-                      children: [
-                        Column(
-                          children: [
-                            Text(shop.name!),
-                            Text(shop.city!),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Image.network(shop.main_image!)
-                          ],
-                        )
-                      ],
+
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height/4.5,
+                      color: Colors.red,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Column(
+                            children: [
+                              Text(shop.name!),
+                              Text(shop.city!),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Container(height: MediaQuery.of(context).size.height/4.5,child: Image.network(shop.main_image!))
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 )
