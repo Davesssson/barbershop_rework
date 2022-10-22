@@ -30,7 +30,7 @@ class MyApp extends ConsumerWidget {
       themeMode:ref.watch(ThemeModeProvider),
       theme: ThemeClass.light,
       darkTheme: ThemeClass.dark,
-      initialRoute:'/login' ,
+      initialRoute:'/admin' ,
       routes:{
         '/register':(context)=>registerScreen(),
         '/profile':(context)=>profileScreen(),

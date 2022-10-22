@@ -1,5 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_shopping_list/models/availability/availability_model.dart';
 import 'package:flutter_shopping_list/models/resource_view_model/resource_view_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -221,6 +224,24 @@ class BarberRepository implements BaseBarberRepository{
        return snap.docs.map((doc) => BookingDay.fromDocumentCustom(doc)).toList();
     } on FirebaseException catch (e) {
       developer.log("Failure during retrieving bookings");
+      throw CustomException(message: e.message);
+    }
+  }
+
+  Future<String?> addWorkToBarber(String barberId, Uint8List image) async{
+    developer.log("[barber_repository.dart][BarberRepository][addWorkToBarber] - Trying to upload work to  ${barberId}. . .");
+    try {
+      final url = image.hashCode;
+      final asdfg = await _read(firebaseStorageProvider).ref().child("/asdasd/").putData(image,SettableMetadata(contentType: "image"));
+      final asdfg_download_link = await _read(firebaseStorageProvider).ref().child("/asdasd/").getDownloadURL();
+      final snap = await _read(firebaseFirestoreProvider)
+          .collection('barbers')
+          .doc(barberId)
+          .collection('bookings')
+          .doc(barberId).update({'works':FieldValue.arrayUnion([asdfg_download_link])}).then((value) => print("sikerult a hozzaadas"));
+      return asdfg_download_link;
+    } on FirebaseException catch (e) {
+      developer.log("Failure work upload");
       throw CustomException(message: e.message);
     }
   }

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter_shopping_list/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../models/barber/barber_model.dart';
@@ -108,6 +110,32 @@ class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
       MyLogger.singleton.logger().i("BarberListStateController = " + state.toString());
     } on CustomException catch (e) {
       developer.log("[barber_controller.dart][BarberListStateController][updateBarber] - addBarber exception");
+      //_read(itemListExceptionProvider).state = e;
+    }
+  }
+
+  Future<void> addWorkToBarber({
+    required String barberId,
+    required Uint8List image,
+  }) async {
+    try {
+      developer.log("[barber_controller.dart][BarberListStateController][addWorkToBarber] - addWorkToBarber");
+      final downloadLink = await _read(barberRepositoryProvider).addWorkToBarber(barberId,image!);
+      if(downloadLink==null) return;
+      /*print("oldState = " + state.toString());
+      state.whenData((barbers) {
+        state = AsyncValue.data([
+          for (final barber in barbers)
+            //TODO na erre kurvára kíváncsi vagyok
+            if (barber.id == barberId) barber.copyWith(works: barber.works!..add(downloadLink)) else barber
+        ]);
+        print("newState = " + state.toString());
+        MyLogger.singleton.logger().i("BarberListStateController = " + state.toString());
+      });*/
+
+      MyLogger.singleton.logger().i("BarberListStateController = " + state.toString());
+    } on CustomException catch (e) {
+      developer.log("[barber_controller.dart][BarberListStateController][updateBarber] - addWorkToBarber exception");
       //_read(itemListExceptionProvider).state = e;
     }
   }

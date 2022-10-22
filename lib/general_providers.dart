@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_shopping_list/models/availability/availability_model.dart';
 import 'package:flutter_shopping_list/repositories/barber_repository.dart';
 import 'package:flutter_shopping_list/repositories/barbershops_repository.dart';
@@ -11,9 +13,5 @@ final firebaseAuthProvider =
 final firebaseFirestoreProvider =
     Provider<FirebaseFirestore>((ref) => FirebaseFirestore.instance);
 
-final availabilityProvider = FutureProvider<List<Availability>>((ref) async {
-    final asd = await ref.read(barberRepositoryProvider).retrieveAvailability('barberId');
-    print('providerben vagyok');
-    print(asd.toString());
-    return asd;
-});
+final firebaseStorageProvider =
+    Provider<FirebaseStorage>((ref) => FirebaseStorage.instance);
