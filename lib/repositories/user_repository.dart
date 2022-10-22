@@ -4,6 +4,8 @@ import 'package:flutter_shopping_list/repositories/custom_exception.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:developer' as developer;
 
+import '../models/booking/booking_model.dart';
+
 
 abstract class BaseUsersRepository {
   Future<void> addUser(UserCredential result);
@@ -22,8 +24,20 @@ class UsersRepository implements BaseUsersRepository{
       developer.log("[user_repository.dart][UsersRepository][addUser] - User added.");
       User user = result.user!;
       //TODO outsource the .set method
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).set(
-          { 'firstName': 'Placeholder'});
+      await FirebaseFirestore.instance.collection('users').doc(user.uid)
+          .set({ 'firstName': 'Placeholder', 'bookings':{}});
+    }on FirebaseAuthException catch(e){
+      developer.log("[user_repository.dart][UsersRepository][addUser] - User add Exception.");
+      throw CustomException(message: e.message);
+    }
+  }
+
+  Future<void> addBookingToUser(User user, String dateId)async{
+    try {
+      developer.log("[user_repository.dart][UsersRepository][addUser] - User added.");
+      //TODO outsource the .set method
+      await FirebaseFirestore.instance.collection('users').doc(user.uid)
+          .update({ 'bookings': FieldValue.arrayUnion([dateId])});
     }on FirebaseAuthException catch(e){
       developer.log("[user_repository.dart][UsersRepository][addUser] - User add Exception.");
       throw CustomException(message: e.message);

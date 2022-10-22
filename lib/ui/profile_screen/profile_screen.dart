@@ -14,35 +14,62 @@ class profileScreen extends ConsumerWidget {
 
     return  Scaffold(
       body:
-      authControllerState==null
-      ?SettingsList(
-        sections: [
-            SettingsSection(
-                tiles: [
-                  SettingsTile(
-                    title:Text("asd"),
-                    enabled: true,
+      authControllerState!=null
+      ?Container(
+        child: SingleChildScrollView(
+          child: Column(
+            children:[
+              Container(
+                child: Center(
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: MediaQuery.of(context).size.width*0.1,
+                        backgroundColor: Colors.green,
+                      ),
+                      authControllerState.email == null? Text(authControllerState.email.toString()) : Text("anonum")
+                    ],
                   ),
-                  SettingsTile.switchTile(
-                      initialValue: ref.read(ThemeModeFilterProvider.notifier).state==ThemeModeFilter.dark,
-                      onToggle: (toggled){
-                        print("heloka");
-                        ref.read(ThemeModeFilterProvider.notifier).state==ThemeModeFilter.dark ? ref.read(ThemeModeFilterProvider.notifier).state=ThemeModeFilter.light : ref.read(ThemeModeFilterProvider.notifier).state=ThemeModeFilter.dark;
-                      },
-                      title: Text("Dark mode")
-                  ),
-                  SettingsTile(
-                    title:Text("Sign out"),
-                    enabled: true,
-                    onPressed: (context){
-                      ref.read(authControllerProvider.notifier).signOut();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ]
-            )
+                ),
+              ),
+              SettingsList(
+                shrinkWrap: true,
+                sections: [
+                    SettingsSection(
+                        title: Text("beállítások"),
+                        tiles: [
+                          SettingsTile(
+                            title:Text("asd"),
+                            enabled: true,
+                          ),
+                          SettingsTile.switchTile(
+                              initialValue: ref.read(ThemeModeFilterProvider.notifier).state==ThemeModeFilter.dark,
+                              onToggle: (toggled){
+                                print("heloka");
+                                ref.read(ThemeModeFilterProvider.notifier).state==ThemeModeFilter.dark ? ref.read(ThemeModeFilterProvider.notifier).state=ThemeModeFilter.light : ref.read(ThemeModeFilterProvider.notifier).state=ThemeModeFilter.dark;
+                              },
+                              title: Text("Dark mode")
+                          ),
+                          SettingsTile.navigation(
+                              title: Text("foglalasaim : TODO"),
 
-        ],
+                          ),
+                          SettingsTile(
+                            title:Text("Sign out"),
+                            enabled: true,
+                            onPressed: (context){
+                              ref.read(authControllerProvider.notifier).signOut();
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ]
+                    )
+
+                ],
+              ),
+          ]
+          ),
+        ),
       )
       :Container(
         color: Colors.green,

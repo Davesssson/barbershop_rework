@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/controllers/auth_controller.dart';
 import 'package:flutter_shopping_list/controllers/barber_controller/barber_providers.dart';
 import 'package:flutter_shopping_list/controllers/work_day_availability_controller/work_day_availability_providers.dart';
+import 'package:flutter_shopping_list/repositories/auth_repository.dart';
+import 'package:flutter_shopping_list/repositories/user_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:uuid/uuid.dart';
@@ -157,6 +161,8 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
                 start: int.parse(startt),
                 end:2000,
               );
+              User? user = ref.watch(authControllerProvider);
+              ref.read(userRepositoryProvider).addBookingToUser(user!,date);
 
 
 
@@ -174,7 +180,7 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
                       Text("INSERT ${chipSelected.start} TIME -ra"),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context, rootNavigator: true).popAndPushNamed('/login');
+                          Navigator.of(context, rootNavigator: true).popAndPushNamed('/home'); //majd a detailsre vigyen át
                         },
                         child: Text(
                           "Exit",

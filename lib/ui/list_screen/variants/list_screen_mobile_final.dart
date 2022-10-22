@@ -60,11 +60,19 @@ class ListScreen_mobile_final extends HookConsumerWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: InkWell(
                     onTap: (){
-                      pushNewScreenWithRouteSettings(
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_)=>profileScreen(),
+
+                        ),
+                      );
+ /*                     pushNewScreenWithRouteSettings(
+
                         context,
                         settings: RouteSettings(name: '/profile'),
                         screen: profileScreen(),
-                      );
+                      );*/
                     },
                     child: CircleAvatar(
                       radius: 20,
@@ -72,7 +80,9 @@ class ListScreen_mobile_final extends HookConsumerWidget {
                     ),
                   ),
                 ):TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+
+                    },
                     child: Text("Sign In!")
                 )
               ],
@@ -161,8 +171,20 @@ class ServicesList extends ConsumerWidget {
         data: (tags){
           return SingleChildScrollView(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ...tags.map((e) => Text(e.toString())).toList()
+                ...tags.map((e) =>
+                    Container(
+                      child:
+                      Column(
+                        children: [
+                          CircleAvatar(radius: 45,backgroundColor: Colors.red,),
+                          Text(e.toString())
+                        ],
+                      ),
+
+                    )
+                  ).toList(),
               ],
             ),
           );

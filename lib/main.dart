@@ -8,6 +8,7 @@ import 'package:flutter_shopping_list/ui/home_screen.dart';
 import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_services.dart';
 import 'package:flutter_shopping_list/ui/login_screen/login_screen.dart';
 import 'package:flutter_shopping_list/ui/profile_screen/profile_screen.dart';
+import 'package:flutter_shopping_list/ui/register_screen/register_screen.dart';
 import 'package:flutter_shopping_list/ui/services_scren/service_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'firebase_options.dart';
@@ -31,6 +32,7 @@ class MyApp extends ConsumerWidget {
       darkTheme: ThemeClass.dark,
       initialRoute:'/login' ,
       routes:{
+        '/register':(context)=>registerScreen(),
         '/profile':(context)=>profileScreen(),
         '/services':(context)=>ListScreen_mobile_services(),
         '/details':(context)=>DetailsScreen(),

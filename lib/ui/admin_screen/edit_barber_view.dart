@@ -45,150 +45,170 @@ class editView extends HookConsumerWidget {
           margin: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width / 8),
           color: Colors.grey,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Column(
-                    children: [
-                      Text("Name"),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          padding: EdgeInsets.all(8),
-                          width: MediaQuery.of(context).size.width/3,
-                          child: TextFormField(controller: textNameController),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Column(
+                      children: [
+                        Text("Name"),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            width: MediaQuery.of(context).size.width/3,
+                            child: TextFormField(controller: textNameController),
+                          ),
                         ),
-                      ),
-                      Text("Description"),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          padding: EdgeInsets.all(8),
-                          width: MediaQuery.of(context).size.width/3,
-                          child: TextFormField(controller: textDescriptionController),
+                        Text("Description"),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            width: MediaQuery.of(context).size.width/3,
+                            child: TextFormField(controller: textDescriptionController),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width/2.5,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.black
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width/2.5,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black
+                            )
+                          ),
+                          child: InkWell(
+                              onHover: (onHover){
+                                 onHover?Container(color: Colors.red):Container(color:Colors.blue);
+                              },
+                              child: Image.network(barberUnderEdit!.prof_pic!)
                           )
-                        ),
-                        child: InkWell(
-                            onHover: (onHover){
-                               onHover?Container(color: Colors.red):Container(color:Colors.blue);
-                            },
-                            child: Image.network(barberUnderEdit!.prof_pic!)
                         )
-                      )
-                    ],
-                  )
-                ],
-              ),
-              TextButton(
-                  onPressed: () {
-                    barberUnderEdit != null
-                        ? {
-                            print("nem vagyok nulla, tudok updatelődni"),
-                            ref.read(barberListForShopStateProvider.notifier)
-                               .updateBarber(
-                                    updatedBarber: barberUnderEdit!.copyWith(
-                                        name: textNameController.text.trim(),
-                                        description: textDescriptionController
-                                            .text
-                                            .trim()
-                                    )
-                                  )
-                          }
-                        : {
-                            print("nulla vagyok, nem tudok updatelődni"),
-                            ref.read(barberListForShopStateProvider.notifier)
-                               .addBarber(
-                                    name: textNameController.text.trim(),
-                                    description:textDescriptionController.text.trim(),
-                                    shopId: '7HTJ8DF8hFwUnrL566Wc'
-                                )
-                          };
-                  },
-                  child: barberUnderEdit == null
-                      ? Text("hozz Létre és adj hozzá egy fodrászt",style: TextStyle(color:Colors.black))
-                      : Text("mentsd el a fodrász változtatásait",style: TextStyle(color:Colors.black))),
-              TextButton(
-                child: Text("updateld a calendart!",style: TextStyle(color:Colors.black),),
-                onPressed: () async{
-                  SnackBar sb_updated ;
-                  SnackBar sb_added;
-                  bool didUpdate = await ref.read(WorkDayAvailabilityListStateProvider(barberUnderEdit!.id!).notifier).updateBarberWorkDayAvailability(changes: changedElements, barberId: barberUnderEdit!.id!);
-                  if(didUpdate){
-                    changedElements.clear();
-                    sb_updated = SnackBar(
-                      content: const Text("Working hours updated"),
-                    );
-                  } else {
-                    sb_updated = SnackBar(content: const Text("No modifications took place"));
-                  }
-                  ScaffoldMessenger.of(context).showSnackBar(sb_updated);
-                  print("vale of the change "+ didUpdate.toString());
-                  bool didAdd = await ref.read(WorkDayAvailabilityListStateProvider(barberUnderEdit!.id!).notifier).addBarberWorkDayAvailability(addedAppointments: addedElements, barberId: barberUnderEdit!.id!);
-                  if(didAdd){
-                    addedElements.clear();
-                    sb_added = SnackBar(
-                      content: const Text("New Working hour updated"),
-                    );
-                  }else {
-                    sb_added = SnackBar(content: const Text("No addition took place"));
-                  }
-                  ScaffoldMessenger.of(context).showSnackBar(sb_added);
-                }
-              ),
-              Expanded(
-                child: SfCalendar(
-                  view: CalendarView.week,
-                  allowDragAndDrop: true,
-                  allowAppointmentResize: true,
-                  onAppointmentResizeEnd: (AppointmentResizeEndDetails details){
-                    changedElements.add(details.appointment); //TODO Mi van akkor, hogyha többször resizeolja és hozzáadódiK????
-                  },
-                  onTap: (CalendarTapDetails details){
-                    String year = details.date!.year.toString();
-                    String month = details.date!.month.toString();
-                    String day = details.date!.day.toString();
-                    String id = year + "-" + month + "-" + day;
-                    if(!hasAppointmentWithId(id)) {
-                      int startHour = details.date!.hour;
-                      int startMin = details.date!.minute;
-                      DateTime start = DateTime(
-                          int.parse(year), int.parse(month), int.parse(day),
-                          startHour, startMin);
-                      DateTime end = DateTime(
-                          int.parse(year), int.parse(month), int.parse(day),
-                          startHour + 8, startMin);
-                      final Appointment newAppointment = Appointment(
-                          id: id,
-                          startTime: start,
-                          endTime: end
-                      );
-                      appointments.add(newAppointment);
-
-                      _events.notifyListeners(
-                          CalendarDataSourceAction.add,
-                          <Appointment>[newAppointment]);
-                      addedElements.add(newAppointment);
-                    }else{
-                      print("heloka");
-                    }
-                  },
-                  //dataSource: _getCalendarDataSource2(workDayAvailabilityState,workDayAvailabilityContent),
-                  dataSource: _events
+                      ],
+                    )
+                  ],
                 ),
-              )
-            ],
+                TextButton(
+                    onPressed: () {
+                      barberUnderEdit != null
+                          ? {
+                              print("nem vagyok nulla, tudok updatelődni"),
+                              ref.read(barberListForShopStateProvider.notifier)
+                                 .updateBarber(
+                                      updatedBarber: barberUnderEdit!.copyWith(
+                                          name: textNameController.text.trim(),
+                                          description: textDescriptionController
+                                              .text
+                                              .trim()
+                                      )
+                                    )
+                            }
+                          : {
+                              print("nulla vagyok, nem tudok updatelődni"),
+                              ref.read(barberListForShopStateProvider.notifier)
+                                 .addBarber(
+                                      name: textNameController.text.trim(),
+                                      description:textDescriptionController.text.trim(),
+                                      shopId: '7HTJ8DF8hFwUnrL566Wc'
+                                  )
+                            };
+                    },
+                    child: barberUnderEdit == null
+                        ? Text("hozz Létre és adj hozzá egy fodrászt",style: TextStyle(color:Colors.black))
+                        : Text("mentsd el a fodrász változtatásait",style: TextStyle(color:Colors.black))),
+                TextButton(
+                  child: Text("updateld a calendart!",style: TextStyle(color:Colors.black),),
+                  onPressed: () async{
+                    SnackBar sb_updated ;
+                    SnackBar sb_added;
+                    bool didUpdate = await ref.read(WorkDayAvailabilityListStateProvider(barberUnderEdit!.id!).notifier).updateBarberWorkDayAvailability(changes: changedElements, barberId: barberUnderEdit!.id!);
+                    if(didUpdate){
+                      changedElements.clear();
+                      sb_updated = SnackBar(
+                        content: const Text("Working hours updated"),
+                      );
+                    } else {
+                      sb_updated = SnackBar(content: const Text("No modifications took place"));
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(sb_updated);
+                    print("vale of the change "+ didUpdate.toString());
+                    bool didAdd = await ref.read(WorkDayAvailabilityListStateProvider(barberUnderEdit!.id!).notifier).addBarberWorkDayAvailability(addedAppointments: addedElements, barberId: barberUnderEdit!.id!);
+                    if(didAdd){
+                      addedElements.clear();
+                      sb_added = SnackBar(
+                        content: const Text("New Working hour updated"),
+                      );
+                    }else {
+                      sb_added = SnackBar(content: const Text("No addition took place"));
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(sb_added);
+                  }
+                ),
+                SingleChildScrollView(
+                  child: Container(
+
+                    child: SfCalendar(
+                      view: CalendarView.week,
+                      allowDragAndDrop: true,
+                      allowAppointmentResize: true,
+                      onAppointmentResizeEnd: (AppointmentResizeEndDetails details){
+                        changedElements.add(details.appointment); //TODO Mi van akkor, hogyha többször resizeolja és hozzáadódiK????
+                      },
+                      onTap: (CalendarTapDetails details){
+                        String year = details.date!.year.toString();
+                        String month = details.date!.month.toString();
+                        String day = details.date!.day.toString();
+                        String id = year + "-" + month + "-" + day;
+                        if(!hasAppointmentWithId(id)) {
+                          int startHour = details.date!.hour;
+                          int startMin = details.date!.minute;
+                          DateTime start = DateTime(
+                              int.parse(year), int.parse(month), int.parse(day),
+                              startHour, startMin);
+                          DateTime end = DateTime(
+                              int.parse(year), int.parse(month), int.parse(day),
+                              startHour + 8, startMin);
+                          final Appointment newAppointment = Appointment(
+                              id: id,
+                              startTime: start,
+                              endTime: end
+                          );
+                          appointments.add(newAppointment);
+
+                          _events.notifyListeners(
+                              CalendarDataSourceAction.add,
+                              <Appointment>[newAppointment]);
+                          addedElements.add(newAppointment);
+                        }else{
+                          print("heloka");
+                        }
+                      },
+                      //dataSource: _getCalendarDataSource2(workDayAvailabilityState,workDayAvailabilityContent),
+                      dataSource: _events
+                    ),
+                  ),
+                ),
+                GridView.count(
+                  shrinkWrap: true,
+                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 20,
+                  crossAxisCount: (MediaQuery.of(context).size.width / 350).toInt(),
+                  children: [
+                    ...barberUnderEdit!.works!.map((picture) {
+                      return Image.network(picture);
+                    }).toList(),
+                    Container(color:Colors.blue,child:Icon(Icons.add))
+                  ],
+                ),
+                Container(height: 300,color:Colors.green),
+                Container(height: 300,color:Colors.blueAccent),
+                Container(height: 300,color:Colors.black),
+              ],
+            ),
           ),
         )
     );
