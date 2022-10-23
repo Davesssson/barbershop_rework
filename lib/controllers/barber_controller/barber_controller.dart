@@ -93,6 +93,25 @@ class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
     }
   }
 
+  Future<void> updateBarberProfPic({required String barberId, required String profPictureLink}) async {
+    try {
+      developer.log("[barber_controller.dart][BarberListStateController][updateBarberProfPic] - updateBarberProfPic ");
+      await _read(barberRepositoryProvider)
+          .changeProfPicture(barberId:barberId, newPicture: profPictureLink);
+      //TODO
+/*      state.whenData((barbers) {
+        state = AsyncValue.data([
+          for (final barber in barbers)
+            if (barber.id == updatedBarber.id) updatedBarber.. else barber
+        ]);
+        MyLogger.singleton.logger().i("BarberListStateController = " + state.toString());
+      });*/
+    } on CustomException catch (e) {
+      developer.log("[barber_controller.dart][BarberListStateController][updateBarberProfPic] - updateBarberProfPic exception");
+    }
+  }
+
+
   Future<void> addBarber({
     required String name,
     required String description,

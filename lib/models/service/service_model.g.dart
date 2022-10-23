@@ -11,6 +11,8 @@ _$_Service _$$_ServiceFromJson(Map<String, dynamic> json) => _$_Service(
       serviceTitle: json['serviceTitle'] as String?,
       servicePrice: json['servicePrice'] as int?,
       serviceDescription: json['serviceDescription'] as String?,
+      barbershop_id: json['barbershop_id'] as String?,
+      tags: json['tags'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$$_ServiceToJson(_$_Service instance) =>
@@ -19,4 +21,6 @@ Map<String, dynamic> _$$_ServiceToJson(_$_Service instance) =>
       'serviceTitle': instance.serviceTitle,
       'servicePrice': instance.servicePrice,
       'serviceDescription': instance.serviceDescription,
+      'barbershop_id': instance.barbershop_id,
+      'tags': instance.tags,
     };

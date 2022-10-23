@@ -10,7 +10,7 @@ class ServiceListStateController extends StateNotifier<AsyncValue<List<Service>>
     retrieveServiceTags();
   }
   ServiceListStateController.forShop(this._read):super(AsyncValue.loading()){
-    retrieveServicesFromShop("asd");
+    retrieveServicesFromShop("7HTJ8DF8hFwUnrL566Wc");
   }
 
   Future<void> retrieveServiceTags({bool isRefreshing = false}) async {
@@ -40,6 +40,55 @@ class ServiceListStateController extends StateNotifier<AsyncValue<List<Service>>
     } on CustomException catch (e) {
       developer.log("[service_controller.dart][ServiceListStateController][retrieveServicesFromShop] - retrieveServiceTags Exception");
       state = AsyncValue.error(e);
+    }
+  }
+
+  Future<void> updateService({required String serviceId, required Service updatedService}) async {
+    try {
+      developer.log("[service_controller.dart][ServiceListStateController][updateService] - updateService ");
+      await _read(serviceRepositoryProvider)
+          .updateService(serviceId:serviceId, service:updatedService);
+      state.whenData((services) {
+        state = AsyncValue.data([
+          for (final service in services)
+            if (service.id == updatedService.id) updatedService else service
+        ]);
+      });
+    } on CustomException catch (e) {
+      developer.log("[service_controller.dart][ServiceListStateController][updateService] - updateService Exception ");
+
+      // _read(itemListExceptionProvider).state = e;
+    }
+  }
+
+  Future<void> addService({required String shopId,required String title, required String description, required int price}) async {
+    try {
+      developer.log("[service_controller.dart][ServiceListStateController][addService] - addService ");
+      final service = Service(barbershop_id:shopId, serviceTitle: title,serviceDescription: description, servicePrice: price);
+      final serviceId = await _read(serviceRepositoryProvider).createItem(
+        shopId:shopId,
+        service: service,
+      );
+      state.whenData((items) =>
+      state = AsyncValue.data(items..add(service.copyWith(id: serviceId))));
+    } on CustomException catch (e) {
+      developer.log("[service_controller.dart][ServiceListStateController][addService] - addService Exception");
+      //_read(itemListExceptionProvider).state = e;
+    }
+  }
+
+  Future<void> deleteItem({required String serviceId}) async {
+    try {
+      developer.log("[service_controller.dart][ServiceListStateController][addService] - addService ");
+      await _read(serviceRepositoryProvider).deleteService(
+        serviceId: serviceId,
+      );
+      state.whenData((services) => state =
+          AsyncValue.data(services..removeWhere((service) => service.id == serviceId)));
+    } on CustomException catch (e) {
+      developer.log("[service_controller.dart][ServiceListStateController][addService] - addService Exception ");
+
+      // _read(itemListExceptionProvider).state = e;
     }
   }
 }

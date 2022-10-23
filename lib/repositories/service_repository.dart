@@ -57,4 +57,50 @@ class ServiceRepository implements BaseServiceRepository{
       throw CustomException(message: e.message);
     }
   }
+  Future<void> updateService({required String serviceId,required Service service}) async{
+    developer.log("[service_repository.dart][ServiceRepository][updateService] - updateService.");
+    try {
+      final snap = await _read(firebaseFirestoreProvider)
+          .collection('services')
+          .doc(serviceId)
+          .update(service.toDocument());
+
+    } on FirebaseException catch (e) {
+      developer.log("Failure during retrieving barbers");
+      throw CustomException(message: e.message);
+    }
+  }
+
+  Future<String> createItem({
+    required String shopId,
+    required Service service,
+  }) async {
+    developer.log("[service_repository.dart][ServiceRepository][createItem] - Item created.");
+    try {
+      final docRef = await _read(firebaseFirestoreProvider)
+          .collection('services')
+          .add(service.toDocument());
+      return docRef.id;
+    } on FirebaseException catch (e) {
+      developer.log("[service_repository.dart][ServiceRepository][createItem] - Item create exception.");
+      throw CustomException(message: e.message);
+    }
+  }
+
+  Future<void> deleteService({
+    required String serviceId,
+  }) async {
+    developer.log("[service_repository.dart][ServiceRepository][deleteService] - Item deleted");
+    try {
+      await _read(firebaseFirestoreProvider)
+          .collection('services')
+          .doc(serviceId)
+          .delete();
+    } on FirebaseException catch (e) {
+      developer.log("[service_repository.dart][ServiceRepository][deleteService] - Delete item exception");
+      throw CustomException(message: e.message);
+    }
+  }
+
+
 }

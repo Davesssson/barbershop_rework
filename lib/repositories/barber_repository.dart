@@ -277,4 +277,17 @@ class BarberRepository implements BaseBarberRepository{
     }
   }
 
+  Future<void> changeProfPicture({required String barberId, required String newPicture}) async{
+    developer.log("[barber_repository.dart][BarberRepository][changeProfPicture] - Changing profile picture for barber ${barberId}. . .");
+    try {
+      final snap = await _read(firebaseFirestoreProvider)
+          .collection('barbers')
+          .doc(barberId)
+          .update({"prof_pic":newPicture});
+    } on FirebaseException catch (e) {
+      developer.log("Failure during changeProfPicture");
+      throw CustomException(message: e.message);
+    }
+  }
+
 }

@@ -14,10 +14,14 @@ class Service with _$Service{
     String? serviceTitle,
     int? servicePrice,
     String? serviceDescription,
+    String? barbershop_id,
+    Map<String, dynamic>? tags
 
 
 
   })= _Service;
+
+  factory Service.empty() => Service(serviceTitle: "",servicePrice: 0,serviceDescription: "");
 
   factory Service.fromJson(Map<String, dynamic> json) => _$ServiceFromJson(json);
 

@@ -3,6 +3,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import 'admin_barber_view.dart';
 import 'admin_resource_view.dart';
+import 'admin_services_view.dart';
 
 class adminScreen extends StatefulWidget {
   adminScreen({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class _adminScreenState extends State<adminScreen> {
     return [
       admin_barbers(),
       calendarView(),
-      Container(color: Colors.green,),
+      adminServiceView(),
     ];
   }
 

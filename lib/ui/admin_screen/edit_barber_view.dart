@@ -207,7 +207,37 @@ class editView extends HookConsumerWidget {
                   crossAxisCount: (MediaQuery.of(context).size.width / 350).toInt(),
                   children: [
                     ...barberUnderEdit!.works!.map((picture) {
-                      return Image.network(picture);
+                      return InkWell(
+                        onTap: () => showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: const Text('Biztosan meg szeretnéd változtatni a barber profil képét?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'No'),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  ref.read(barberListForShopStateProvider.notifier)
+                                      .updateBarberProfPic(barberId: barberUnderEdit!.id!, profPictureLink: picture);
+                                  Navigator.pop(context, 'Yes');
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        child: Image.network(picture),
+                      );
+
+/*                      return InkWell(
+                          onTap: (){
+                            ref.read(barberListForShopStateProvider.notifier)
+                                .updateBarberProfPic(barberId: barberUnderEdit!.id!, profPictureLink: picture);
+                          },
+                          child: Image.network(picture)
+                      );*/
                     }).toList(),
                     Container(color:Colors.blue,child:Icon(Icons.add))
                   ],
