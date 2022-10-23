@@ -12,6 +12,7 @@ _$_Booking _$$_BookingFromJson(Map<String, dynamic> json) => _$_Booking(
       barberId: json['barberId'] as String?,
       start: json['start'] as int?,
       end: json['end'] as int?,
+      userReserverId: json['userReserverId'] as String?,
     );
 
 Map<String, dynamic> _$$_BookingToJson(_$_Booking instance) =>
@@ -21,4 +22,5 @@ Map<String, dynamic> _$$_BookingToJson(_$_Booking instance) =>
       'barberId': instance.barberId,
       'start': instance.start,
       'end': instance.end,
+      'userReserverId': instance.userReserverId,
     };

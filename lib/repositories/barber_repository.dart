@@ -173,15 +173,16 @@ class BarberRepository implements BaseBarberRepository{
     }
   }
 
-  Future<void> addBooking({required String barberId, required String dateId, required int start, required String uId}) async {
+  Future<void> addBooking({required String barberId, required String dateId, required int start, required String uId, required String userReserverId}) async {
     developer.log("[barber_repository.dart][BarberRepository][addBooking] - Adding Booking for barber ${barberId}...");
     try {
+
       await _read(firebaseFirestoreProvider)
           .collection('barbers')
           .doc(barberId)
           .collection('bookings')
           .doc(dateId)
-          .set({uId:{"barberId":barberId, "dateId":dateId,"start":start,"end":start+30,"uId":uId}})
+          .update({uId:{"barberId":barberId, "dateId":dateId,"start":start,"end":start+30,"uId":uId,"userReserverId":userReserverId}})
           .then((value) => developer.log("New availability successfully added to ${dateId} start:${start} end: "));
     } on FirebaseException catch (e) {
       //nem tudja azt kezelni, hogyha updatelni akarunk egy olyan dokumentumot, ami nem létezik

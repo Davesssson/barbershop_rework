@@ -25,6 +25,7 @@ mixin _$Booking {
   String? get barberId => throw _privateConstructorUsedError;
   int? get start => throw _privateConstructorUsedError;
   int? get end => throw _privateConstructorUsedError;
+  String? get userReserverId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,7 +37,12 @@ abstract class $BookingCopyWith<$Res> {
   factory $BookingCopyWith(Booking value, $Res Function(Booking) then) =
       _$BookingCopyWithImpl<$Res>;
   $Res call(
-      {String? dateId, String? uId, String? barberId, int? start, int? end});
+      {String? dateId,
+      String? uId,
+      String? barberId,
+      int? start,
+      int? end,
+      String? userReserverId});
 }
 
 /// @nodoc
@@ -54,6 +60,7 @@ class _$BookingCopyWithImpl<$Res> implements $BookingCopyWith<$Res> {
     Object? barberId = freezed,
     Object? start = freezed,
     Object? end = freezed,
+    Object? userReserverId = freezed,
   }) {
     return _then(_value.copyWith(
       dateId: dateId == freezed
@@ -76,6 +83,10 @@ class _$BookingCopyWithImpl<$Res> implements $BookingCopyWith<$Res> {
           ? _value.end
           : end // ignore: cast_nullable_to_non_nullable
               as int?,
+      userReserverId: userReserverId == freezed
+          ? _value.userReserverId
+          : userReserverId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -87,7 +98,12 @@ abstract class _$$_BookingCopyWith<$Res> implements $BookingCopyWith<$Res> {
       __$$_BookingCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String? dateId, String? uId, String? barberId, int? start, int? end});
+      {String? dateId,
+      String? uId,
+      String? barberId,
+      int? start,
+      int? end,
+      String? userReserverId});
 }
 
 /// @nodoc
@@ -106,6 +122,7 @@ class __$$_BookingCopyWithImpl<$Res> extends _$BookingCopyWithImpl<$Res>
     Object? barberId = freezed,
     Object? start = freezed,
     Object? end = freezed,
+    Object? userReserverId = freezed,
   }) {
     return _then(_$_Booking(
       dateId: dateId == freezed
@@ -128,6 +145,10 @@ class __$$_BookingCopyWithImpl<$Res> extends _$BookingCopyWithImpl<$Res>
           ? _value.end
           : end // ignore: cast_nullable_to_non_nullable
               as int?,
+      userReserverId: userReserverId == freezed
+          ? _value.userReserverId
+          : userReserverId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -135,7 +156,13 @@ class __$$_BookingCopyWithImpl<$Res> extends _$BookingCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_Booking extends _Booking {
-  _$_Booking({this.dateId, this.uId, this.barberId, this.start, this.end})
+  _$_Booking(
+      {this.dateId,
+      this.uId,
+      this.barberId,
+      this.start,
+      this.end,
+      this.userReserverId})
       : super._();
 
   factory _$_Booking.fromJson(Map<String, dynamic> json) =>
@@ -151,10 +178,12 @@ class _$_Booking extends _Booking {
   final int? start;
   @override
   final int? end;
+  @override
+  final String? userReserverId;
 
   @override
   String toString() {
-    return 'Booking(dateId: $dateId, uId: $uId, barberId: $barberId, start: $start, end: $end)';
+    return 'Booking(dateId: $dateId, uId: $uId, barberId: $barberId, start: $start, end: $end, userReserverId: $userReserverId)';
   }
 
   @override
@@ -166,7 +195,9 @@ class _$_Booking extends _Booking {
             const DeepCollectionEquality().equals(other.uId, uId) &&
             const DeepCollectionEquality().equals(other.barberId, barberId) &&
             const DeepCollectionEquality().equals(other.start, start) &&
-            const DeepCollectionEquality().equals(other.end, end));
+            const DeepCollectionEquality().equals(other.end, end) &&
+            const DeepCollectionEquality()
+                .equals(other.userReserverId, userReserverId));
   }
 
   @JsonKey(ignore: true)
@@ -177,7 +208,8 @@ class _$_Booking extends _Booking {
       const DeepCollectionEquality().hash(uId),
       const DeepCollectionEquality().hash(barberId),
       const DeepCollectionEquality().hash(start),
-      const DeepCollectionEquality().hash(end));
+      const DeepCollectionEquality().hash(end),
+      const DeepCollectionEquality().hash(userReserverId));
 
   @JsonKey(ignore: true)
   @override
@@ -198,7 +230,8 @@ abstract class _Booking extends Booking {
       final String? uId,
       final String? barberId,
       final int? start,
-      final int? end}) = _$_Booking;
+      final int? end,
+      final String? userReserverId}) = _$_Booking;
   _Booking._() : super._();
 
   factory _Booking.fromJson(Map<String, dynamic> json) = _$_Booking.fromJson;
@@ -213,6 +246,8 @@ abstract class _Booking extends Booking {
   int? get start;
   @override
   int? get end;
+  @override
+  String? get userReserverId;
   @override
   @JsonKey(ignore: true)
   _$$_BookingCopyWith<_$_Booking> get copyWith =>

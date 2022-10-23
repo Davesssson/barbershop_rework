@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/ui/profile_screen/profile_own_bookings.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:settings_ui/settings_ui.dart';
 
@@ -27,7 +28,7 @@ class profileScreen extends ConsumerWidget {
                         radius: MediaQuery.of(context).size.width*0.1,
                         backgroundColor: Colors.green,
                       ),
-                      authControllerState.email == null? Text(authControllerState.email.toString()) : Text("anonum")
+                      authControllerState.displayName == null? Text(authControllerState.email.toString()) : Text(authControllerState.displayName!)
                     ],
                   ),
                 ),
@@ -52,7 +53,12 @@ class profileScreen extends ConsumerWidget {
                           ),
                           SettingsTile.navigation(
                               title: Text("foglalasaim : TODO"),
-
+                              onPressed: (context) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => ownBookings()),
+                                );
+                              },
                           ),
                           SettingsTile(
                             title:Text("Sign out"),

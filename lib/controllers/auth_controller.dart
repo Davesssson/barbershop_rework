@@ -53,6 +53,6 @@ class AuthController extends StateNotifier<User?> {
   void createUserWithEmailAndPassword(String email, String password) async{
     developer.log("[auth_controller.dart][AuthRepository][createUserWithEmailAndPassword] - Create user with Email.");
     await _read(authRepositoryProvider).createUserWithEmailAndPassword(email,password);
-}
+  }
 
 }

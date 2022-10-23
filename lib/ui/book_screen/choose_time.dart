@@ -9,7 +9,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:uuid/uuid.dart';
 import '../../models/barbershop/barbershop_model.dart';
+import '../../models/booking/booking_model.dart';
 import '../../models/work_day_availability/work_day_availability_model.dart';
+import '../../repositories/booking_repository.dart';
 
 StateProvider<DateTime> selectedDate = StateProvider<DateTime>((_) => DateTime(2020));
 StateProvider<CustomChip?> selectedChip = StateProvider<CustomChip?>((_) => null);
@@ -154,15 +156,26 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
               print(widget.barberId);
               print(int.parse(startt));
               Uuid uuid = Uuid();
-              ref.read(barberListForShopStateProvider.notifier).addBooking(
-                dateId: date,
-                uId: uuid.v4(),
-                barberId: widget.barberId,
-                start: int.parse(startt),
-                end:2000,
-              );
               User? user = ref.watch(authControllerProvider);
-              ref.read(userRepositoryProvider).addBookingToUser(user!,date);
+              Booking b = Booking(
+                  dateId: date,
+                  uId: uuid.v4(),
+                  barberId: widget.barberId!,
+                  start:int.parse(startt),
+                  userReserverId: user!.uid
+              );
+
+              ref.read(barberListForShopStateProvider.notifier).addBooking(
+                dateId: b.dateId!,
+                uId: b.uId!,
+                barberId: widget.barberId,
+                start: b.start!,
+                end:2000,
+                userReserverId:user!.uid
+              );
+              ref.read(userRepositoryProvider).addBookingToUser(user,b.uId!);
+
+              ref.read(BookingRepositoryProvider).addBooking(booking: b);
 
 
 

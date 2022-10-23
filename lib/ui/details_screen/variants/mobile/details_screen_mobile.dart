@@ -11,7 +11,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'dart:developer' as developer;
 import '../../../../controllers/auth_controller.dart';
+import '../../../../controllers/barber_controller/barber_providers.dart';
 import '../../../../controllers/place_controller.dart';
+import '../../../../controllers/service_controller/service_providers.dart';
 import '../../../../models/barber/barber_model.dart';
 import '../../../../models/service/service_model.dart';
 
@@ -43,6 +45,7 @@ class DetailWidget_mobile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authControllerState = ref.watch(authControllerProvider);
+    final works =  ref.watch(retrieveBarbersWorks(bs.id!));
 
     return DefaultTabController(
         length: 4,
@@ -103,18 +106,29 @@ class DetailWidget_mobile extends ConsumerWidget {
               //Container(color: Colors.blue,height: 200,),
               buildReviews(),
               //Container(color: Colors.red,height: 200,),
-              GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                  ),
-                  itemCount: 4,
-                  itemBuilder: (context,index){
-                    return Container(
-                      height: MediaQuery.of(context).size.height/2,
-                      width: MediaQuery.of(context).size.width/2,
-                      child: Text(items[index].toString()),
-                    );
-                  })
+              works.when(
+                  data: (data){
+                    return data.isNotEmpty?
+                      GridView.builder(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                        ),
+                        itemCount: 4,
+                        itemBuilder: (context,index){
+                          Barber b = data[index];
+                          return Container(
+                            height: MediaQuery.of(context).size.height/2,
+                            width: MediaQuery.of(context).size.width/2,
+                            child: Text(b.name!),
+                          );
+                        }
+                    )
+                    :Text("Bocs haver, ez most nem fog összejönni");
+                  },
+                  error: (e,_st){return Text(e.toString());},
+                  loading: (){return CircularProgressIndicator();}
+              )
+
             ],
           ),
         ),

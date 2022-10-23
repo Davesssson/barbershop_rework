@@ -32,12 +32,24 @@ class UsersRepository implements BaseUsersRepository{
     }
   }
 
-  Future<void> addBookingToUser(User user, String dateId)async{
+  Future<void> addBookingToUser(User user, String bookingId)async{
+    try {
+      developer.log("[user_repository.dart][UsersRepository][addBookingToUser] - addBookingToUser.");
+      //TODO outsource the .set method
+      await FirebaseFirestore.instance.collection('users').doc(user.uid)
+          .update({ 'bookings': FieldValue.arrayUnion([bookingId])});
+    }on FirebaseAuthException catch(e){
+      developer.log("[user_repository.dart][UsersRepository][addUser] - addBookingToUser Exception.");
+      throw CustomException(message: e.message);
+    }
+  }
+
+  Future<void> changeUserName(User user, String newName)async{
     try {
       developer.log("[user_repository.dart][UsersRepository][addUser] - User added.");
       //TODO outsource the .set method
       await FirebaseFirestore.instance.collection('users').doc(user.uid)
-          .update({ 'bookings': FieldValue.arrayUnion([dateId])});
+          .update({ 'firstName': newName});
     }on FirebaseAuthException catch(e){
       developer.log("[user_repository.dart][UsersRepository][addUser] - User add Exception.");
       throw CustomException(message: e.message);

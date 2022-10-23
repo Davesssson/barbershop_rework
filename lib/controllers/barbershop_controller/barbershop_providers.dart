@@ -1,5 +1,6 @@
 import 'package:flutter_shopping_list/controllers/city_controller/city_controller.dart';
 import 'package:flutter_shopping_list/controllers/service_controller/service_providers.dart';
+import 'package:flutter_shopping_list/repositories/barbershops_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/riverpod.dart';
 import 'dart:developer' as developer;

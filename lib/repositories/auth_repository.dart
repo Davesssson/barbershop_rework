@@ -82,4 +82,17 @@ class AuthRepository implements BaseAuthRepository {
       throw CustomException(message: e.message);
     }
   }
+
+  @override
+  Future<void> updateUsername(User? user, String newName) async {
+    try {
+      developer.log("[auth_repository.dart][AuthRepository][singInViaEmailAndPassword] - Sign in via Email.");
+      if (user == null) return;
+      await user.updateDisplayName(newName);
+      _read(userRepositoryProvider).changeUserName(user,newName);
+    } on FirebaseAuthException catch (e) {
+      developer.log("[auth_repository.dart][AuthRepository][singInViaEmailAndPassword] - Sign in via Email Exception.");
+      throw CustomException(message: e.message);
+    }
+  }
 }
