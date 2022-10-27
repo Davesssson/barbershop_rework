@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/models/responses/marker_response_item.dart';
+import 'package:flutter_shopping_list/ui/map_screen/map_screen.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -118,14 +119,16 @@ class CitiesRepository implements BaseCitiesRepository {
     }
   }
 
-  Future<Set<MarkerResponseItem>> retrieveCityMarkersGeoLocation2(LatLng middlePoint)async {
+  Stream<Set<MarkerResponseItem>> retrieveCityMarkersGeoLocation2(LatLng middlePoint, double radius)async* {
     developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkersGeoLocation] - Retrieving City Markers for geolocation. . .");
     Geoflutterfire geo = Geoflutterfire();
     GeoFirePoint center = geo.point(latitude: 47.497913, longitude:19.040236);
     //GeoFirePoint center = geo.point(latitude:middlePoint.latitude, longitude: middlePoint.longitude);
     try {
       final collectionReference = await _read(firebaseFirestoreProvider).collection('barbershops');
-      double radius = 10;
+      //final r = _read(radiusProvider);
+      print("r=" + radius.toString());
+      //double radius = 10;
       String field = 'point';
       Stream<List<DocumentSnapshot>> stream = geo
           .collection(collectionRef: collectionReference)
@@ -135,9 +138,9 @@ class CitiesRepository implements BaseCitiesRepository {
             field: field
       );
 
-       final asd = stream.listen((List<DocumentSnapshot> documentList) {
-        documentList.map((doc)   {
-          print("heloka");
+       yield* stream.map((List<DocumentSnapshot> documentList) {
+        return documentList.map((doc)   {
+          print("heloka itt vagyok");
           print(doc.data().toString());
           GeoPoint gp = doc['location'];
           return MarkerResponseItem(
@@ -149,7 +152,7 @@ class CitiesRepository implements BaseCitiesRepository {
           );
         }).toSet();
       });
-      final markerResponseItems = await stream.first.then((documents) => documents.map((doc) {
+/*      final markerResponseItems = await stream.first.then((documents) => documents.map((doc) {
         print("heloka");
         print(doc.data().toString());
         GeoPoint gp = doc['location'];
@@ -160,9 +163,9 @@ class CitiesRepository implements BaseCitiesRepository {
               position: LatLng(gp.latitude,gp.longitude),
             )
         );
-      }).toSet());
-      markerResponseItems.forEach((element) {print(element);});
-      return markerResponseItems;
+      }).toSet());*/
+/*      markerResponseItems.forEach((element) {print(element);});
+      return markerResponseItems;*/
     } on FirebaseException catch (e) {
       developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkersGeoLocation] - Failure during retrieving city markers for geolaction.");
       throw CustomException(message: e.message);

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_shopping_list/ui/map_screen/map_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../controllers/auth_controller.dart';
 import '../../../controllers/item_list_controller.dart';
+import '../../../controllers/marker_controller/marker_providers.dart';
 import '../../../controllers/theme_controller.dart';
 import '../../../models/item/item_model.dart';
 import '../../../repositories/custom_exception.dart';
@@ -22,7 +24,7 @@ class ItemListScreen_mobile extends HookConsumerWidget {
     final filteredItemList = ref.watch(itemListContentProvider);
     final authControllerState = ref.watch(authControllerProvider);
     final isObtainedFilter = ref.watch(itemListFilterProvider.notifier).state == ItemListFilter.all;
-
+    final radius = ref.watch(radiusProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shopping List'),
@@ -80,10 +82,17 @@ class ItemListScreen_mobile extends HookConsumerWidget {
       ),
       body: itemListState.when(
         data: (items) => items.isEmpty
-            ? const Center(
-                child: Text(
-                  'Tap + to add an item',
-                  style: TextStyle(fontSize: 20.0),
+            ?  Center(
+                child: Slider(
+                  value: radius,
+                  max: 1000,
+                  divisions: 5,
+                  label: radius.round().toString(),
+                  onChanged: (double value) {
+                    print("na ez lesz a jó"+ref.read(markerListStateProvider.notifier).getRadius().toString());
+                    ref.read(markerListStateProvider.notifier).setRadius(value);
+                    ref.read(radiusProvider.notifier).state=value;
+                  },
                 ),
               )
             : ListView.builder(

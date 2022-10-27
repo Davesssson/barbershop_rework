@@ -13,6 +13,7 @@ final markerListContentProvider = Provider<Set<Marker>>((ref) {
 
   return markersListState.maybeWhen(
     data: (markerItems) {
+      print("na ez lesz a jó"+ref.read(markerListStateProvider.notifier).getRadius().toString());
       //if(cityListFilterState.toString()!="") {
         return markerItems.where((element) => element.city==cityListFilterState.toString()).map((markerItem) {
           return Marker(

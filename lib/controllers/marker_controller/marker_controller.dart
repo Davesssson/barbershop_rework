@@ -8,10 +8,10 @@ import 'dart:developer' as developer;
 
 class MarkerListStateController extends StateNotifier<AsyncValue<Set<MarkerResponseItem>>> {
   final Reader _read;
-
+  double radius =10;
   MarkerListStateController(this._read) : super(AsyncValue.loading()) {
     developer.log("[marker_controller.dart][MarkerListStateController][MarkerListStateController] - MarkerListStateController constructed");
-    retrieveCityMarkers();
+    retrieveCityMarkersGeoQuery(LatLng(47.497913, 19.040236));
   }
 
   Future<void> retrieveCityMarkers({bool isRefreshing = false}) async {
@@ -29,15 +29,26 @@ class MarkerListStateController extends StateNotifier<AsyncValue<Set<MarkerRespo
     }
   }
 
+  void setRadius(double r){
+    this.radius=r;
+  }
+
+  double getRadius(){
+    return this.radius;
+  }
+
   Future<void> retrieveCityMarkersGeoQuery(LatLng middlePoint,{bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
       developer.log("[marker_controller.dart][MarkerListStateController][retrieveCityMarkersGeoQuery] - retrieveCityMarkersGeoQuery ");
-      final markers =await _read(citiesRepositoryProvider).retrieveCityMarkersGeoLocation2(middlePoint);
-      if (mounted) {
+      final markers = _read(citiesRepositoryProvider).retrieveCityMarkersGeoLocation2(middlePoint,radius);
+      markers.listen((event) {
+        state=AsyncValue.data(event);
+      });
+/*      if (mounted) {
         state = AsyncValue.data(markers);
         MyLogger.singleton.logger().i("MarkerController state =" + state.toString());
-      }
+      }*/
     } on CustomException catch (e) {
       developer.log("[marker_controller.dart][MarkerListStateController][retrieveCityMarkersGeoQuery] - retrieveCityMarkersGeoQuery Exception");
       state = AsyncValue.error(e);

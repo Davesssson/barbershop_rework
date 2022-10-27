@@ -15,6 +15,7 @@ import 'info_window.dart';
 //https://pub.dev/packages/google_maps_cluster_manager
 
 final cityFilterStateForMap = StateProvider<String>((_) => "");
+final radiusProvider = StateProvider<double>((_) => 20);
 
 class MapScreen extends ConsumerWidget {
   final _controller = Completer();
@@ -40,6 +41,7 @@ class MapScreen extends ConsumerWidget {
     final show = ref.watch(cityFilterStateForMap);
 
     late TextEditingController controller;
+    double _currentSliderValue = ref.watch(radiusProvider);
 
     return Scaffold(
       body: markersState.when(
@@ -56,14 +58,21 @@ class MapScreen extends ConsumerWidget {
                     mapType: MapType.hybrid,
                     initialCameraPosition: _kGooglePlex,
                     onMapCreated: (GoogleMapController controller) {
-                      _controller.complete(controller);
+                        _controller.complete(controller);
                     },
                   ),
-                  infoWindow(),
+                  //infoWindow(),
                   //buildBottomPart(show, ref),
                   AutoComplete(optionsState, ref),
+                  Container(
+                    width: 100,
+                    height: 100,
+                    color: Colors.yellow,
+                    child: Text(_currentSliderValue.toString()),
+                  )
 
-                ]
+
+          ]
           ),
           error: (e, _) => Text("faszom"),
           loading: () => CircularProgressIndicator()
