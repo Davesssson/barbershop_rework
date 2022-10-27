@@ -117,28 +117,6 @@ DataSource _getCalendarDataSource(AsyncValue<List<ResourceViewModel>> state) {
       loading: (){}
   );
 
-/*
-  appointments.add(
-    Appointment(
-      startTime: DateTime.now(),
-      endTime: DateTime.now().add(Duration(hours: 2)),
-      isAllDay: false,
-      subject: 'Meeting',
-      color: Colors.blue,
-      resourceIds: <Object>['0001'],
-    ),
-  );
-  appointments.add(
-    Appointment(
-      startTime: DateTime.now(),
-      endTime: DateTime.now().add(Duration(hours: 6)),
-      isAllDay: false,
-      subject: 'Meeting',
-      color: Colors.red,
-      resourceIds: <Object>['0001'],
-    ),
-  );
-*/
 
   resources.add(CalendarResource(displayName: 'John', id: '0001', color: Colors.red));
 

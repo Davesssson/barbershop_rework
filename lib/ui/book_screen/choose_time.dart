@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/controllers/auth_controller.dart';
 import 'package:flutter_shopping_list/controllers/barber_controller/barber_providers.dart';
 import 'package:flutter_shopping_list/controllers/work_day_availability_controller/work_day_availability_providers.dart';
-import 'package:flutter_shopping_list/repositories/auth_repository.dart';
 import 'package:flutter_shopping_list/repositories/user_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -12,6 +11,7 @@ import '../../models/barbershop/barbershop_model.dart';
 import '../../models/booking/booking_model.dart';
 import '../../models/work_day_availability/work_day_availability_model.dart';
 import '../../repositories/booking_repository.dart';
+import 'widgets/custom_chip.dart';
 
 StateProvider<DateTime> selectedDate = StateProvider<DateTime>((_) => DateTime(2020));
 StateProvider<CustomChip?> selectedChip = StateProvider<CustomChip?>((_) => null);
@@ -35,6 +35,152 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
       list.add(DateTime.now().add(Duration(days: i)));
     }
     super.initState();
+}
+
+  @override
+  Widget build(BuildContext context) {
+    final workDayAvailabilityListState =
+        ref.watch(WorkDayAvailabilityListStateProvider(widget.barberId));
+    final workDayAvailabilityListContent =
+        ref.watch(WorkDayAvailabilityListContentProvider(widget.barberId));
+    final chipSelected = ref.watch(selectedChip);
+
+    return Scaffold(
+        body: workDayAvailabilityListState.when(data: (data) {
+      prepareBlackoutDates(data);
+      return ListView(children: [
+        SfDateRangePicker(
+          initialSelectedDate:
+              DateTime.parse(workDayAvailabilityListContent.id!),
+          maxDate: DateTime.now().add(Duration(days: 30)),
+          enablePastDates: false,
+          allowViewNavigation: true,
+          enableMultiView: false,
+          monthViewSettings: DateRangePickerMonthViewSettings(
+            firstDayOfWeek: 7,
+            numberOfWeeksInView: 1,
+            blackoutDates: [
+              ...list,
+            ],
+          ),
+          onSelectionChanged: (DateRangePickerSelectionChangedArgs arg) {
+            print("inital date selected" + ref.read(selectedDate).toString());
+            updateDateSelected(arg, ref);
+            displayNewChips(arg);
+            ref.read(selectedChip.notifier).state=null;
+          },
+        ),
+        buildChipChoicesGridView(context, workDayAvailabilityListContent),//TODO itt dobja a render errort, majd később foglalkozok vele
+        Center(
+          child: ElevatedButton(
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            onPressed: chipSelected!=null ? () {
+              if(ref.read(selectedDate).year==2020)return;
+              final date = chipSelected.start.toString().split(" ")[0];
+              final time = chipSelected.start.toString().split(" ")[1];
+              final date_split = date.split("-");
+              final time_split = time.split(":");
+              int year = int.parse(date_split[0]);
+              int month = int.parse(date_split[1]);
+              int day = int.parse(date_split[2]);
+              int hour = int.parse(time_split[0]);
+              int minute = int.parse(time_split[1]);
+              String startt = hour.toString()+minute.toString();
+              print(date);
+              print(widget.barberId);
+              print(int.parse(startt));
+              Uuid uuid = Uuid();
+              User? user = ref.watch(authControllerProvider);
+              Booking b = Booking(
+                  dateId: date,
+                  uId: uuid.v4(),
+                  barberId: widget.barberId!,
+                  start:int.parse(startt),
+                  userReserverId: user!.uid
+              );
+
+              ref.read(barberListForShopStateProvider.notifier).addBooking(
+                dateId: b.dateId!,
+                uId: b.uId!,
+                barberId: widget.barberId,
+                start: b.start!,
+                end:2000,
+                userReserverId:user!.uid
+              );
+              ref.read(userRepositoryProvider).addBookingToUser(user,b.uId!);
+              ref.read(BookingRepositoryProvider).addBooking(booking: b);
+
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.grey,
+                useRootNavigator: false,
+                builder: (context) => Center(
+                  child: Column(
+                    children: [
+                      Text("sikeres foglalás ${widget.barbershop.name}ügyes vagy"),
+                      Text("INSERT BARBERSHOP HERE"),
+                      Text("INSERT BARBER NAME -hez"),
+                      Text("INSERT ${chipSelected.start} TIME -ra"),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).popAndPushNamed('/home'); //majd a detailsre vigyen át
+                        },
+                        child: Text(
+                          "Exit",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }:null,
+            child: Text(
+              "BOOK NOW ",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      ]);
+    }, error: (e, _) {
+      return Text("asdasdasd");
+    }, loading: () {
+      return CircularProgressIndicator();
+    }));
+  }
+
+  Flexible buildChipChoicesGridView(BuildContext context, WorkDayAvailability workDayAvailabilityListContent) {
+    return Flexible(
+        //height: MediaQuery.of(context).size.height/5,
+        child: GridView.count(
+          shrinkWrap: true,
+          mainAxisSpacing: 5,
+          crossAxisSpacing: 5,
+          crossAxisCount: (MediaQuery.of(context).size.width / 70).toInt(),
+          children: prepareChipChoices(workDayAvailabilityListContent),
+        ),
+      );
+  }
+
+  Container buildChipChoicesScrollView(BuildContext context, WorkDayAvailability workDayAvailabilityListContent) {
+    return Container(
+        height: MediaQuery.of(context).size.height / 10,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: prepareChipChoices(workDayAvailabilityListContent),
+        ),
+      );
+  }
+
+  void updateDateSelected(DateRangePickerSelectionChangedArgs arg, WidgetRef ref) {
+    final date = arg.value.toString().split(" ");
+    final dateComponents = date[0].split("-");
+    int year = int.parse(dateComponents[0]);
+    int month = int.parse(dateComponents[1]);
+    int day = int.parse(dateComponents[2]);
+    DateTime overrideWith = DateTime(year,month,day);
+    ref.read(selectedDate.notifier).state=overrideWith;
+    print("after changing date selected" +ref.read(selectedDate).toString());
   }
 
   void prepareBlackoutDates(List<WorkDayAvailability> data) {
@@ -94,292 +240,4 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
       return [];
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final workDayAvailabilityListState =
-        ref.watch(WorkDayAvailabilityListStateProvider(widget.barberId));
-    final workDayAvailabilityListContent =
-        ref.watch(WorkDayAvailabilityListContentProvider(widget.barberId));
-    final chipSelected = ref.watch(selectedChip);
-
-    return Scaffold(
-        body: workDayAvailabilityListState.when(data: (data) {
-      prepareBlackoutDates(data);
-      return ListView(children: [
-        SfDateRangePicker(
-          initialSelectedDate:
-              DateTime.parse(workDayAvailabilityListContent.id!),
-          maxDate: DateTime.now().add(Duration(days: 30)),
-          enablePastDates: false,
-          allowViewNavigation: true,
-          enableMultiView: false,
-          monthViewSettings: DateRangePickerMonthViewSettings(
-            firstDayOfWeek: 7,
-            numberOfWeeksInView: 1,
-            blackoutDates: [
-              ...list,
-            ],
-          ),
-          onSelectionChanged: (DateRangePickerSelectionChangedArgs arg) {
-            print("inital date selected" + ref.read(selectedDate).toString());
-            final date = arg.value.toString().split(" ");
-            final dateComponents = date[0].split("-");
-            int year = int.parse(dateComponents[0]);
-            int month = int.parse(dateComponents[1]);
-            int day = int.parse(dateComponents[2]);
-            DateTime overrideWith = DateTime(year,month,day);
-            ref.read(selectedDate.notifier).state=overrideWith;
-            print("after changing date selected" +ref.read(selectedDate).toString());
-            displayNewChips(arg);
-            ref.read(selectedChip.notifier).state=null;
-          },
-        ),
-        buildChipChoicesGridView(context, workDayAvailabilityListContent),//TODO itt dobja a render errort, majd később foglalkozok vele
-        Center(
-          child: ElevatedButton(
-
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            onPressed: chipSelected!=null ? () {
-              if(ref.read(selectedDate).year==2020)return;
-              print("helobelo");
-              final date = chipSelected.start.toString().split(" ")[0];
-              final time = chipSelected.start.toString().split(" ")[1];
-              final date_split = date.split("-");
-              final time_split = time.split(":");
-              int year = int.parse(date_split[0]);
-              int month = int.parse(date_split[1]);
-              int day = int.parse(date_split[2]);
-              int hour = int.parse(time_split[0]);
-              int minute = int.parse(time_split[1]);
-              String startt = hour.toString()+minute.toString();
-              print(date);
-              print(widget.barberId);
-              print(int.parse(startt));
-              Uuid uuid = Uuid();
-              User? user = ref.watch(authControllerProvider);
-              Booking b = Booking(
-                  dateId: date,
-                  uId: uuid.v4(),
-                  barberId: widget.barberId!,
-                  start:int.parse(startt),
-                  userReserverId: user!.uid
-              );
-
-              ref.read(barberListForShopStateProvider.notifier).addBooking(
-                dateId: b.dateId!,
-                uId: b.uId!,
-                barberId: widget.barberId,
-                start: b.start!,
-                end:2000,
-                userReserverId:user!.uid
-              );
-              ref.read(userRepositoryProvider).addBookingToUser(user,b.uId!);
-
-              ref.read(BookingRepositoryProvider).addBooking(booking: b);
-
-
-
-
-              showModalBottomSheet(
-                context: context,
-                backgroundColor: Colors.grey,
-                useRootNavigator: false,
-                builder: (context) => Center(
-                  child: Column(
-                    children: [
-                      Text("sikeres foglalás ${widget.barbershop.name}ügyes vagy"),
-                      Text("INSERT BARBERSHOP HERE"),
-                      Text("INSERT BARBER NAME -hez"),
-                      Text("INSERT ${chipSelected.start} TIME -ra"),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context, rootNavigator: true).popAndPushNamed('/home'); //majd a detailsre vigyen át
-                        },
-                        child: Text(
-                          "Exit",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }:null,
-            child: Text(
-              "BOOK NOW ",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ),
-      ]);
-    }, error: (e, _) {
-      return Text("asdasdasd");
-    }, loading: () {
-      return CircularProgressIndicator();
-    }));
-  }
-
-  Flexible buildChipChoicesGridView(BuildContext context, WorkDayAvailability workDayAvailabilityListContent) {
-    return Flexible(
-        //height: MediaQuery.of(context).size.height/5,
-        child: GridView.count(
-          shrinkWrap: true,
-          mainAxisSpacing: 5,
-          crossAxisSpacing: 5,
-          crossAxisCount: (MediaQuery.of(context).size.width / 70).toInt(),
-          children: [
-            ...prepareChipChoices(workDayAvailabilityListContent)
-          ],
-        ),
-      );
-  }
-
-  Container buildChipChoicesScrollView(BuildContext context, WorkDayAvailability workDayAvailabilityListContent) {
-    return Container(
-        height: MediaQuery.of(context).size.height / 10,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: [...prepareChipChoices(workDayAvailabilityListContent)],
-        ),
-      );
-  }
 }
-
-class CustomChip extends ConsumerWidget {
-  const CustomChip({
-    Key? key,
-    required this.barberId,
-    required this.ref,
-    required this.start,
-  }) : super(key: key);
-  final String barberId;
-  final WidgetRef ref;
-  final DateTime start;
-
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final selected = ref.watch(selectedChip);
-    //return InkWell(
-     /* onTap: (){
-        if(ref.read(selectedDate).year==2020)return;
-        print("helobelo");
-        print(start.toString());
-        final date = start.toString().split(" ")[0];
-        final time = start.toString().split(" ")[1];
-        final date_split = date.split("-");
-        final time_split = time.split(":");
-        int year = int.parse(date_split[0]);
-        int month = int.parse(date_split[1]);
-        int day = int.parse(date_split[2]);
-        int hour = int.parse(time_split[0]);
-        int minute = int.parse(time_split[1]);
-        String startt = hour.toString()+minute.toString();
-        print(date);
-        print(barberId);
-        print(int.parse(startt));
-        Uuid uuid = Uuid();
-        ref.read(barberListForShopStateProvider.notifier).addBooking(
-          dateId: date,
-          uId: uuid.v4(),
-          barberId: barberId,
-          start: int.parse(startt),
-          end:2000,
-        );
-      },*/
-      return ChoiceChip(
-        selected: selected?.start==this.start,
-        onSelected: (selected){
-          ref.read(selectedChip.notifier).state=this;
-
-        },
-        selectedColor: Colors.brown,
-        label: Text("${start.hour}:${start.minute}"));
-    //);
-  }
-}
-
-//region old implementation
-/* body:details.when(
-          data: (data) {
-            print("eloszor");
-            print(list.toString());
-            data.forEach((element1) {
-              final asd = element1.id!.split("-");
-              final date = DateTime(int.parse(asd[0]),int.parse(asd[1]),int.parse(asd[2]));
-              list.removeWhere((element) {
-                List<String> asd2 = element.toString().split(" ");
-                List<String> asd22 = asd2[0].toString().split("-");
-                final date2 = DateTime(int.parse(asd22[0]),int.parse(asd22[1]),int.parse(asd22[2]));
-                return date==date2;
-              });
-            });
-            print("masodszor");
-            print(list.toString());
-            return ListView(
-              children:[
-                  SfDateRangePicker(
-                    maxDate: DateTime.now().add(Duration(days:30)),
-                    enablePastDates: false,
-                    allowViewNavigation: true,
-                    enableMultiView: false,
-                    monthViewSettings: DateRangePickerMonthViewSettings(
-                      firstDayOfWeek: 7,
-                      numberOfWeeksInView: 1,
-                      blackoutDates:[
-                        ...list,
-                        ...data.map((e) { // ide még kell egy csekk, hogy csak akkor legyen engedélyezett hogyha van szabad timeslot
-                          final asd = e.id!.split("-");
-                          print(asd);
-                          return DateTime(int.parse(asd[0]),int.parse(asd[1]),int.parse(asd[2]));
-                        }).toList()
-                      ],
-                    ),
-                    onSelectionChanged: (DateRangePickerSelectionChangedArgs arg){
-                      final date = arg.value.toString().split(" ");
-                      final dateComponents = date[0].split("-");
-                      print("date");
-                      print(date.toString());
-                      print("dateComponents");
-                      print(dateComponents.toString());
-                      print("AvailabilityFilterProvider state = ");
-                      print(ref.read(availabilityFilterProvider.notifier).state.toString());
-                      print("most állítom át");
-                      ref.read(availabilityFilterProvider.notifier).state = DateTime(int.parse(dateComponents[0]),int.parse(dateComponents[1]),int.parse(dateComponents[2]));
-                      print("átállított után");
-                      print(ref.read(availabilityFilterProvider.notifier).state);
-                      print(arg.value.toString());
-                    },
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height/10,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      ...chooseTime.slots!.map((slot) {
-                        return InkWell(
-                          onTap: () {
-                            pushNewScreenWithRouteSettings(
-                              context,
-                              settings: RouteSettings(name: '/book'),
-                              screen: chooseTime(),
-                            );
-                          },
-                          child: Chip(
-                            label: Text(slot.start.toString()),
-                          ),
-                        );
-                      }).toList()
-                    ],
-                  ),
-                ),
-
-
-
-              ]
-            );
-          },
-          error: (e,_){return Text("hiba");},
-          loading: (){return CircularProgressIndicator();}
-      )*/
-//endregion old implementation

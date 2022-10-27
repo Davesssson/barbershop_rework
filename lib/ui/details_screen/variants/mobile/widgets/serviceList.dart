@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../../controllers/service_controller/service_providers.dart';
 import '../details_screen_mobile.dart';
 
-class ServiceList extends ConsumerWidget {
-  const ServiceList({
+class Services extends ConsumerWidget {
+  const Services({
     Key? key,
   }) : super(key: key);
 

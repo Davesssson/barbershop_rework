@@ -13,29 +13,42 @@ class admin_barbers extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final barberState = ref.watch(barberListForShopStateProvider);
-    final barberContent = ref.watch(barberListForShopContentProvider);
     return barberState.when(data: (barbers) {
       return barbers.isEmpty
           ? Container(
               child: Text("Hat tesom, neked nincsenek barbereid. Veszel fel?"),
               color: Colors.red,
             )
-          : GridView.count(
-              mainAxisSpacing: 20,
-              crossAxisSpacing: 20,
-              crossAxisCount: (MediaQuery.of(context).size.width / 350).toInt(),
-              children: [
-                ...barberContent.map((existingBarber) {
-                  return BarberTile(existingBarber: existingBarber);
-                }).toList(),
-                addNewBarberTile(),
-              ],
-            );
+          : barberGrid();
     }, error: (e, _) {
       return Text(e.toString());
     }, loading: () {
       return CircularProgressIndicator();
     });
+  }
+}
+
+class barberGrid extends ConsumerWidget {
+  const barberGrid({
+    Key? key,
+  }) : super(key: key);
+
+
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final barberContent = ref.watch(barberListForShopContentProvider);
+    return GridView.count(
+        mainAxisSpacing: 20,
+        crossAxisSpacing: 20,
+        crossAxisCount: (MediaQuery.of(context).size.width / 350).toInt(),
+        children: [
+          ...barberContent.map((existingBarber) {
+            return BarberTile(existingBarber: existingBarber);
+          }).toList(),
+          addNewBarberTile(),
+        ],
+      );
   }
 }
 

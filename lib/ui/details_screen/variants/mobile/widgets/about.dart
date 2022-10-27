@@ -5,8 +5,8 @@ import 'package:riverpod/riverpod.dart';
 
 import '../../../../../controllers/place_controller.dart';
 
-class buildAbout extends ConsumerWidget {
-  const buildAbout({
+class About extends ConsumerWidget {
+  const About({
     Key? key,
   }) : super(key: key);
 

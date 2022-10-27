@@ -56,50 +56,7 @@ class editView extends HookConsumerWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Row(
-                  children: [
-                    Column(
-                      children: [
-                        Text("Name"),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            padding: EdgeInsets.all(8),
-                            width: MediaQuery.of(context).size.width/3,
-                            child: TextFormField(controller: textNameController),
-                          ),
-                        ),
-                        Text("Description"),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            padding: EdgeInsets.all(8),
-                            width: MediaQuery.of(context).size.width/3,
-                            child: TextFormField(controller: textDescriptionController),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width/2.5,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.black
-                            )
-                          ),
-                          child: InkWell(
-                              onHover: (onHover){
-                                 onHover?Container(color: Colors.red):Container(color:Colors.blue);
-                              },
-                              child: Image.network(barberUnderEdit!.prof_pic!)
-                          )
-                        )
-                      ],
-                    )
-                  ],
-                ),
+                editNameAndDescription(textNameController: textNameController, textDescriptionController: textDescriptionController, barberUnderEdit: barberUnderEdit),
                 TextButton(
                     onPressed: () {
                       barberUnderEdit != null
@@ -158,8 +115,8 @@ class editView extends HookConsumerWidget {
                 ),
                 SingleChildScrollView(
                   child: Container(
-
                     child: SfCalendar(
+                      dataSource: _events,
                       view: CalendarView.week,
                       allowDragAndDrop: true,
                       allowAppointmentResize: true,
@@ -167,36 +124,24 @@ class editView extends HookConsumerWidget {
                         changedElements.add(details.appointment); //TODO Mi van akkor, hogyha többször resizeolja és hozzáadódiK????
                       },
                       onTap: (CalendarTapDetails details){
-                        String year = details.date!.year.toString();
-                        String month = details.date!.month.toString();
-                        String day = details.date!.day.toString();
-                        String id = year + "-" + month + "-" + day;
-                        if(!hasAppointmentWithId(id)) {
-                          int startHour = details.date!.hour;
-                          int startMin = details.date!.minute;
-                          DateTime start = DateTime(
-                              int.parse(year), int.parse(month), int.parse(day),
-                              startHour, startMin);
-                          DateTime end = DateTime(
-                              int.parse(year), int.parse(month), int.parse(day),
-                              startHour + 8, startMin);
+                        String dateId = getDateId(details);
+                        if(!hasAppointmentWithId(dateId)) {
+                          DateTime start = getStartTime(details);
+                          DateTime end = getEndTime(details, 8);
                           final Appointment newAppointment = Appointment(
-                              id: id,
+                              id: dateId,
                               startTime: start,
                               endTime: end
                           );
                           appointments.add(newAppointment);
-
+                          addedElements.add(newAppointment);
                           _events.notifyListeners(
                               CalendarDataSourceAction.add,
                               <Appointment>[newAppointment]);
-                          addedElements.add(newAppointment);
                         }else{
                           print("heloka");
                         }
                       },
-                      //dataSource: _getCalendarDataSource2(workDayAvailabilityState,workDayAvailabilityContent),
-                      dataSource: _events
                     ),
                   ),
                 ),
@@ -210,34 +155,10 @@ class editView extends HookConsumerWidget {
                       return InkWell(
                         onTap: () => showDialog<String>(
                           context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: const Text('Biztosan meg szeretnéd változtatni a barber profil képét?'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'No'),
-                                child: const Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  ref.read(barberListForShopStateProvider.notifier)
-                                      .updateBarberProfPic(barberId: barberUnderEdit!.id!, profPictureLink: picture);
-                                  Navigator.pop(context, 'Yes');
-                                },
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          ),
+                          builder: (BuildContext context) => showConfirmationDialog(context, ref, picture),
                         ),
                         child: Image.network(picture),
                       );
-
-/*                      return InkWell(
-                          onTap: (){
-                            ref.read(barberListForShopStateProvider.notifier)
-                                .updateBarberProfPic(barberId: barberUnderEdit!.id!, profPictureLink: picture);
-                          },
-                          child: Image.network(picture)
-                      );*/
                     }).toList(),
                     Container(color:Colors.blue,child:Icon(Icons.add))
                   ],
@@ -255,13 +176,31 @@ class editView extends HookConsumerWidget {
                       },
                     child: Text("Tölts fel képet",style: TextStyle(color: Colors.red),)
                 ),
-                Container(height: 300,color:Colors.green),
-                Container(height: 300,color:Colors.blueAccent),
-                Container(height: 300,color:Colors.black),
+
               ],
             ),
           ),
         )
+    );
+  }
+
+  AlertDialog showConfirmationDialog(BuildContext context, WidgetRef ref, String picture) {
+    return AlertDialog(
+      title: const Text('Biztosan meg szeretnéd változtatni a barber profil képét?'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'No'),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            ref.read(barberListForShopStateProvider.notifier) // TODO KICSERÉLNI SIMA ASYNC-ra
+                .updateBarberProfPic(barberId: barberUnderEdit!.id!, profPictureLink: picture);
+            Navigator.pop(context, 'Yes');
+          },
+          child: const Text('OK'),
+        ),
+      ],
     );
   }
 
@@ -311,51 +250,101 @@ class editView extends HookConsumerWidget {
     });
     return listAlreadyHasAppointmentWithId;
   }
+
+  String getDateId(CalendarTapDetails details) {
+    String year = details.date!.year.toString();
+    String month = details.date!.month.toString();
+    String day = details.date!.day.toString();
+    String id = year + "-" + month + "-" + day;
+    return id;
+  }
+
+  DateTime getStartTime(CalendarTapDetails details) {
+    int year = details.date!.year;
+    int month = details.date!.month;
+    int day = details.date!.day;
+    int startHour = details.date!.hour;
+    int startMin = details.date!.minute;
+    DateTime start = DateTime(
+        year, month, day,
+        startHour, startMin);
+    return start;
+  }
+
+  DateTime getEndTime(CalendarTapDetails details, int workDayLengthInHour) {
+    int year = details.date!.year;
+    int month = details.date!.month;
+    int day = details.date!.day;
+    int endHour = details.date!.hour;
+    int endMin = details.date!.minute;
+    DateTime end = DateTime(
+        year, month, day,
+        endHour+workDayLengthInHour, endMin);
+    return end;
+  }
+
 }
-//region old implementation
-/*  _AppointmentDataSource _getCalendarDataSource(AsyncValue<List<Availability>> state, Availability content) {
-    List<Appointment> appointments = <Appointment>[];
-    var uuid = Uuid();
-    state.when(
-        data: (data){
-           data.forEach((availabilityDate) {
-             availabilityDate.slots!.forEach((availabilityTimeSlot) {
-               final List<String> date_split = availabilityDate.id!.split("-");
-               final int start_hour = int.parse(availabilityTimeSlot.start.toString().substring(0,2));
-               final int start_min = int.parse(availabilityTimeSlot.start.toString().substring(2));
-               final int end_hour = int.parse(availabilityTimeSlot.end.toString().substring(0,2));
-               final int end_min = int.parse(availabilityTimeSlot.end.toString().substring(2));
-               final asd =  Appointment(
-                 id: availabilityTimeSlot.id,
-                 startTime: DateTime(
-                  int.parse(date_split[0]),
-                  int.parse(date_split[1]),
-                  int.parse(date_split[2]),
-                  start_hour,
-                  start_min,
-                ),
-                 endTime: DateTime(
-                   int.parse(date_split[0]),
-                   int.parse(date_split[1]),
-                   int.parse(date_split[2]),
-                   end_hour,
-                   end_min,
-                 ),
-              );
-               appointments.add(asd);
-            });
-          });
-        },
-        error: (e,_){print("fos");},
-        loading: (){}
+
+class editNameAndDescription extends StatelessWidget {
+  const editNameAndDescription({
+    Key? key,
+    required this.textNameController,
+    required this.textDescriptionController,
+    required this.barberUnderEdit,
+  }) : super(key: key);
+
+  final TextEditingController textNameController;
+  final TextEditingController textDescriptionController;
+  final Barber? barberUnderEdit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Column(
+          children: [
+            Text("Name"),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                padding: EdgeInsets.all(8),
+                width: MediaQuery.of(context).size.width/3,
+                child: TextFormField(controller: textNameController),
+              ),
+            ),
+            Text("Description"),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                padding: EdgeInsets.all(8),
+                width: MediaQuery.of(context).size.width/3,
+                child: TextFormField(controller: textDescriptionController),
+              ),
+            ),
+          ],
+        ),
+        Column(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width/2.5,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black
+                )
+              ),
+              child: InkWell(
+                  onHover: (onHover){
+                     onHover?Container(color: Colors.red):Container(color:Colors.blue);
+                  },
+                  child: Image.network(barberUnderEdit!.prof_pic!)
+              )
+            )
+          ],
+        )
+      ],
     );
-    return _AppointmentDataSource(appointments);
-  }*/
-//endregion old implementation
-
-
-
-
+  }
+}
 
 class _AppointmentDataSource extends CalendarDataSource {
   _AppointmentDataSource(List<Appointment> source) {

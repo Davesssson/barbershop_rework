@@ -52,7 +52,7 @@ class WorkDayAvailabilityListStateController extends StateNotifier<AsyncValue<Li
           MyLogger.singleton.logger().i("WorkDayAvailability state = "+state.toString());
         });
       });
-      return true;
+      return true;  //TODO check return value
     } on CustomException catch (e) {
       return false;
       // _read(itemListExceptionProvider).state = e;

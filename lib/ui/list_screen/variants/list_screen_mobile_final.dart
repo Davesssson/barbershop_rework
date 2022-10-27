@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/controllers/barbershop_controller/barbershop_featured_provider.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
-import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_final_proto.dart';
 import 'package:flutter_shopping_list/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import '../../../controllers/auth_controller.dart';
 import '../../../controllers/barbershop_controller/barbershop_controller.dart';
 import '../../../controllers/barbershop_controller/barbershop_providers.dart';
-import '../../../controllers/city_controller/city_providers.dart';
 import 'dart:developer' as developer;
 import '../../../controllers/service_controller/service_providers.dart';
-import '../../details_screen/details_screen.dart';
 import '../../profile_screen/profile_screen.dart';
-import '../../services_scren/service_screen.dart';
-import '../widgets/shopTile.dart';
 import '../widgets/shopTile3.dart';
 import 'list_screen_mobile_services.dart';
 

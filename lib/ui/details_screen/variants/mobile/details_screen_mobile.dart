@@ -51,7 +51,8 @@ class DetailWidget_mobile extends ConsumerWidget {
         length: 4,
         child: NestedScrollView(
           scrollDirection: Axis.vertical,
-          headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          headerSliverBuilder: (context, innerBoxIsScrolled) =>
+          [
               SliverToBoxAdapter(
                   child:Column(
                       children: [
@@ -63,11 +64,8 @@ class DetailWidget_mobile extends ConsumerWidget {
                         ),
                         buildCoworkers(),
                         BarberList(),
-                        //buildServices(),
-                        //ServiceList(),
                         authControllerState!=null
-                            ?
-                        TextButton(
+                        ? TextButton(
                             onPressed: () {
                               pushNewScreenWithRouteSettings(
                                 context,
@@ -82,11 +80,9 @@ class DetailWidget_mobile extends ConsumerWidget {
                                 content: const Text('JELENTKEZZ BE KÖCSÖG'),
                               );
                               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
                             },
                             child: Text("nem vagy bejelentkezve")
-                        )
-                        ,
+                        ),
                         TabBar(
                           tabs: [
                             Tab(child:Text('General')),
@@ -98,15 +94,13 @@ class DetailWidget_mobile extends ConsumerWidget {
                       ]
                   )
               )
-            ],
+          ],
           body: TabBarView(
             children: [
-              buildAbout(),
-              ServiceList(),
-              //Container(color: Colors.blue,height: 200,),
-              buildReviews(),
-              //Container(color: Colors.red,height: 200,),
-              works.when(
+              About(),
+              Services(),
+              Reviews(),
+               works.when(
                   data: (data){
                     return data.isNotEmpty?
                       GridView.builder(
@@ -133,29 +127,6 @@ class DetailWidget_mobile extends ConsumerWidget {
           ),
         ),
     );
-
-    return ListView(children: [
-      Header(bs: bs),
-      Container(
-        height: 50,
-        color: Colors.red,
-        child: Text("Ide jon még az elérhetőség"),
-      ),
-      buildCoworkers(),
-      BarberList(),
-      buildServices(),
-      ServiceList(),
-      TextButton(
-          onPressed: () {
-            pushNewScreenWithRouteSettings(
-              context,
-              settings: RouteSettings(name: '/book'),
-              screen: chooseBarber(),
-            );
-          },
-          child: Text("kattints ram")
-      ),
-    ]);
   }
 
   Padding buildServices() {
@@ -189,8 +160,8 @@ class DetailWidget_mobile extends ConsumerWidget {
   }
 }
 
-class buildReviews extends ConsumerWidget {
-  const buildReviews({
+class Reviews extends ConsumerWidget {
+  const Reviews({
     Key? key,
   }) : super(key: key);
 
