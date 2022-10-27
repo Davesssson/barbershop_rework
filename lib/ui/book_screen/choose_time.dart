@@ -4,6 +4,7 @@ import 'package:flutter_shopping_list/controllers/auth_controller.dart';
 import 'package:flutter_shopping_list/controllers/barber_controller/barber_providers.dart';
 import 'package:flutter_shopping_list/controllers/work_day_availability_controller/work_day_availability_providers.dart';
 import 'package:flutter_shopping_list/repositories/user_repository.dart';
+import 'package:flutter_shopping_list/ui/book_screen/widgets/book_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:uuid/uuid.dart';
@@ -63,15 +64,10 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
               ...list,
             ],
           ),
-          onSelectionChanged: (DateRangePickerSelectionChangedArgs arg) {
-            print("inital date selected" + ref.read(selectedDate).toString());
-            updateDateSelected(arg, ref);
-            displayNewChips(arg);
-            ref.read(selectedChip.notifier).state=null;
-          },
+          onSelectionChanged: onCalendarSelectionChangedCallback
         ),
         buildChipChoicesGridView(context, workDayAvailabilityListContent),//TODO itt dobja a render errort, majd később foglalkozok vele
-        Center(
+          Center(
           child: ElevatedButton(
             clipBehavior: Clip.antiAliasWithSaveLayer,
             onPressed: chipSelected!=null ? () {
@@ -238,6 +234,13 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
       return temp;
     } else
       return [];
+  }
+
+  void onCalendarSelectionChangedCallback(DateRangePickerSelectionChangedArgs arg) {
+    print("inital date selected" + ref.read(selectedDate).toString());
+    updateDateSelected(arg, ref);
+    displayNewChips(arg);
+    ref.read(selectedChip.notifier).state=null;
   }
 
 }

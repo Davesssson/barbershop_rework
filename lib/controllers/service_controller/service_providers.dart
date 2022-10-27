@@ -10,6 +10,10 @@ final serviceTagsProvider = FutureProvider<List<String>>((ref) async {
   return await ref.read(serviceRepositoryProvider).retrieveServiceTags();
 });
 
+final servicesForShopProvider = FutureProvider.family<List<Service>,String>((ref,shopId) async {
+  return await ref.read(serviceRepositoryProvider).retrieveServicesFromShop(shopId);
+});
+
 final serviceTagsFilterProvider = StateProvider<List<String>>((_) => []);
 
 final serviceListForShopContentProvider = Provider<List<Service>>((ref){

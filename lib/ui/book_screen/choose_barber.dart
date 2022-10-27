@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/ui/book_screen/widgets/book_barber_tile.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import '../../controllers/barber_controller/barber_providers.dart';
@@ -24,14 +25,14 @@ class chooseBarber extends ConsumerWidget {
                     color: Colors.red,
                   )
                 : GridView.count(
-              mainAxisSpacing: 20,
-              crossAxisSpacing: 20,
-              crossAxisCount: (MediaQuery.of(context).size.width / 200).toInt(),
-              children: [
-                ...barbersContent.map((existingBarber) {
-                  return bookBarberTile(existingBarber: existingBarber,barbershop: barbershop,);
-                }).toList(),
-              ],
+                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 20,
+                  crossAxisCount: (MediaQuery.of(context).size.width / 200).toInt(),
+                  children: [
+                    ...barbersContent.map((existingBarber) {
+                      return bookBarberTile(existingBarber: existingBarber,barbershop: barbershop,);
+                    }).toList(),
+                  ],
             );
 
           },
@@ -41,31 +42,4 @@ class chooseBarber extends ConsumerWidget {
   }
 }
 
-class bookBarberTile extends StatelessWidget {
-  final existingBarber;
-  final barbershop;
-  const bookBarberTile({
-    required this.existingBarber,
-    required this.barbershop,
-    Key? key,
-  }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        pushNewScreenWithRouteSettings(
-          context,
-          settings: RouteSettings(name: '/book'),
-          screen: chooseTime(barberId:existingBarber.id!, barbershop: barbershop,),
-        );
-      },
-      child: Container(
-        height: 50,
-        width: 50,
-        color: Colors.black,
-        child: Text(existingBarber.name!),
-      ),
-    );
-  }
-}

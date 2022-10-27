@@ -6,13 +6,15 @@ import 'package:riverpod/riverpod.dart';
 import '../../../../../controllers/place_controller.dart';
 
 class About extends ConsumerWidget {
+  final placesId;
   const About({
+    required this.placesId,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final detailsResponse = ref.watch(detailsResultProvider('ChIJP6SRA2bcQUcRd4Q6z-4PUTI'));
+    final detailsResponse = ref.watch(detailsResultProvider(placesId));
 
     return detailsResponse.when(
         data: (DetailsResponse d){

@@ -6,14 +6,15 @@ import '../../../../../controllers/service_controller/service_providers.dart';
 import '../details_screen_mobile.dart';
 
 class Services extends ConsumerWidget {
+  final barbershopId;
   const Services({
+    required this.barbershopId,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final serviceListContent = ref.watch(serviceListForShopContentProvider);
-    final serviceListState = ref.watch(serviceListForShopStateProvider);
+    final serviceListState = ref.watch(servicesForShopProvider(barbershopId));
 
     return serviceListState.when(
         data: (data) => data.isEmpty
@@ -25,9 +26,9 @@ class Services extends ConsumerWidget {
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
-                    itemCount: serviceListContent.length,
+                    itemCount: data.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final service = serviceListContent[index];
+                      final service = data[index];
                       return ProviderScope(
                           overrides: [
                             currentService.overrideWithValue(service)

@@ -3,8 +3,11 @@ import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/ui/book_screen/choose_barber.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/about.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/barberList.dart';
+import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/book_now_button.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/header.dart';
+import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/reviews_tab.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/serviceList.dart';
+import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/works_tab.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_place/google_place.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -13,7 +16,6 @@ import 'dart:developer' as developer;
 import '../../../../controllers/auth_controller.dart';
 import '../../../../controllers/barber_controller/barber_providers.dart';
 import '../../../../controllers/place_controller.dart';
-import '../../../../controllers/service_controller/service_providers.dart';
 import '../../../../models/barber/barber_model.dart';
 import '../../../../models/service/service_model.dart';
 
@@ -41,18 +43,15 @@ class DetailsScreen_mobile extends HookConsumerWidget {
 class DetailWidget_mobile extends ConsumerWidget {
   final Barbershop bs;
   DetailWidget_mobile({Key? key, required this.bs}) : super(key: key);
-  final items = List<String>.generate(10000, (i) => 'Item $i');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authControllerState = ref.watch(authControllerProvider);
-    final works =  ref.watch(retrieveBarbersWorks(bs.id!));
-
     return DefaultTabController(
         length: 4,
         child: NestedScrollView(
           scrollDirection: Axis.vertical,
-          headerSliverBuilder: (context, innerBoxIsScrolled) =>
-          [
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
               SliverToBoxAdapter(
                   child:Column(
                       children: [
@@ -62,27 +61,9 @@ class DetailWidget_mobile extends ConsumerWidget {
                           color: Colors.red,
                           child: Text("Ide jon még az elérhetőség"),
                         ),
-                        buildCoworkers(),
+                        buildCoworkersText(),
                         BarberList(),
-                        authControllerState!=null
-                        ? TextButton(
-                            onPressed: () {
-                              pushNewScreenWithRouteSettings(
-                                context,
-                                settings: RouteSettings(name: '/book', arguments: bs),
-                                screen: chooseBarber(),
-                              );
-                            },
-                            child: Text("kattints ram")
-                        ):TextButton(
-                            onPressed: (){
-                              final snackBar = SnackBar(
-                                content: const Text('JELENTKEZZ BE KÖCSÖG'),
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                            },
-                            child: Text("nem vagy bejelentkezve")
-                        ),
+                        BookNowButton(bs:bs),
                         TabBar(
                           tabs: [
                             Tab(child:Text('General')),
@@ -94,57 +75,22 @@ class DetailWidget_mobile extends ConsumerWidget {
                       ]
                   )
               )
-          ],
+            ];
+          },
           body: TabBarView(
             children: [
-              About(),
-              Services(),
-              Reviews(),
-               works.when(
-                  data: (data){
-                    return data.isNotEmpty?
-                      GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                        ),
-                        itemCount: 4,
-                        itemBuilder: (context,index){
-                          Barber b = data[index];
-                          return Container(
-                            height: MediaQuery.of(context).size.height/2,
-                            width: MediaQuery.of(context).size.width/2,
-                            child: Text(b.name!),
-                          );
-                        }
-                    )
-                    :Text("Bocs haver, ez most nem fog összejönni");
-                  },
-                  error: (e,_st){return Text(e.toString());},
-                  loading: (){return CircularProgressIndicator();}
-              )
-
+              About(placesId:bs.places_id),
+              Services(barbershopId:bs.id),
+              Reviews(placesId:bs.places_id),
+              Works(barbershopId: bs.id)
             ],
           ),
         ),
     );
   }
 
-  Padding buildServices() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
-      child: Container(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            "Szolgáltatások",
-            style: GoogleFonts.notoSansAnatolianHieroglyphs(
-                fontWeight: FontWeight.bold,
-                color: Colors.white60,
-                fontSize: 30),
-          )),
-    );
-  }
 
-  Padding buildCoworkers() {
+  Padding buildCoworkersText() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
       child: Container(
@@ -154,46 +100,13 @@ class DetailWidget_mobile extends ConsumerWidget {
             style: GoogleFonts.notoSansAnatolianHieroglyphs(
                 fontWeight: FontWeight.bold,
                 color: Colors.white60,
-                fontSize: 30),
-          )),
+                fontSize: 30
+            ),
+          )
+      ),
     );
   }
 }
-
-class Reviews extends ConsumerWidget {
-  const Reviews({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context,WidgetRef ref) {
-    final detailsResponse = ref.watch(detailsResultProvider('ChIJP6SRA2bcQUcRd4Q6z-4PUTI'));
-
-    return detailsResponse.when(
-        data: (DetailsResponse d){
-          return ListView.builder(
-            itemCount: d.result!.reviews!.length,
-            itemBuilder: (context,index){
-              final currentReview = d.result!.reviews![index];
-              return ListTile(
-                //leading: Image.network(currentReview.profilePhotoUrl!),
-                title: Padding(
-                  padding: const EdgeInsets.only(top:3,bottom: 3),
-                  child: Text(currentReview.authorName!),
-                ),
-                subtitle: Text(currentReview.text!),
-              );
-
-            },
-          );
-        } ,
-        error: (e,_){return Text("fos");},
-        loading: (){return CircularProgressIndicator();}
-    );
-  }
-}
-
-
 
 final currentBarber = Provider<Barber>((_) {
   developer.log("[item_list_screen_mobile.dart][currentItem] - ??????.");
