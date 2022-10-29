@@ -26,6 +26,12 @@ final retrieveBarbersWorks = FutureProvider.family<List<Barber>,String>((ref,sho
   return barbers;
 });
 
+final retrieveSingleBarber = FutureProvider.family<Barber,String>((ref,barberId) async {
+  final barber = await ref.read(barberRepositoryProvider).retrieveSingleBarbersFromShop(barberId);
+  print("barbers.tostring"+barber.toString());
+  return barber;
+});
+
 final retrieveBookingsfrom = FutureProvider.family<List<Barber>,String>((ref,shopId) async {
   final barbers = await ref.read(barberRepositoryProvider).retrieveBarbersFromShop2(shopId);
   print("barbers.tostring"+barbers.toString());

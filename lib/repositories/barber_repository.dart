@@ -32,7 +32,7 @@ class BarberRepository implements BaseBarberRepository{
     developer.log("[barber_repository.dart][BarberRepository][retrieveBarbers] - Retrieving barbers. . .");
     try {
       final snap =
-      await _read(firebaseFirestoreProvider).collection('barbers').get();
+      await _read(firebaseFirestoreProvider).collection('barbers').where('isDeleted',isEqualTo: false).get();
       return snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
       developer.log("Barbers retrieve exception.");
@@ -58,7 +58,7 @@ class BarberRepository implements BaseBarberRepository{
   Future<List<Barber>> retrieveBarbersFromShop(List<String> ids) async{
     developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop] - Barbers retrieved from shop.");
     try {//EZ JÓ DE CSAK 10 IG MUKODIK
-        final snap = await _read(firebaseFirestoreProvider).collection('barbers').where('__name__',whereIn: ids).get();
+        final snap = await _read(firebaseFirestoreProvider).collection('barbers').where('__name__',whereIn: ids).where('isDeleted',isEqualTo: false).get();
         return snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
         //List<Barber> barbers= snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
        // print(barbers.toString());
@@ -85,7 +85,7 @@ class BarberRepository implements BaseBarberRepository{
   Future<List<Barber>> retrieveBarbersFromShop2(String shopId) async{
     developer.log("[barber_repository.dart][BarberRepository][retrieveBarbersFromShop2] - Retrieving barbers for shop ${shopId}. . .");
     try {//EZ JÓ DE CSAK 10 IG MUKODIK
-      final snap = await _read(firebaseFirestoreProvider).collection('barbers').where('barbershop_id', isEqualTo: shopId).get();
+      final snap = await _read(firebaseFirestoreProvider).collection('barbers').where('barbershop_id', isEqualTo: shopId).where('isDeleted',isEqualTo: false) .get();
       return snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
       developer.log("Failure during retrieving barbersFromShop.");
@@ -102,7 +102,6 @@ class BarberRepository implements BaseBarberRepository{
           .collection('barbers')
           .doc('8KyCYKVgBtKd6Rfec4ZD')
           .collection('availability')
-          .where('__name__',isGreaterThanOrEqualTo: '2022-10-02')
           .get();
       print("itt kell nezni");print(snap.docs.toString());
       return snap.docs.map((doc) => Availability.fromDocumentCustom(doc)).toList();
@@ -182,11 +181,12 @@ class BarberRepository implements BaseBarberRepository{
           .doc(barberId)
           .collection('bookings')
           .doc(dateId)
-          .update({uId:{"barberId":barberId, "dateId":dateId,"start":start,"end":start+30,"uId":uId,"userReserverId":userReserverId}})
+          .set({uId:{"barberId":barberId, "dateId":dateId,"start":start,"end":start+30,"uId":uId,"userReserverId":userReserverId}})
+          //ide kell egy csekk, hogyha létezik akkor update, hogyha nem létezik akkor set
           .then((value) => developer.log("New availability successfully added to ${dateId} start:${start} end: "));
     } on FirebaseException catch (e) {
       //nem tudja azt kezelni, hogyha updatelni akarunk egy olyan dokumentumot, ami nem létezik
-      developer.log("Failure during adding Working hour update.");
+      developer.log("Failure during adding booking to barber.");
       throw CustomException(message: e.message);
     }
   }
@@ -287,6 +287,21 @@ class BarberRepository implements BaseBarberRepository{
           .update({"prof_pic":newPicture});
     } on FirebaseException catch (e) {
       developer.log("Failure during changeProfPicture");
+      throw CustomException(message: e.message);
+    }
+  }
+
+  Future<void> deleteBarber({
+    required String barberId,
+  }) async {
+    developer.log("[itemrepository.dart][itemRepository][deleteItem] - Item deleted");
+    try {
+      await _read(firebaseFirestoreProvider)
+          .collection('barbers')
+          .doc(barberId)
+          .update({"isDeleted":true});
+    } on FirebaseException catch (e) {
+      developer.log("[itemrepository.dart][itemRepository][deleteItem] - Delete item exception");
       throw CustomException(message: e.message);
     }
   }

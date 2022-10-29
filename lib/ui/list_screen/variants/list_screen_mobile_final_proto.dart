@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/ui/list_screen/widgets/chipSelection.dart';
@@ -141,6 +141,7 @@ class ItemsList2 extends ConsumerWidget {
   }
 }
 
+/*
 class ItemsListBuilder2 extends ConsumerWidget {
   const ItemsListBuilder2({
     Key? key,
@@ -153,7 +154,9 @@ class ItemsListBuilder2 extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final List<Barbershop> items =
-        ref.watch(contentProvider /*barbershopListFeaturedContentProvider*/);
+        ref.watch(contentProvider */
+/*barbershopListFeaturedContentProvider*//*
+);
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -168,3 +171,5 @@ class ItemsListBuilder2 extends ConsumerWidget {
     );
   }
 }
+*/
+*/

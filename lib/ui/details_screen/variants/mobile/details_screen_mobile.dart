@@ -8,6 +8,7 @@ import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/reviews_tab.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/serviceList.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/works_tab.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_place/google_place.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,24 +17,28 @@ import 'dart:developer' as developer;
 import '../../../../controllers/auth_controller.dart';
 import '../../../../controllers/barber_controller/barber_providers.dart';
 import '../../../../controllers/place_controller.dart';
+import '../../../../controllers/theme_controller.dart';
 import '../../../../models/barber/barber_model.dart';
 import '../../../../models/service/service_model.dart';
 
 class DetailsScreen_mobile extends HookConsumerWidget {
-  const DetailsScreen_mobile({Key? key}) : super(key: key);
+  final Barbershop barbershop;
+  const DetailsScreen_mobile({Key? key, required this.barbershop}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Barbershop barbershop =
-        ModalRoute.of(context)?.settings.arguments as Barbershop;
+    //final Barbershop barbershop =
+        //ModalRoute.of(context)?.settings.arguments as Barbershop;
     return Scaffold(
+      //backgroundColor: Colors.black,
         //extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(Icons.arrow_back, ),
+            //onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => GoRouter.of(context).go("/")
           ),
         ),
         body: DetailWidget_mobile(bs: barbershop));
@@ -99,7 +104,6 @@ class DetailWidget_mobile extends ConsumerWidget {
             "Munkatársak",
             style: GoogleFonts.notoSansAnatolianHieroglyphs(
                 fontWeight: FontWeight.bold,
-                color: Colors.white60,
                 fontSize: 30
             ),
           )

@@ -14,6 +14,7 @@ _$_Barber _$$_BarberFromJson(Map<String, dynamic> json) => _$_Barber(
       prof_pic: json['prof_pic'] as String?,
       works:
           (json['works'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      isDeleted: json['isDeleted'] as bool?,
     );
 
 Map<String, dynamic> _$$_BarberToJson(_$_Barber instance) => <String, dynamic>{
@@ -23,4 +24,5 @@ Map<String, dynamic> _$$_BarberToJson(_$_Barber instance) => <String, dynamic>{
       'description': instance.description,
       'prof_pic': instance.prof_pic,
       'works': instance.works,
+      'isDeleted': instance.isDeleted,
     };

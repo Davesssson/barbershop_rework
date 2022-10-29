@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_shopping_list/controllers/auth_controller.dart';
 import 'package:flutter_shopping_list/repositories/auth_repository.dart';
 import 'package:flutter_shopping_list/repositories/custom_exception.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class LoginScreen_mobile extends HookConsumerWidget{
@@ -158,8 +159,8 @@ class LoginScreen_mobile extends HookConsumerWidget{
                                 onPressed: (){
                                    try {
                                      if (_formKey.currentState!.validate()) {
-                                       ref.watch(authRepositoryProvider)
-                                           .signInAnonymously();
+                                       ref.watch(authRepositoryProvider).singInViaEmailAndPassword(emailController.text.trim(), passwordController.text.trim());
+
                                      }
                                    }on CustomException catch(e){
                                      print(e.toString());
@@ -177,7 +178,8 @@ class LoginScreen_mobile extends HookConsumerWidget{
                         ),
                         TextButton(
                           onPressed: (){
-                            Navigator.pushNamed(context,"/register");
+                            context.go("/register");
+                            //Navigator.pushNamed(context,"/register");
                           },
                           child: Text(
                             "Dont have an account? Sign up!",

@@ -119,7 +119,7 @@ class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
   }) async {
     try {
       developer.log("[barber_controller.dart][BarberListStateController][addBarber] - addBarber");
-      final newBarber = Barber(name: name, description: description, barbershop_id: shopId );
+      final newBarber = Barber(name: name, description: description, barbershop_id: shopId,isDeleted: false );
       final createdBarberId = await _read(barberRepositoryProvider).createBarber(
         //userId: _userId!,
         newBarber: newBarber,
@@ -179,6 +179,21 @@ class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
        //TODO
     } on CustomException catch (e) {
       developer.log("[barber_controller.dart][BarberListStateController][updateBarber] - addBooking exception");
+    }
+  }
+
+  Future<void> deleteBarber({required String barberId}) async {
+    try {
+      developer.log("[barber_controller.dart][BarberListStateController][deleteBarber] - Deleting Barber ");
+      await _read(barberRepositoryProvider).deleteBarber(
+        barberId: barberId,
+      );
+      state.whenData((barbers) => state =
+          AsyncValue.data(barbers..removeWhere((barber) => barber.id == barberId)));
+    } on CustomException catch (e) {
+      developer.log("[barber_controller.dart][BarberListStateController][deleteBarber] - Deleting Barber Exception ");
+
+      // _read(itemListExceptionProvider).state = e;
     }
   }
 

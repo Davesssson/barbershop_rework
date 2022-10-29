@@ -24,7 +24,7 @@ class BarbershopRepository implements BaseBarbershopRepository{
   Future<List<Barbershop>> retrieveBarbershops() async {
     developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Retriving Barbershops.");
     try {
-        final snap = await _read(firebaseFirestoreProvider).collection('barbershops')/*.limit(3)*/.get();
+        final snap = await _read(firebaseFirestoreProvider).collection('barbershops').limit(3).get();
         final asd = await _read(serviceRepositoryProvider).retrieveServiceTags();
         print(asd);
         return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();

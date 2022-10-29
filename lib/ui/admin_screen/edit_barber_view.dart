@@ -113,6 +113,15 @@ class editView extends HookConsumerWidget {
                     ScaffoldMessenger.of(context).showSnackBar(sb_added);
                   }
                 ),
+
+                IconButton(
+                    onPressed: (){
+                      ref.read(barberListForShopStateProvider.notifier) // TODO KICSERÉLNI SIMA ASYNC-ra
+                          .deleteBarber(barberId: barberUnderEdit!.id!);
+                    },
+                    icon: Icon(Icons.delete_forever)
+                ),
+
                 SingleChildScrollView(
                   child: Container(
                     child: SfCalendar(
@@ -123,8 +132,10 @@ class editView extends HookConsumerWidget {
                       onAppointmentResizeEnd: (AppointmentResizeEndDetails details){
                         changedElements.add(details.appointment); //TODO Mi van akkor, hogyha többször resizeolja és hozzáadódiK????
                       },
+
                       onTap: (CalendarTapDetails details){
                         String dateId = getDateId(details);
+
                         if(!hasAppointmentWithId(dateId)) {
                           DateTime start = getStartTime(details);
                           DateTime end = getEndTime(details, 8);
@@ -138,8 +149,12 @@ class editView extends HookConsumerWidget {
                           _events.notifyListeners(
                               CalendarDataSourceAction.add,
                               <Appointment>[newAppointment]);
-                        }else{
-                          print("heloka");
+                        }
+                        else{
+                          if(details.date!.isAfter(DateTime.now()..add(Duration(days: 1)))) { //holnaptól számítva
+                            print("helokaasd");
+                            editWorkDayDialog.show(context, details);
+                          }
                         }
                       },
                     ),
@@ -163,7 +178,7 @@ class editView extends HookConsumerWidget {
                     Container(color:Colors.blue,child:Icon(Icons.add))
                   ],
                 ),
-                TextButton(
+                TextButton( // TODO EZ MOBILON ELTÖRI A DOLGOKAT
                     onPressed: ()async {
                       Uint8List? bytesFromPicker = await ImagePickerWeb.getImageAsBytes();
                       final url = bytesFromPicker.hashCode;
@@ -349,5 +364,79 @@ class editNameAndDescription extends StatelessWidget {
 class _AppointmentDataSource extends CalendarDataSource {
   _AppointmentDataSource(List<Appointment> source) {
     appointments = source;
+  }
+}
+
+
+class editWorkDayDialog extends HookConsumerWidget {
+  static void show(BuildContext context, CalendarTapDetails details) {
+    showDialog(
+      context: context,
+      builder: (context) => editWorkDayDialog(details: details),
+    );
+  }
+
+  final CalendarTapDetails details;
+
+  const editWorkDayDialog({Key? key, required this.details}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final startController = useTextEditingController(text:details.date!.hour.toString());
+    final endController = useTextEditingController(text:(details.date!..add(Duration(hours: 8))).hour.toString());
+    return Dialog(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: startController,
+              autofocus: true,
+              decoration: const InputDecoration(hintText: 'Item name'),
+            ),
+            TextField(
+              controller: endController,
+              autofocus: true,
+              decoration: const InputDecoration(hintText: 'Item name'),
+            ),
+
+/*            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: isUpdating
+                      ? Colors.orange
+                      : Theme.of(context).primaryColor,
+                ),
+                onPressed: () {
+                  isUpdating
+                      ? ref
+                      .read(serviceListForShopStateProvider.notifier)
+                      .updateService(
+                    serviceId: service.id!,
+                    updatedService: service.copyWith(
+                      serviceTitle: titleController.text.trim(),
+                      serviceDescription: descriptionController.text.trim(),
+                      servicePrice: int.parse(priceController.text.toString().trim()),
+                    ),
+                  )
+                      :{}; ref
+                      .read(serviceListForShopStateProvider.notifier)
+                      .addService(
+                      shopId: "7HTJ8DF8hFwUnrL566Wc",
+                      title: titleController.text.trim(),
+                      description: descriptionController.text.trim(),
+                      price: int.parse(priceController.text.toString().trim())
+                  );
+                  Navigator.of(context).pop();
+                },
+                child: Text(isUpdating ? 'Update' : 'Add'),
+              ),
+            ),*/
+          ],
+        ),
+      ),
+    );
   }
 }

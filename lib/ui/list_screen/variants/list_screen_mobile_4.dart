@@ -109,7 +109,7 @@ class ShopTile extends HookConsumerWidget {
     return InkWell(
       onTap: (){
         //Navigator.pushNamed(context, '/details', arguments: barbershop.id!.toString());
-        Navigator.push(
+/*        Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => DetailsScreen(),
@@ -117,7 +117,7 @@ class ShopTile extends HookConsumerWidget {
               arguments: barbershop.id,// TODO ez igy ebben a formában jo a materialRoutepage-el????
             ),
           ),
-        );
+        );*/
       }, //TODO ITT KELL MEGADNI HOGY MILYEN APARMÉTERT ADUNK ÁT ÉS ARRA KELL FETCHELNI A DETAILSBAN
       child: ListTile(
         key: ValueKey(barbershop.id), //ez nemtudom mit csinal

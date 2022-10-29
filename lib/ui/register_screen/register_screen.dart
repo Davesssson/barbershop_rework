@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_shopping_list/controllers/auth_controller.dart';
 import 'package:flutter_shopping_list/repositories/auth_repository.dart';
 import 'package:flutter_shopping_list/repositories/custom_exception.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class registerScreen extends HookConsumerWidget{
@@ -254,7 +255,8 @@ class registerScreen extends HookConsumerWidget{
                           ),
                           TextButton(
                             onPressed: (){
-                              Navigator.pushNamed(context,"/login");
+                              context.go("/login");
+                              //Navigator.pushNamed(context,"/login");
                             },
                             child: Text(
                               "Already have an account? Log in",

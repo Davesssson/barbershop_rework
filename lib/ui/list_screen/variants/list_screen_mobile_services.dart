@@ -5,6 +5,7 @@ import 'package:flutter_shopping_list/ui/list_screen/widgets/chipSelection.dart'
 import '../../../controllers/barbershop_controller/barbershop_providers.dart';
 import '../../pagination/providers.dart';
 import '../widgets/shopTile.dart';
+import '../widgets/shopTile3.dart';
 
 final currentShop4 = Provider<Barbershop>((_) {
   throw UnimplementedError();
@@ -154,7 +155,7 @@ class ItemsListBuilder extends ConsumerWidget {
       delegate: SliverChildBuilderDelegate((context, index) {
         return ProviderScope(
             overrides: [currentShop4.overrideWithValue(items[index])],
-            child: ShopTile(shopToWatch: currentShop4)
+            child: ShopTile3(shopToWatch: currentShop4)
         );
       },
         childCount: items.length,

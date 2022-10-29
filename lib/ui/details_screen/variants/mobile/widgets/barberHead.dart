@@ -43,7 +43,6 @@ class BarberHead extends StatelessWidget {
                   barber.name!,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.white70,
                   ),
                 ),
               )

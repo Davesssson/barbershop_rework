@@ -129,7 +129,7 @@ class ShopTile extends HookConsumerWidget {
       child: InkWell(
         onTap: (){
           ref.read(barberListStateProvider.notifier).retrieveBarbersFromShop2(barbershop.id!);
-          Navigator.push(
+/*          Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (_)=>DetailsScreen(),
@@ -137,7 +137,7 @@ class ShopTile extends HookConsumerWidget {
                arguments: barbershop,// TODO ez igy ebben a formában jo a materialRoutepage-el????
              ),
             ),
-          );
+          );*/
 
         },
         child: Column(

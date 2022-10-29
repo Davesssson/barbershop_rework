@@ -15,6 +15,7 @@ class Barber with _$Barber{
     String? description,
     String? prof_pic,
     List<String>? works,
+    bool? isDeleted,
 
   })= _Barber;
 

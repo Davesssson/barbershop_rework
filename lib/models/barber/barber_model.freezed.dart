@@ -26,6 +26,7 @@ mixin _$Barber {
   String? get description => throw _privateConstructorUsedError;
   String? get prof_pic => throw _privateConstructorUsedError;
   List<String>? get works => throw _privateConstructorUsedError;
+  bool? get isDeleted => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -42,7 +43,8 @@ abstract class $BarberCopyWith<$Res> {
       String? name,
       String? description,
       String? prof_pic,
-      List<String>? works});
+      List<String>? works,
+      bool? isDeleted});
 }
 
 /// @nodoc
@@ -61,6 +63,7 @@ class _$BarberCopyWithImpl<$Res> implements $BarberCopyWith<$Res> {
     Object? description = freezed,
     Object? prof_pic = freezed,
     Object? works = freezed,
+    Object? isDeleted = freezed,
   }) {
     return _then(_value.copyWith(
       barbershop_id: barbershop_id == freezed
@@ -87,6 +90,10 @@ class _$BarberCopyWithImpl<$Res> implements $BarberCopyWith<$Res> {
           ? _value.works
           : works // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      isDeleted: isDeleted == freezed
+          ? _value.isDeleted
+          : isDeleted // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -102,7 +109,8 @@ abstract class _$$_BarberCopyWith<$Res> implements $BarberCopyWith<$Res> {
       String? name,
       String? description,
       String? prof_pic,
-      List<String>? works});
+      List<String>? works,
+      bool? isDeleted});
 }
 
 /// @nodoc
@@ -122,6 +130,7 @@ class __$$_BarberCopyWithImpl<$Res> extends _$BarberCopyWithImpl<$Res>
     Object? description = freezed,
     Object? prof_pic = freezed,
     Object? works = freezed,
+    Object? isDeleted = freezed,
   }) {
     return _then(_$_Barber(
       barbershop_id: barbershop_id == freezed
@@ -148,6 +157,10 @@ class __$$_BarberCopyWithImpl<$Res> extends _$BarberCopyWithImpl<$Res>
           ? _value._works
           : works // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      isDeleted: isDeleted == freezed
+          ? _value.isDeleted
+          : isDeleted // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -161,7 +174,8 @@ class _$_Barber extends _Barber {
       this.name,
       this.description,
       this.prof_pic,
-      final List<String>? works})
+      final List<String>? works,
+      this.isDeleted})
       : _works = works,
         super._();
 
@@ -188,8 +202,11 @@ class _$_Barber extends _Barber {
   }
 
   @override
+  final bool? isDeleted;
+
+  @override
   String toString() {
-    return 'Barber(barbershop_id: $barbershop_id, id: $id, name: $name, description: $description, prof_pic: $prof_pic, works: $works)';
+    return 'Barber(barbershop_id: $barbershop_id, id: $id, name: $name, description: $description, prof_pic: $prof_pic, works: $works, isDeleted: $isDeleted)';
   }
 
   @override
@@ -204,7 +221,8 @@ class _$_Barber extends _Barber {
             const DeepCollectionEquality()
                 .equals(other.description, description) &&
             const DeepCollectionEquality().equals(other.prof_pic, prof_pic) &&
-            const DeepCollectionEquality().equals(other._works, _works));
+            const DeepCollectionEquality().equals(other._works, _works) &&
+            const DeepCollectionEquality().equals(other.isDeleted, isDeleted));
   }
 
   @JsonKey(ignore: true)
@@ -216,7 +234,8 @@ class _$_Barber extends _Barber {
       const DeepCollectionEquality().hash(name),
       const DeepCollectionEquality().hash(description),
       const DeepCollectionEquality().hash(prof_pic),
-      const DeepCollectionEquality().hash(_works));
+      const DeepCollectionEquality().hash(_works),
+      const DeepCollectionEquality().hash(isDeleted));
 
   @JsonKey(ignore: true)
   @override
@@ -238,7 +257,8 @@ abstract class _Barber extends Barber {
       final String? name,
       final String? description,
       final String? prof_pic,
-      final List<String>? works}) = _$_Barber;
+      final List<String>? works,
+      final bool? isDeleted}) = _$_Barber;
   _Barber._() : super._();
 
   factory _Barber.fromJson(Map<String, dynamic> json) = _$_Barber.fromJson;
@@ -255,6 +275,8 @@ abstract class _Barber extends Barber {
   String? get prof_pic;
   @override
   List<String>? get works;
+  @override
+  bool? get isDeleted;
   @override
   @JsonKey(ignore: true)
   _$$_BarberCopyWith<_$_Barber> get copyWith =>

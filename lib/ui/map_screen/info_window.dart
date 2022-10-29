@@ -27,7 +27,7 @@ class infoWindow extends ConsumerWidget {
                     ref.read(barberListForShopStateProvider.notifier).retrieveBarbersFromShop2(shop.id!);
                     ref.read(barberListStateProvider.notifier).retrieveBarbersFromShop2(shop.id!);
                     ref.read(serviceListForShopStateProvider.notifier).retrieveServicesFromShop(shop.id!);
-                    Navigator.push(
+/*                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (_)=>DetailsScreen(),
@@ -35,7 +35,7 @@ class infoWindow extends ConsumerWidget {
                           arguments: shop,// TODO ez igy ebben a formában jo a materialRoutepage-el????
                         ),
                       ),
-                    );
+                    );*/
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(30.0),

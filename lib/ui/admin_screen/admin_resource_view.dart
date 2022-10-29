@@ -99,7 +99,7 @@ DataSource _getCalendarDataSource(AsyncValue<List<ResourceViewModel>> state) {
                           year, month, day, startHour, startMinute),
                       endTime: DateTime(year, month, day, endHour, endMinute),
                       isAllDay: false,
-                      subject: 'Booking',
+                      subject: oneBooking.userReserverId.toString(),
                       color: Colors.purple,
                       resourceIds: <Object>[resource.barber!.id!],
                     ),

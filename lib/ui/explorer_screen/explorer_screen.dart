@@ -144,7 +144,7 @@ class OnePage extends HookConsumerWidget {
                     ref.read(barberListStateProvider.notifier).retrieveBarbersFromShop2(barber.barbershop_id!);
                     ref.read(barbershopListStateProvider.notifier).retrieveSingleBarbershop(barber.barbershop_id!);
                     List<Barbershop> b = ref.watch(barbershopListContentProvider);
-                    Navigator.push(
+/*                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (_)=>DetailsScreen(),
@@ -152,7 +152,7 @@ class OnePage extends HookConsumerWidget {
                           arguments:b[0] ,// TODO ez igy ebben a formában jo a materialRoutepage-el????
                         ),
                       ),
-                    );
+                    );*/
 
                   },
                     child: Text(barber.name!),

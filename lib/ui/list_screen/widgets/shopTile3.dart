@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/constants/route_paths.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../controllers/barber_controller/barber_providers.dart';
@@ -21,7 +23,8 @@ class ShopTile3 extends HookConsumerWidget {
           ref.read(barberListForShopStateProvider.notifier).retrieveBarbersFromShop2(barbershop.id!);
           ref.read(barberListStateProvider.notifier).retrieveBarbersFromShop2(barbershop.id!);
           ref.read(serviceListForShopStateProvider.notifier).retrieveServicesFromShop(barbershop.id!);
-          Navigator.push(
+          GoRouter.of(context).go("/details/${barbershop.id}");
+          /*          Navigator.push(
             context,
             MaterialPageRoute(
               builder: (_)=>DetailsScreen(),
@@ -29,13 +32,13 @@ class ShopTile3 extends HookConsumerWidget {
                 arguments: barbershop,// TODO ez igy ebben a formában jo a materialRoutepage-el????
               ),
             ),
-          );
+          );*/
         },
         child: Container(
           height: MediaQuery.of(context).size.height/3,
           width:MediaQuery.of(context).size.width*0.85,
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(10),
             child: (
               Stack(
                 children: [
@@ -57,13 +60,20 @@ class ShopTile3 extends HookConsumerWidget {
                   Positioned(
                     bottom: 50,
                     left: 30,
-                    child: Text(
-                      barbershop.name!,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.w400
-                      ),
+                    child: Column(
+                      children: [
+                        Text(
+                          barbershop.name!,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w400
+                          ),
+                        ),
+                        Text(
+                          barbershop.city!
+                        )
+                      ],
                     ),
                   )
                 ],

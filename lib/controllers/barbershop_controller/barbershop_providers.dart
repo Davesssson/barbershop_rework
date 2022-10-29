@@ -17,6 +17,10 @@ bool checkIfTagIsConteined(Barbershop b, ProviderRef<List<Barbershop>> ref){
   else return false;
 }
 
+final shopProvider = FutureProvider.family<Barbershop,String>((ref, id) async {
+  return await ref.read(barbershopRepositoryProvider).retrieveSingleBarbershop(id);
+});
+
 final barbershopListContentProvider = Provider<List<Barbershop>>((ref) {
   developer.log("[barbershop_providers.dart][-][barbershopListContentProvider] - barbershopListContentProvider.");
   final barbershopsListState = ref.watch(barbershopListStateProvider);

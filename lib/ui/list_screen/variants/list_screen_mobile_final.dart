@@ -11,6 +11,7 @@ import 'dart:developer' as developer;
 import '../../../controllers/service_controller/service_providers.dart';
 import '../../profile_screen/profile_screen.dart';
 import '../widgets/shopTile3.dart';
+import 'list_screen_mobile_pagination_mine.dart';
 import 'list_screen_mobile_services.dart';
 
 final currentShop_final = Provider<Barbershop>((_) {
@@ -38,12 +39,10 @@ class ListScreen_mobile_final extends HookConsumerWidget {
                     child: Padding(
                       padding: EdgeInsets.all(8),
                       child: Text(
-                        "Discover _______",
+                        "Hello",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 40,
-                          color: Colors.black,
-
                         ),
                       )
                     ),
@@ -95,6 +94,19 @@ class ListScreen_mobile_final extends HookConsumerWidget {
                 child: Text("logout")
             ),//
             SizedBox(height: 25),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Text(
+                    "Featured",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),
+                  )
+              ),
+            ),
             HorizontalList(
                 stateProvider: barbershopListFeaturedStateProvider,
                 contentProvider: barbershopListFeaturedContentProvider,
@@ -105,24 +117,27 @@ class ListScreen_mobile_final extends HookConsumerWidget {
               child: Padding(
                   padding: EdgeInsets.all(8),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         "Find Services",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 30,
-                          color: Colors.black,
                         ),
                       ),
-                      InkWell(
-                          onTap: (){
-                            pushNewScreenWithRouteSettings(
-                              context,
-                              settings: RouteSettings( name: '/services'),
-                              screen: ListScreen_mobile_services(),
-                            );
-                          },
-                        child: Text("sea all")
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                            onTap: (){
+                              pushNewScreenWithRouteSettings(
+                                context,
+                                settings: RouteSettings( name: '/services'),
+                                screen: ListScreen_mobile_pagination_mine(),
+                              );
+                            },
+                          child: Text("sea all")
+                        ),
                       )
                     ],
                   )
@@ -138,7 +153,6 @@ class ListScreen_mobile_final extends HookConsumerWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 30,
-                      color: Colors.black,
                     ),
                   )
               ),
@@ -149,6 +163,7 @@ class ListScreen_mobile_final extends HookConsumerWidget {
                 contentProvider: barbershopListContentProvider,
                 shopToWatch: nearYouShop
             ),
+          SizedBox(height: 300,)
           ],
         ),
     );
@@ -172,7 +187,10 @@ class ServicesList extends ConsumerWidget {
                       child:
                       Column(
                         children: [
-                          CircleAvatar(radius: 45,backgroundColor: Colors.red,),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircleAvatar(radius: 45,backgroundColor: Colors.red,),
+                          ),
                           Text(e.toString())
                         ],
                       ),
