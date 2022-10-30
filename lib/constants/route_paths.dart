@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/models/barber/barber_model.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
+import 'package:flutter_shopping_list/ui/admin_screen/admin_login.dart';
 import 'package:flutter_shopping_list/ui/admin_screen/admin_screen.dart';
 import 'package:flutter_shopping_list/ui/details_screen/details_screen.dart';
 import 'package:flutter_shopping_list/ui/home_screen.dart';
@@ -27,6 +28,7 @@ class AppRouter {
   static Widget _homePageRouteBuilder(BuildContext context, GoRouterState state) =>  HomeScreen();
   static Widget _loginScreenRouteBuilder(BuildContext context, GoRouterState state) =>  LoginScreen();
   static Widget _registerScreenRouteBuilder(BuildContext context, GoRouterState state) =>  registerScreen();
+  static Widget _adminLoginScreenRouteBuilder(BuildContext context, GoRouterState state) =>  adminLoginScreen();
   //static Widget _detailsScreenRouteBuilder(BuildContext context, GoRouterState state) =>  DetailsScreen(state.params[]);
   static Widget errorWidget(BuildContext context, GoRouterState state) => const Text("asd");
 
@@ -38,6 +40,7 @@ class AppRouter {
       GoRoute(path: root, builder: _homePageRouteBuilder),
       GoRoute(path: login, builder: _loginScreenRouteBuilder),
       GoRoute(path: register, builder: _registerScreenRouteBuilder),
+      GoRoute(path: "/admin/login", builder:_adminLoginScreenRouteBuilder ),
       GoRoute(
           path: "/details/:barbershopId",
           builder: (BuildContext context, GoRouterState state){

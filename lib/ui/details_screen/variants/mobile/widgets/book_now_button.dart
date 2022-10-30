@@ -17,6 +17,10 @@ class BookNowButton extends ConsumerWidget {
     return
       authControllerState!=null
           ? TextButton(
+          style:ButtonStyle(
+            backgroundColor:  MaterialStatePropertyAll<Color>(Theme.of(context).primaryColor),
+            textStyle: MaterialStatePropertyAll<TextStyle>(Theme.of(context).textTheme.titleMedium!),
+          ),
           onPressed: () {
             pushNewScreenWithRouteSettings(
               context,

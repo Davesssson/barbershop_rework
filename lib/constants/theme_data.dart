@@ -33,7 +33,7 @@ class ThemeClass {
   static ThemeData dark = ThemeData(
     brightness: Brightness.dark,
     primarySwatch: Colors.grey,
-    primaryColor: Color.fromRGBO(69, 90,100,1),
+    primaryColor: Color.fromRGBO(3, 218, 198, 1),
     //secondaryHeaderColor: Color.fromRGBO(117, 117 , 117, 1),
     scaffoldBackgroundColor: Color.fromRGBO(48, 48, 48, 1),
     errorColor: Color.fromRGBO(176, 0,32, 1),

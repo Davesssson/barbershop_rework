@@ -87,10 +87,6 @@ class registerScreen extends HookConsumerWidget{
                                     focusedBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(color: Colors.black)
                                     ),
-                                    //labelText: "Label",
-                                    //labelStyle: TextStyle(
-                                    //  color:Colors.black
-                                    //),
                                     border: OutlineInputBorder(),
                                     hintText: 'Enter a search term',
                                   ),
