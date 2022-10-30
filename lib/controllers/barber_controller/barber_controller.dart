@@ -17,8 +17,14 @@ class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
 
   BarberListStateController.forShop( this._read):super(AsyncValue.loading()){
     developer.log("[barber_controller.dart][BarberListStateController][BarberListStateController] - BarberListStateForShopController constructed.");
+    retrieveBarbersFromShop2("asd");
+    //retrieveBarbersFromShopOnlyForAdmin();
+  }
+
+  BarberListStateController.forAdmin(String id ,this._read):super(AsyncValue.loading()){
+    developer.log("[barber_controller.dart][BarberListStateController][BarberListStateController] - BarberListStateForShopController constructed.");
     //retrieveBarbersFromShop2("asd");
-    retrieveBarbersFromShopOnlyForAdmin();
+    retrieveBarbersFromShopOnlyForAdmin(id);
   }
 
   Future<void> retrieveBarbers({bool isRefreshing = false}) async {
@@ -49,10 +55,10 @@ class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
       state = AsyncValue.error(e);
     }
   }
-  Future<void> retrieveBarbersFromShopOnlyForAdmin( {bool isRefreshing = false}) async {
+  Future<void> retrieveBarbersFromShopOnlyForAdmin( String id,{bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();
     try {
-      final items = await _read(barberRepositoryProvider).retrieveBarbersFromShop2('7HTJ8DF8hFwUnrL566Wc');
+      final items = await _read(barberRepositoryProvider).retrieveBarbersFromShop2(id);
       if (mounted) {
         state = AsyncValue.data(items);
         MyLogger.singleton.logger().i("BarberListStateController = " + state.toString());

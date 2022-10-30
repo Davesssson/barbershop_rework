@@ -12,6 +12,9 @@ class ServiceListStateController extends StateNotifier<AsyncValue<List<Service>>
   ServiceListStateController.forShop(this._read):super(AsyncValue.loading()){
     retrieveServicesFromShop("7HTJ8DF8hFwUnrL566Wc");
   }
+  ServiceListStateController.forAdmin(this._read,String shopId):super(AsyncValue.loading()){
+    retrieveServicesFromShop(shopId);
+  }
 
   Future<void> retrieveServiceTags({bool isRefreshing = false}) async {
     if (isRefreshing) state = AsyncValue.loading();

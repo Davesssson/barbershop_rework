@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_shopping_list/models/barber/barber_model.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
+import 'package:flutter_shopping_list/repositories/auth_repository.dart';
 import 'package:flutter_shopping_list/repositories/service_repository.dart';
 import 'package:flutter_shopping_list/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -24,7 +27,10 @@ class BarbershopRepository implements BaseBarbershopRepository{
   Future<List<Barbershop>> retrieveBarbershops() async {
     developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershops] - Retriving Barbershops.");
     try {
-        final snap = await _read(firebaseFirestoreProvider).collection('barbershops')/*.limit(3)*/.get();
+        final snap = await _read(firebaseFirestoreProvider).collection('barbershops')
+            .where('isVisible',isEqualTo: true)
+            .where('isDeleted',isEqualTo: false)/*.limit(3)*/
+            .get();
         final asd = await _read(serviceRepositoryProvider).retrieveServiceTags();
         print(asd);
         return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();
@@ -38,7 +44,12 @@ class BarbershopRepository implements BaseBarbershopRepository{
     developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveMoreBarbershops] - Retrieving MORE barrbershops. . .");
     try {
       final previoussSnap = await  _read(firebaseFirestoreProvider).collection('barbershops').doc(b!.id).get();
-      final snap = await _read(firebaseFirestoreProvider).collection('barbershops').startAfterDocument(previoussSnap).limit(3).get();
+      final snap = await _read(firebaseFirestoreProvider).collection('barbershops')
+          .startAfterDocument(previoussSnap)
+          .where('isVisible',isEqualTo: true)
+          .where('isDeleted',isEqualTo: false)
+          .limit(3)
+          .get();
       return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
       developer.log("Failure during retrieving MORE barbershops" + e.message!);
@@ -95,7 +106,10 @@ class BarbershopRepository implements BaseBarbershopRepository{
   Future<List<Barbershop>> retrieveBarbershopsServices(List<String> tags) async {
     developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveBarbershopsServices] - retrieveBarbershopsServices retrieved.");
     try {
-      final snap = await _read(firebaseFirestoreProvider).collection('barbershops').where('tags',arrayContains: tags).get();
+      final snap = await _read(firebaseFirestoreProvider).collection('barbershops')
+          .where('isVisible',isEqualTo: true)
+          .where('isDeleted',isEqualTo: false)
+          .where('tags',arrayContains: tags).get();
       //this.retrieveCities();
       return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
@@ -107,10 +121,47 @@ class BarbershopRepository implements BaseBarbershopRepository{
   Future<List<Barbershop>> retrieveFeaturedBarbershops() async{
     developer.log("[barbershops_repository.dart][BarbershopRepository][retrieveFeaturedBarbershops] - Retrieving Featured barbershops. . .");
     try {
-      final snap = await _read(firebaseFirestoreProvider).collection('barbershops').where('featured',isEqualTo: true).get();
+      final snap = await _read(firebaseFirestoreProvider).collection('barbershops')
+          .where('isVisible',isEqualTo: true)
+          .where('isDeleted',isEqualTo: false)
+          .where('featured',isEqualTo: true)
+          .get();
       print("snap fetured");
       print(snap.toString());
       return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();
+    } on FirebaseException catch (e) {
+      developer.log("Failure during retrieving paginated barbershops" + e.message!);
+      throw CustomException(message: e.message);
+    }
+  }
+
+  Future<String>createBarbershop({required String shopName, required String email,required String password})async{
+    developer.log("[barbershops_repository.dart][BarbershopRepository][createBarbershop] - Creating barbershop. . .");
+    try {
+      Barbershop b = Barbershop(location: GeoPoint(12,12),name: shopName);
+      final UserCredential? user = await _read(authRepositoryProvider).createUserWithEmailAndPassword(email, password,role:"admin");
+      final docRef = await _read(firebaseFirestoreProvider)
+          .collection('barbershops')
+          .add({
+            "barbers":[],
+            "city":"",
+            "featured":false,
+            "isDeleted":false, //!!
+            "isVisible":false, //!!
+            "location":GeoPoint(12,12),
+            "main_image":"",
+            "name":shopName,
+            "places_id":"",
+            "point":{
+              "geohash":"",
+              "geopoint":GeoPoint(12,12)
+            },
+            "services":[],
+            "tags":[]
+          });
+      return docRef.id;
+
+      //return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
       developer.log("Failure during retrieving paginated barbershops" + e.message!);
       throw CustomException(message: e.message);

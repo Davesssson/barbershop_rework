@@ -8,7 +8,7 @@ import '../models/booking/booking_model.dart';
 
 
 abstract class BaseUsersRepository {
-  Future<void> addUser(UserCredential result);
+  //Future<void> addUser({UserCredential result});
 }
 
 final userRepositoryProvider = Provider<UsersRepository>((ref) => UsersRepository(ref.read));
@@ -18,14 +18,17 @@ class UsersRepository implements BaseUsersRepository{
 
   const UsersRepository(this._reader);
 
-  @override
-  Future<void> addUser(UserCredential result)async{
+  Future<void> addUser(UserCredential result,{String role = "customer" })async{
     try {
       developer.log("[user_repository.dart][UsersRepository][addUser] - User added.");
       User user = result.user!;
       //TODO outsource the .set method
       await FirebaseFirestore.instance.collection('users').doc(user.uid)
-          .set({ 'firstName': 'Placeholder', 'bookings':{}});
+          .set({
+            'firstName': 'Placeholder',
+            'bookings':{},
+            'role':role
+          });
     }on FirebaseAuthException catch(e){
       developer.log("[user_repository.dart][UsersRepository][addUser] - User add Exception.");
       throw CustomException(message: e.message);

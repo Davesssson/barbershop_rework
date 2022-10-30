@@ -21,6 +21,8 @@ class Barbershop with _$Barbershop{
     String? city,
     List<String>? services,
     List<String>?  tags,
+    bool? isVisible,
+    bool? isDeleted,
 
 
   })= _Barbershop;

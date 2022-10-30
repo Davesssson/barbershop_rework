@@ -21,6 +21,8 @@ _$_Barbershop _$$_BarbershopFromJson(Map<String, dynamic> json) =>
           ?.map((e) => e as String)
           .toList(),
       tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      isVisible: json['isVisible'] as bool?,
+      isDeleted: json['isDeleted'] as bool?,
     );
 
 Map<String, dynamic> _$$_BarbershopToJson(_$_Barbershop instance) =>
@@ -34,4 +36,6 @@ Map<String, dynamic> _$$_BarbershopToJson(_$_Barbershop instance) =>
       'city': instance.city,
       'services': instance.services,
       'tags': instance.tags,
+      'isVisible': instance.isVisible,
+      'isDeleted': instance.isDeleted,
     };

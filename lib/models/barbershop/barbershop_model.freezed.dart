@@ -30,6 +30,8 @@ mixin _$Barbershop {
   String? get city => throw _privateConstructorUsedError;
   List<String>? get services => throw _privateConstructorUsedError;
   List<String>? get tags => throw _privateConstructorUsedError;
+  bool? get isVisible => throw _privateConstructorUsedError;
+  bool? get isDeleted => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -51,7 +53,9 @@ abstract class $BarbershopCopyWith<$Res> {
       List<String>? barbers,
       String? city,
       List<String>? services,
-      List<String>? tags});
+      List<String>? tags,
+      bool? isVisible,
+      bool? isDeleted});
 }
 
 /// @nodoc
@@ -73,6 +77,8 @@ class _$BarbershopCopyWithImpl<$Res> implements $BarbershopCopyWith<$Res> {
     Object? city = freezed,
     Object? services = freezed,
     Object? tags = freezed,
+    Object? isVisible = freezed,
+    Object? isDeleted = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -111,6 +117,14 @@ class _$BarbershopCopyWithImpl<$Res> implements $BarbershopCopyWith<$Res> {
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      isVisible: isVisible == freezed
+          ? _value.isVisible
+          : isVisible // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      isDeleted: isDeleted == freezed
+          ? _value.isDeleted
+          : isDeleted // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -131,7 +145,9 @@ abstract class _$$_BarbershopCopyWith<$Res>
       List<String>? barbers,
       String? city,
       List<String>? services,
-      List<String>? tags});
+      List<String>? tags,
+      bool? isVisible,
+      bool? isDeleted});
 }
 
 /// @nodoc
@@ -155,6 +171,8 @@ class __$$_BarbershopCopyWithImpl<$Res> extends _$BarbershopCopyWithImpl<$Res>
     Object? city = freezed,
     Object? services = freezed,
     Object? tags = freezed,
+    Object? isVisible = freezed,
+    Object? isDeleted = freezed,
   }) {
     return _then(_$_Barbershop(
       id: id == freezed
@@ -193,6 +211,14 @@ class __$$_BarbershopCopyWithImpl<$Res> extends _$BarbershopCopyWithImpl<$Res>
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      isVisible: isVisible == freezed
+          ? _value.isVisible
+          : isVisible // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      isDeleted: isDeleted == freezed
+          ? _value.isDeleted
+          : isDeleted // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -209,7 +235,9 @@ class _$_Barbershop extends _Barbershop {
       final List<String>? barbers,
       this.city,
       final List<String>? services,
-      final List<String>? tags})
+      final List<String>? tags,
+      this.isVisible,
+      this.isDeleted})
       : _barbers = barbers,
         _services = services,
         _tags = tags,
@@ -259,8 +287,13 @@ class _$_Barbershop extends _Barbershop {
   }
 
   @override
+  final bool? isVisible;
+  @override
+  final bool? isDeleted;
+
+  @override
   String toString() {
-    return 'Barbershop(id: $id, name: $name, main_image: $main_image, location: $location, places_id: $places_id, barbers: $barbers, city: $city, services: $services, tags: $tags)';
+    return 'Barbershop(id: $id, name: $name, main_image: $main_image, location: $location, places_id: $places_id, barbers: $barbers, city: $city, services: $services, tags: $tags, isVisible: $isVisible, isDeleted: $isDeleted)';
   }
 
   @override
@@ -277,7 +310,9 @@ class _$_Barbershop extends _Barbershop {
             const DeepCollectionEquality().equals(other._barbers, _barbers) &&
             const DeepCollectionEquality().equals(other.city, city) &&
             const DeepCollectionEquality().equals(other._services, _services) &&
-            const DeepCollectionEquality().equals(other._tags, _tags));
+            const DeepCollectionEquality().equals(other._tags, _tags) &&
+            const DeepCollectionEquality().equals(other.isVisible, isVisible) &&
+            const DeepCollectionEquality().equals(other.isDeleted, isDeleted));
   }
 
   @JsonKey(ignore: true)
@@ -292,7 +327,9 @@ class _$_Barbershop extends _Barbershop {
       const DeepCollectionEquality().hash(_barbers),
       const DeepCollectionEquality().hash(city),
       const DeepCollectionEquality().hash(_services),
-      const DeepCollectionEquality().hash(_tags));
+      const DeepCollectionEquality().hash(_tags),
+      const DeepCollectionEquality().hash(isVisible),
+      const DeepCollectionEquality().hash(isDeleted));
 
   @JsonKey(ignore: true)
   @override
@@ -317,7 +354,9 @@ abstract class _Barbershop extends Barbershop {
       final List<String>? barbers,
       final String? city,
       final List<String>? services,
-      final List<String>? tags}) = _$_Barbershop;
+      final List<String>? tags,
+      final bool? isVisible,
+      final bool? isDeleted}) = _$_Barbershop;
   _Barbershop._() : super._();
 
   factory _Barbershop.fromJson(Map<String, dynamic> json) =
@@ -342,6 +381,10 @@ abstract class _Barbershop extends Barbershop {
   List<String>? get services;
   @override
   List<String>? get tags;
+  @override
+  bool? get isVisible;
+  @override
+  bool? get isDeleted;
   @override
   @JsonKey(ignore: true)
   _$$_BarbershopCopyWith<_$_Barbershop> get copyWith =>

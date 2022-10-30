@@ -62,3 +62,8 @@ final barberListForShopStateProvider = StateNotifierProvider<BarberListStateCont
   developer.log("[barber_providers.dart][-][barberListStateProvider] - barberListStateProvider.");
   return BarberListStateController.forShop(ref.read);
 },);
+
+final barberListForAdminStateProvider = StateNotifierProvider.family<BarberListStateController, AsyncValue<List<Barber>>,String>((ref,id) {
+  developer.log("[barber_providers.dart][-][barberListStateProvider] - barberListStateProvider.");
+  return BarberListStateController.forAdmin(id,ref.read);
+},);

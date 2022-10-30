@@ -9,8 +9,8 @@ import '../../models/resource_view_model/resource_view_model.dart';
 
 });*/
 
-final resourceViewListStateProvider = StateNotifierProvider<ResourceViewListStateController, AsyncValue<List<ResourceViewModel>>>((ref) {
+final resourceViewListStateProvider = StateNotifierProvider.family<ResourceViewListStateController, AsyncValue<List<ResourceViewModel>>,String>((ref,shopId) {
   developer.log("[barbershop_providers.dart][-][barbershopListStateProvider] - barbershopListStateProvider.");
-  return ResourceViewListStateController(ref.read);
+  return ResourceViewListStateController(ref.read,shopId);
 },
 );

@@ -6,13 +6,15 @@ import '../../controllers/resource_view_controller/resource_view_providers.dart'
 import '../../models/resource_view_model/resource_view_model.dart';
 
 class calendarView extends ConsumerWidget {
+  final String shopId;
   const calendarView({
+    required this.shopId,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final resViewState = ref.watch(resourceViewListStateProvider);
+    final resViewState = ref.watch(resourceViewListStateProvider(shopId));
 
     return SfCalendar(
       view: CalendarView.timelineDay,

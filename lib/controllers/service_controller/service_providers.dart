@@ -47,3 +47,9 @@ final serviceListForShopStateProvider = StateNotifierProvider<ServiceListStateCo
   return ServiceListStateController.forShop(ref.read);
 },
 );
+
+final serviceListForAdminStateProvider = StateNotifierProvider.family<ServiceListStateController, AsyncValue<List<Service>>,String>((ref,shopId) {
+  developer.log("[service_providers.dart][-][serviceListStateProvider] - serviceListStateProvider");
+  return ServiceListStateController.forAdmin(ref.read,shopId);
+},
+);

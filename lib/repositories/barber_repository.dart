@@ -247,10 +247,10 @@ class BarberRepository implements BaseBarberRepository{
     }
   }
 
-  Future<List<ResourceViewModel>> retrieveResourceView() async{
+  Future<List<ResourceViewModel>> retrieveResourceView(String shopId) async{
     developer.log("[barber_repository.dart][BarberRepository][retrieveResourceView] - Retrieving ResourceView data. . .");
     try {
-      List<Barber> barbers =  await retrieveBarbersFromShop2('7HTJ8DF8hFwUnrL566Wc');
+      List<Barber> barbers =  await retrieveBarbersFromShop2(shopId);
       List<Future<List<WorkDayAvailability>>> list_workday= barbers.map((barber)  {
         return  retrieveWorkDayAvailability(barber.id!);
       }).toList();

@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_shopping_list/ui/admin_screen/edit_barber_view.dart';
@@ -6,20 +7,30 @@ import '../../controllers/barber_controller/barber_providers.dart';
 import '../../models/barber/barber_model.dart';
 
 class admin_barbers extends ConsumerWidget {
+  final String shopId;
   admin_barbers({
     Key? key,
+    required this.shopId
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final barberState = ref.watch(barberListForShopStateProvider);
-    return barberState.when(data: (barbers) {
+    final barberState = ref.watch(barberListForAdminStateProvider(shopId));
+    return barberState.when(
+        data: (barbers) {
       return barbers.isEmpty
           ? Container(
-              child: Text("Hat tesom, neked nincsenek barbereid. Veszel fel?"),
-              color: Colors.red,
+              child: GridView.count(
+                mainAxisSpacing: 20,
+                crossAxisSpacing: 20,
+                crossAxisCount: (MediaQuery.of(context).size.width / 350).toInt(),
+                children: [
+                  Text("Hát tesóm, neked nincsenek barbereid, veszel fel?"),
+                  addNewBarberTile(),
+                ],
+              ),
             )
-          : barberGrid();
+          : barberGrid(shopId: shopId,);
     }, error: (e, _) {
       return Text(e.toString());
     }, loading: () {
@@ -29,7 +40,9 @@ class admin_barbers extends ConsumerWidget {
 }
 
 class barberGrid extends ConsumerWidget {
+  final String shopId;
   const barberGrid({
+    required this.shopId,
     Key? key,
   }) : super(key: key);
 
@@ -37,18 +50,27 @@ class barberGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final barberContent = ref.watch(barberListForShopContentProvider);
-    return GridView.count(
-        mainAxisSpacing: 20,
-        crossAxisSpacing: 20,
-        crossAxisCount: (MediaQuery.of(context).size.width / 350).toInt(),
-        children: [
-          ...barberContent.map((existingBarber) {
-            return BarberTile(existingBarber: existingBarber);
-          }).toList(),
-          addNewBarberTile(),
-        ],
-      );
+    final barberContent = ref.watch(barberListForAdminStateProvider(shopId));
+    return barberContent.when(
+        data: (barbers){
+          return barbers.isEmpty
+              ?Text("hát..itt nincsenek barberek")
+              :GridView.count(
+                mainAxisSpacing: 20,
+                crossAxisSpacing: 20,
+                crossAxisCount: (MediaQuery.of(context).size.width / 350).toInt(),
+                children: [
+                  ...barbers.map((existingBarber) {
+                    return BarberTile(existingBarber: existingBarber);
+                  }).toList(),
+              addNewBarberTile(),
+            ],
+          );
+        },
+        error: (e,_){return Text("nem tudjuk a barbereket behuzni, sorry");},
+        loading: (){return CircularProgressIndicator();}
+    );
+
   }
 }
 
@@ -93,11 +115,23 @@ class addNewBarberTile extends StatelessWidget {
             }
         ));
       },
-      child: Container(
-        height: 50,
-        width: 50,
-        color: Colors.black,
-        child: Text("add new"),
+      child: DottedBorder(
+        color: Colors.white,
+        strokeWidth: 2,
+        dashPattern: [5, 5],
+        child: Center(
+          child: Container(
+            height: 100,
+            width: 100,
+            color: Colors.transparent,
+            child: Column(
+              children: [
+                Text("add new"),
+                Icon(Icons.add)
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -70,12 +70,12 @@ class AuthRepository implements BaseAuthRepository {
     }
   }
 
-  Future<UserCredential?> createUserWithEmailAndPassword(String email, String password) async {  //todo add different error handling (existing, in use, weak password, etc)
+  Future<UserCredential?> createUserWithEmailAndPassword(String email, String password, {String role="customer"}) async {  //todo add different error handling (existing, in use, weak password, etc)
     try { //TODO get in parameters the user data from the reg process
       developer.log("[auth_repository.dart][AuthRepository][createUserWithEmailAndPassword] - Register  via Email.");
       UserCredential result = await _read(firebaseAuthProvider).createUserWithEmailAndPassword(email: email, password: password);
       print("user creation"+result.toString());
-      _read(userRepositoryProvider).addUser(result);
+      _read(userRepositoryProvider).addUser(result,role:role);
       return result;
     } on FirebaseAuthException catch (e) {
       developer.log("[auth_repository.dart][AuthRepository][createUserWithEmailAndPassword] - Register  via Email Exception.");
