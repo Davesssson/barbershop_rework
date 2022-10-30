@@ -125,9 +125,11 @@ class editView extends HookConsumerWidget {
                 SingleChildScrollView(
                   child: Container(
                     child: SfCalendar(
+                      showNavigationArrow: true,
+                      todayHighlightColor: Colors.purple,
                       dataSource: _events,
                       view: CalendarView.week,
-                      allowDragAndDrop: true,
+                      allowDragAndDrop: false,
                       allowAppointmentResize: true,
                       onAppointmentResizeEnd: (AppointmentResizeEndDetails details){
                         changedElements.add(details.appointment); //TODO Mi van akkor, hogyha többször resizeolja és hozzáadódiK????
@@ -166,6 +168,7 @@ class editView extends HookConsumerWidget {
                   crossAxisSpacing: 20,
                   crossAxisCount: (MediaQuery.of(context).size.width / 350).toInt(),
                   children: [
+                    if(barberUnderEdit!=null)
                     ...barberUnderEdit!.works!.map((picture) {
                       return InkWell(
                         onTap: () => showDialog<String>(
@@ -347,12 +350,7 @@ class editNameAndDescription extends StatelessWidget {
                   color: Colors.black
                 )
               ),
-              child: InkWell(
-                  onHover: (onHover){
-                     onHover?Container(color: Colors.red):Container(color:Colors.blue);
-                  },
-                  child: Image.network(barberUnderEdit!.prof_pic!)
-              )
+              child: barberUnderEdit==null?Icon(Icons.no_accounts): barberUnderEdit!.prof_pic==null?Icon(Icons.no_accounts):Image.network(barberUnderEdit!.prof_pic!)
             )
           ],
         )

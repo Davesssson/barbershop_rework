@@ -4,6 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_shopping_list/repositories/auth_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+
+final userNanemFromIdProvider = FutureProvider.family<String,String>((ref,userId) async {
+  return await ref.read(authRepositoryProvider).getUsernameFromId(userId);
+
+});
+
 final authControllerProvider = StateNotifierProvider<AuthController, User?>(
   (ref) => AuthController(ref.read)/*..appStarted()*/,
 );

@@ -95,4 +95,12 @@ class AuthRepository implements BaseAuthRepository {
       throw CustomException(message: e.message);
     }
   }
+  Future<String> getUsernameFromId(String id)async{
+    try{
+      final snap = await _read(firebaseFirestoreProvider).collection("users").doc(id).get();
+      return snap['firstName'];
+    }on FirebaseAuthException catch(e){
+      throw CustomException(message: e.message);
+    }
+  }
 }

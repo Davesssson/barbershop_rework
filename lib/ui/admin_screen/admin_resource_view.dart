@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/controllers/auth_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../../controllers/resource_view_controller/resource_view_providers.dart';
@@ -15,7 +16,7 @@ class calendarView extends ConsumerWidget {
 
     return SfCalendar(
       view: CalendarView.timelineDay,
-      dataSource: _getCalendarDataSource(resViewState),
+      dataSource: _getCalendarDataSource(resViewState,ref),
       resourceViewSettings: ResourceViewSettings(
           visibleResourceCount: 4,
           size: 150,
@@ -36,7 +37,7 @@ class DataSource extends CalendarDataSource {
   }
 }
 
-DataSource _getCalendarDataSource(AsyncValue<List<ResourceViewModel>> state) {
+DataSource _getCalendarDataSource(AsyncValue<List<ResourceViewModel>> state, WidgetRef ref) {
   List<Appointment> appointments = <Appointment>[];
   List<CalendarResource> resources = <CalendarResource>[];
   state.when(
@@ -99,7 +100,11 @@ DataSource _getCalendarDataSource(AsyncValue<List<ResourceViewModel>> state) {
                           year, month, day, startHour, startMinute),
                       endTime: DateTime(year, month, day, endHour, endMinute),
                       isAllDay: false,
-                      subject: "fasz",
+                      subject: ref.watch(userNanemFromIdProvider(oneBooking.userReserverId!)).when(
+                          data: (data) {return data;},
+                          error: (e,_){return "faszomat márr";},
+                          loading: (){return "loading";}
+                      ),
                       color: Colors.purple,
                       resourceIds: <Object>[resource.barber!.id!],
                     ),
