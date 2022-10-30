@@ -44,12 +44,6 @@ class ListScreen_mobile_services extends ConsumerWidget {
           ),
           //region ez itt opcionális
           SliverToBoxAdapter(
-              child: Container(
-                color: Colors.red,
-                height: 20,
-              )
-          ),
-          SliverToBoxAdapter(
             child: MultiSelectionMine(ref),
           ),
           //endregion ez itt opcionális

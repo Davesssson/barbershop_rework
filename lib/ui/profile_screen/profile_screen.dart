@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/ui/profile_screen/profile_own_bookings.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:settings_ui/settings_ui.dart';
-
 import '../../controllers/auth_controller.dart';
 import '../../controllers/theme_controller.dart';
 
@@ -28,13 +27,23 @@ class profileScreen extends ConsumerWidget {
                         radius: MediaQuery.of(context).size.width*0.1,
                         backgroundColor: Colors.green,
                       ),
-                      authControllerState.displayName == null? Text(authControllerState.email.toString()) : Text(authControllerState.displayName!)
+                      (authControllerState.displayName == null || authControllerState.isAnonymous)
+                          ? Text("vagy anonim vagyok vagy nincsen display namem")
+                          : Text(authControllerState.displayName!)
                     ],
                   ),
                 ),
               ),
               SettingsList(
                 shrinkWrap: true,
+                darkTheme: SettingsThemeData(
+                  settingsListBackground: Theme.of(context).scaffoldBackgroundColor,
+                  settingsTileTextColor: Theme.of(context).cardColor,
+                  titleTextColor: Colors.white,
+                  tileDescriptionTextColor: Colors.white,
+                  trailingTextColor: Colors.white,
+                  tileHighlightColor:Colors.white,
+                ),
                 sections: [
                     SettingsSection(
                         title: Text("beállítások"),

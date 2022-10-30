@@ -9,7 +9,7 @@ class ThemeClass {
       secondaryHeaderColor: Color.fromRGBO(117, 117 , 117, 1),
       scaffoldBackgroundColor: Colors.white,
       errorColor: Color.fromRGBO(176, 0,32, 1),
-
+      cardColor: Color.fromRGBO(225, 225, 225, 1),
       textTheme: TextTheme(
         displayLarge: TextStyle(color: Colors.black),
         displayMedium: TextStyle(color: Colors.black),
@@ -35,8 +35,9 @@ class ThemeClass {
     primarySwatch: Colors.grey,
     primaryColor: Color.fromRGBO(69, 90,100,1),
     //secondaryHeaderColor: Color.fromRGBO(117, 117 , 117, 1),
-    scaffoldBackgroundColor: Colors.black,
+    scaffoldBackgroundColor: Color.fromRGBO(48, 48, 48, 1),
     errorColor: Color.fromRGBO(176, 0,32, 1),
+    cardColor: Color.fromRGBO(42, 42, 42, 1),
     textTheme: TextTheme(
       displayLarge: TextStyle(color: Colors.white),
       displayMedium: TextStyle(color: Colors.white),

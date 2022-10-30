@@ -306,4 +306,18 @@ class BarberRepository implements BaseBarberRepository{
     }
   }
 
+  Future<void> modifyWorkdayAvailability({required String barberId, required String workdayId, required int newStart, required int newEnd}) async{
+    developer.log("[barber_repository.dart][BarberRepository][changeProfPicture] - Changing profile picture for barber ${barberId}. . .");
+    try {
+      final snap = await _read(firebaseFirestoreProvider)
+          .collection('barbers')
+          .doc(barberId)
+          .collection('work_day_availability')
+          .doc(workdayId)
+          .update({"start":newStart,"end":newEnd});
+    } on FirebaseException catch (e) {
+      developer.log("Failure during changeProfPicture");
+      throw CustomException(message: e.message);
+    }
+  }
 }

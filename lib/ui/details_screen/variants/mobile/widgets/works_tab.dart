@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -13,10 +15,32 @@ class Works extends ConsumerWidget {
   @override
   Widget build(BuildContext context,WidgetRef ref) {
     final works =  ref.watch(retrieveBarbersWorks(barbershopId));
-
     return works.when(
-        data: (data){
-          return data.isNotEmpty?
+        data: (barbers){
+          if(barbers.isEmpty) return Center(child: Text("Nincsenek megjeleníthető képek"),);
+          List<Widget> images =[];
+          barbers.forEach((barber) {
+            if(barber.works!=null){
+              barber.works!.forEach((work) {
+                images.add(
+                  Image.network(work)
+                );
+              });
+            }
+          });
+          return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
+              itemCount: images.length,
+              itemBuilder: (context,index){
+                return images[index];
+              }
+          );
+
+
+
+/*          return data.isNotEmpty?
           GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -31,10 +55,34 @@ class Works extends ConsumerWidget {
                 );
               }
           )
-              :Text("Bocs haver, ez most nem fog összejönni");
+           :Text("Bocs haver, ez most nem fog összejönni");*/
         },
         error: (e,_st){return Text(e.toString());},
         loading: (){return CircularProgressIndicator();}
+    );
+  }
+}
+
+class woorkGrid extends ConsumerWidget {
+  final Barber b;
+  const woorkGrid({
+    required this.b,
+    Key? key,
+  }) : super(key: key);
+
+
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GridView.count(
+      mainAxisSpacing: 20,
+      crossAxisSpacing: 20,
+      crossAxisCount: (MediaQuery.of(context).size.width / 350).toInt(),
+      children: [
+        ...b.works!.map((picture) {
+          return Image.network(picture);
+        }).toList(),
+      ],
     );
   }
 }

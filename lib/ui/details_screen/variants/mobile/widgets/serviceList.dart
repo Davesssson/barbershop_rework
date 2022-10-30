@@ -20,28 +20,39 @@ class Services extends ConsumerWidget {
         data: (data) => data.isEmpty
             ? const Center(
                 child: Text('sajnos nem tudtuk a szolgáltatásokat behúzni'))
-            : Container(
-               //color: Colors.amber,
-                height: MediaQuery.of(context).size.height/9,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    itemCount: data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final service = data[index];
-                      return ProviderScope(
-                          overrides: [
-                            currentService.overrideWithValue(service)
-                          ],
-                          child: serviceTile2(service: service)
-                      );
-                    }
-                ),
-              ),
+            : ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final service = data[index];
+                  return ProviderScope(
+                      overrides: [
+                        currentService.overrideWithValue(service)
+                      ],
+                      child: serviceTile3(service: service)
+                  );
+                }
+            ),
         error: (e, _) => Text(e.toString()),
         loading: () => CircularProgressIndicator());
   }
 }
+
+class serviceTile3 extends StatelessWidget {
+  final Service service;
+  const serviceTile3({Key? key,required this.service}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(service.serviceTitle!),
+      subtitle: Text(service.serviceDescription!),
+      trailing: Text(service.servicePrice.toString()),
+    );
+  }
+}
+
 
 class serviceTile2 extends StatelessWidget {
   const serviceTile2({
@@ -69,7 +80,6 @@ class serviceTile2 extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w500,
-                    color: Colors.black38
                   )
                 ),
               ),

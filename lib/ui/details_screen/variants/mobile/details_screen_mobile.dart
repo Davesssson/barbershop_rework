@@ -73,8 +73,8 @@ class DetailWidget_mobile extends ConsumerWidget {
                           tabs: [
                             Tab(child:Text('General')),
                             Tab(child:Text('Szolgáltatások')),
-                            Tab(child:Text('Termékek')),
                             Tab(child:Text('Reviews')),
+                            Tab(child:Text('Munkáink')),
                           ],
                         )
                       ]

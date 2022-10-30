@@ -28,6 +28,20 @@ class WorkDayAvailabilityListStateController extends StateNotifier<AsyncValue<Li
     }
   }
 
+  Future<void> modifyWorkDayAvailability(String? barberId,String? workdayId, int newStart, int newEnd, { bool isRefreshing = false})async{
+    if(isRefreshing) state = AsyncValue.loading();
+    if(barberId ==null) return ;
+    try{
+       await _read(barberRepositoryProvider).modifyWorkdayAvailability(barberId: barberId, workdayId: workdayId!, newStart: newStart, newEnd: newEnd);
+/*      if(mounted){
+        state = AsyncValue.data(items);
+        print("WorkDayAvailabilityListController state = " + state.toString());
+      }*/
+    }on CustomException catch(e){
+      state = AsyncValue.error(e);
+    }
+  }
+
   Future<bool> updateBarberWorkDayAvailability({required List<Appointment>? changes, required String barberId }) async {
     try {
       developer.log("[work_day_controller.dart][WorkDayAvailabilityListStateController][updateBarberWorkDayAvailability] - updateBarberWorkDayAvailability ");

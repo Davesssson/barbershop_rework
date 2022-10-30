@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/controllers/barbershop_controller/barbershop_featured_provider.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
@@ -39,7 +40,7 @@ class ListScreen_mobile_final extends HookConsumerWidget {
                     child: Padding(
                       padding: EdgeInsets.all(8),
                       child: Text(
-                        "Hello",
+                        greeting(),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 40,
@@ -80,6 +81,28 @@ class ListScreen_mobile_final extends HookConsumerWidget {
                 )
               ],
             ),
+            ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              child: Container(
+                height: 200,
+                width: MediaQuery.of(context).size.width-50,
+                color: Theme.of(context).cardColor,
+                child: Center(
+                  child: AnimatedTextKit(
+                    animatedTexts: [
+                      TypewriterAnimatedText(
+                        'Heloka',
+                        textStyle: const TextStyle(
+                          fontSize: 32.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        speed: const Duration(milliseconds: 1000),
+                      ),
+                    ],
+               ),
+                ),
+              ),
+            ),
             TextButton(
                 onPressed: (){
                   ref.watch(authControllerProvider.notifier).signInAnonymously();
@@ -99,7 +122,7 @@ class ListScreen_mobile_final extends HookConsumerWidget {
               child: Padding(
                   padding: EdgeInsets.all(8),
                   child: Text(
-                    "Featured",
+                    "Featured Saloons",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 30,
@@ -133,7 +156,7 @@ class ListScreen_mobile_final extends HookConsumerWidget {
                               pushNewScreenWithRouteSettings(
                                 context,
                                 settings: RouteSettings( name: '/services'),
-                                screen: ListScreen_mobile_pagination_mine(),
+                                screen: ListScreen_mobile_services(),
                               );
                             },
                           child: Text("sea all")
@@ -163,10 +186,43 @@ class ListScreen_mobile_final extends HookConsumerWidget {
                 contentProvider: barbershopListContentProvider,
                 shopToWatch: nearYouShop
             ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Text(
+                  "Featured Barbers",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                  ),
+                )
+            ),
+          ),
           SizedBox(height: 300,)
           ],
         ),
     );
+  }
+
+  String greeting(){
+    //5-9 reggelt
+    //9-12 délelőtt
+    //12-17 délutánt
+    //17-20 estét
+    //20-5 éjszakát
+    final time = DateTime.now();
+    if(time.hour>20 && time.hour<5)
+      return "Szép éjszakát";
+    else if(time.hour>5&&time.hour<9)
+      return "Jó reggelt";
+    else if(time.hour>9&&time.hour<12)
+      return "Szép délelőttöt";
+    else if(time.hour>12 && time. hour< 17)
+      return "Szép délutánt";
+    else if(time.hour >17 && time.hour < 20)
+      return "Szép estét";
+    else return ("Üdv");
   }
 }
 

@@ -8,8 +8,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_shopping_list/controllers/barber_controller/barber_providers.dart';
 import 'package:flutter_shopping_list/repositories/barber_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:image_picker_web/image_picker_web.dart';
+//import 'package:image_picker/image_picker.dart';
+//import 'package:image_picker_web/image_picker_web.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../../general_providers.dart';
 import '../../models/barber/barber_model.dart';
@@ -23,7 +23,7 @@ class editView extends HookConsumerWidget {
   List<Appointment> appointments = <Appointment>[];
   final List<Appointment> changedElements = [];
   final List<Appointment> addedElements = [];
-  final picker = ImagePicker();
+  //final picker = ImagePicker();
 
 
   @override
@@ -153,7 +153,7 @@ class editView extends HookConsumerWidget {
                         else{
                           if(details.date!.isAfter(DateTime.now()..add(Duration(days: 1)))) { //holnaptól számítva
                             print("helokaasd");
-                            editWorkDayDialog.show(context, details);
+                            editWorkDayDialog.show(context, details, barberUnderEdit!.id!);
                           }
                         }
                       },
@@ -178,7 +178,7 @@ class editView extends HookConsumerWidget {
                     Container(color:Colors.blue,child:Icon(Icons.add))
                   ],
                 ),
-                TextButton( // TODO EZ MOBILON ELTÖRI A DOLGOKAT
+/*                TextButton( // TODO EZ MOBILON ELTÖRI A DOLGOKAT
                     onPressed: ()async {
                       Uint8List? bytesFromPicker = await ImagePickerWeb.getImageAsBytes();
                       final url = bytesFromPicker.hashCode;
@@ -190,7 +190,7 @@ class editView extends HookConsumerWidget {
 
                       },
                     child: Text("Tölts fel képet",style: TextStyle(color: Colors.red),)
-                ),
+                ),*/
 
               ],
             ),
@@ -369,71 +369,60 @@ class _AppointmentDataSource extends CalendarDataSource {
 
 
 class editWorkDayDialog extends HookConsumerWidget {
-  static void show(BuildContext context, CalendarTapDetails details) {
+  static void show(BuildContext context, CalendarTapDetails details, String barberId) {
     showDialog(
       context: context,
-      builder: (context) => editWorkDayDialog(details: details),
+      builder: (context) => editWorkDayDialog(details: details,barberUnderEdit: barberId,),
     );
   }
-
+  final String barberUnderEdit;
   final CalendarTapDetails details;
 
-  const editWorkDayDialog({Key? key, required this.details}) : super(key: key);
+  const editWorkDayDialog({Key? key, required this.details, required this.barberUnderEdit}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final startController = useTextEditingController(text:details.date!.hour.toString());
     final endController = useTextEditingController(text:(details.date!..add(Duration(hours: 8))).hour.toString());
     return Dialog(
-      child: Padding(
+      child: Container(
+        width:MediaQuery.of(context).size.width*3/4,
         padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Text("start"),
             TextField(
               controller: startController,
               autofocus: true,
               decoration: const InputDecoration(hintText: 'Item name'),
             ),
+            Text("end"),
             TextField(
               controller: endController,
               autofocus: true,
               decoration: const InputDecoration(hintText: 'Item name'),
             ),
-
-/*            SizedBox(
-              width: double.infinity,
+            SizedBox(
+              width: MediaQuery.of(context).size.width*3/4,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: isUpdating
-                      ? Colors.orange
-                      : Theme.of(context).primaryColor,
-                ),
                 onPressed: () {
-                  isUpdating
-                      ? ref
-                      .read(serviceListForShopStateProvider.notifier)
-                      .updateService(
-                    serviceId: service.id!,
-                    updatedService: service.copyWith(
-                      serviceTitle: titleController.text.trim(),
-                      serviceDescription: descriptionController.text.trim(),
-                      servicePrice: int.parse(priceController.text.toString().trim()),
-                    ),
-                  )
-                      :{}; ref
-                      .read(serviceListForShopStateProvider.notifier)
-                      .addService(
-                      shopId: "7HTJ8DF8hFwUnrL566Wc",
-                      title: titleController.text.trim(),
-                      description: descriptionController.text.trim(),
-                      price: int.parse(priceController.text.toString().trim())
+                  print(barberUnderEdit);
+                  print(details.date.toString().split(" ")[0]);
+                  print(startController.text.trim());
+                  print(endController.text.trim());
+                  ref.read(WorkDayAvailabilityListStateProvider(barberUnderEdit).notifier)
+                      .modifyWorkDayAvailability(
+                      barberUnderEdit,
+                      details.date.toString().split(" ")[0],
+                      int.parse(startController.text.trim()),
+                      int.parse(endController.text.trim())
                   );
                   Navigator.of(context).pop();
                 },
-                child: Text(isUpdating ? 'Update' : 'Add'),
+                child: Text('Update'),
               ),
-            ),*/
+            ),
           ],
         ),
       ),

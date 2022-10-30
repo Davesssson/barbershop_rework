@@ -42,7 +42,9 @@ final barbershopListContentProvider = Provider<List<Barbershop>>((ref) {
         final asd =  shops.where((element) {
           var bSet = element.tags!.toSet(); // TODO Ide még kéne egy csekk, hogy fix legyen
           final tSet = serviceTagfFilterState.toSet();
-          return checkIfTagIsConteined(element, ref);
+          final tobereturned= checkIfTagIsConteined(element, ref);
+          print("heloka ezt nezd = " + tobereturned.toString());
+          return tobereturned;
         }).toList();
         print(asd);
         return asd;

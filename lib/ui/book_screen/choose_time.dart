@@ -51,6 +51,7 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
       prepareBlackoutDates(data);
       return ListView(children: [
         SfDateRangePicker(
+          showNavigationArrow: true,
           initialSelectedDate:
               DateTime.parse(workDayAvailabilityListContent.id!),
           maxDate: DateTime.now().add(Duration(days: 30)),
@@ -67,76 +68,105 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
           onSelectionChanged: onCalendarSelectionChangedCallback
         ),
         buildChipChoicesGridView(context, workDayAvailabilityListContent),//TODO itt dobja a render errort, majd később foglalkozok vele
-          Center(
+        Center(
           child: ElevatedButton(
+            child: Text("BOOK NOW",),
             clipBehavior: Clip.antiAliasWithSaveLayer,
             onPressed: chipSelected!=null ? () {
-              if(ref.read(selectedDate).year==2020)return;
-              final date = chipSelected.start.toString().split(" ")[0];
-              final time = chipSelected.start.toString().split(" ")[1];
-              final date_split = date.split("-");
-              final time_split = time.split(":");
-              int year = int.parse(date_split[0]);
-              int month = int.parse(date_split[1]);
-              int day = int.parse(date_split[2]);
-              int hour = int.parse(time_split[0]);
-              int minute = int.parse(time_split[1]);
-              String startt = hour.toString()+minute.toString();
-              print(date);
-              print(widget.barberId);
-              print(int.parse(startt));
-              Uuid uuid = Uuid();
+              //if(ref.read(selectedDate).year==2020)return;
+
               User? user = ref.watch(authControllerProvider);
-              Booking b = Booking(
-                  dateId: date,
-                  uId: uuid.v4(),
-                  barberId: widget.barberId!,
-                  start:int.parse(startt),
-                  userReserverId: user!.uid
-              );
 
-              ref.read(barberListForShopStateProvider.notifier).addBooking(
-                dateId: b.dateId!,
-                uId: b.uId!,
-                barberId: widget.barberId,
-                start: b.start!,
-                end:2000,
-                userReserverId:user!.uid
-              );
-              ref.read(userRepositoryProvider).addBookingToUser(user,b.uId!);
-              ref.read(BookingRepositoryProvider).addBooking(booking: b);
+              if(user!.isAnonymous ) {
+                showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Theme.of(context).cardColor,
+                  useRootNavigator: false,
+                  builder: (context) => Center(
+                    child: Column(
+                      children: [
+                        Text("Ahhoz, hogy tudj foglalni be kell jelentkezned testvérem..."),
+                        ElevatedButton(
+                          onPressed: () {},
+                          child: Text(
+                            "Exit",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+              else {
+                final date = chipSelected.start.toString().split(" ")[0];
+                final time = chipSelected.start.toString().split(" ")[1];
+                final date_split = date.split("-");
+                final time_split = time.split(":");
+                int year = int.parse(date_split[0]);
+                int month = int.parse(date_split[1]);
+                int day = int.parse(date_split[2]);
+                int hour = int.parse(time_split[0]);
+                int minute = int.parse(time_split[1]);
+                String startt = hour.toString() + minute.toString();
+                print(date);
+                print(widget.barberId);
+                print(int.parse(startt));
+                Uuid uuid = Uuid();
 
-              showModalBottomSheet(
-                context: context,
-                backgroundColor: Colors.grey,
-                useRootNavigator: false,
-                builder: (context) => Center(
-                  child: Column(
-                    children: [
-                      Text("sikeres foglalás ${widget.barbershop.name}ügyes vagy"),
-                      Text("INSERT BARBERSHOP HERE"),
-                      Text("INSERT BARBER NAME -hez"),
-                      Text("INSERT ${chipSelected.start} TIME -ra"),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context, rootNavigator: true).popAndPushNamed('/home'); //majd a detailsre vigyen át
-                        },
-                        child: Text(
-                          "Exit",
-                          style: TextStyle(color: Colors.white),
+                Booking b = Booking(
+                    dateId: date,
+                    uId: uuid.v4(),
+                    barberId: widget.barberId!,
+                    start: int.parse(startt),
+                    userReserverId: user!.uid
+                );
+
+                ref.read(barberListForShopStateProvider.notifier).addBooking(
+                    dateId: b.dateId!,
+                    uId: b.uId!,
+                    barberId: widget.barberId,
+                    start: b.start!,
+                    end: 2000,
+                    userReserverId: user!.uid
+                );
+                ref.read(userRepositoryProvider).addBookingToUser(user, b.uId!);
+                ref.read(BookingRepositoryProvider).addBooking(booking: b);
+
+                showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.grey,
+                  useRootNavigator: false,
+                  builder: (context) =>
+                      Center(
+                        child: Column(
+                          children: [
+                            Text("sikeres foglalás ${widget.barbershop
+                                .name}ügyes vagy"),
+                            Text("INSERT BARBERSHOP HERE"),
+                            Text("INSERT BARBER NAME -hez"),
+                            Text("INSERT ${chipSelected.start} TIME -ra"),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context, rootNavigator: true)
+                                    .popAndPushNamed(
+                                    '/home'); //majd a detailsre vigyen át
+                              },
+                              child: Text(
+                                "Exit",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              );
+                );
+              };
             }:null,
-            child: Text(
-              "BOOK NOW ",
-              style: TextStyle(color: Colors.white),
-            ),
+
           ),
         ),
+        //TODO IDE MÉG A SZOLGÁLTATÁSOKAT
       ]);
     }, error: (e, _) {
       return Text("asdasdasd");
