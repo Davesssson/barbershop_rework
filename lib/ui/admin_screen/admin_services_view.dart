@@ -12,8 +12,6 @@ class adminServiceView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //final serviceListContent = ref.watch(serviceListForShopContentProvider);
-    //final serviceListState = ref.watch(serviceListForShopStateProvider);
     final serviceListState = ref.watch(serviceListForAdminStateProvider(shopId));
     final deleteSwitch = ref.watch(deleteSwitcherProvider);
     return Scaffold(
@@ -55,7 +53,9 @@ class adminServiceView extends HookConsumerWidget {
                       ),
                     ),
                 error: (e, _) => Text(e.toString()),
-                loading: () => CircularProgressIndicator())));
+                loading: () => CircularProgressIndicator())
+        )
+    );
   }
 }
 

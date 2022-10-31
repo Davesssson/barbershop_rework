@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/repositories/barbershops_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -6,19 +7,21 @@ import '../../controllers/barbershop_controller/barbershop_providers.dart';
 import 'admin_barber_view.dart';
 import 'admin_resource_view.dart';
 import 'admin_services_view.dart';
+import 'admin_shop_settings.dart';
 
 final pageProvider = StateProvider<int>((_) => 0);
+final visibleProvider = StateProvider<bool>((_) => false);
 
 class adminScreen extends ConsumerWidget {
   final String shopId;
   adminScreen({Key? key, required this.shopId}) : super(key: key);
 
-  final int _selectedDestination = 0;
   List<Widget> _buildScreens(){
     return [
       admin_barbers(shopId:shopId),
       calendarView(shopId: shopId),
       adminServiceView(shopId: shopId,),
+      adminShopSettingsScreen(shopId:shopId),
     ];
   }
 
@@ -26,11 +29,12 @@ class adminScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-    final barber = ref.watch(shopProvider(shopId));
+    final currentShop = ref.watch(shopProvider(shopId));
     final page = ref.watch(pageProvider);
+    final visible = ref.watch(visibleProvider);
     final int _selectedDestination = ref.watch(pageProvider);
 
-    return barber.when(
+    return currentShop.when(
         data: (data){
           return Row(
             children: [
@@ -50,9 +54,11 @@ class adminScreen extends ConsumerWidget {
                         leading: Icon(Icons.event_available),
                         title: Text('Üzlet látható'),
                         trailing:Switch(
-                          value: true,
+                          value: visible,
                           activeColor: Colors.blueAccent,
-                          onChanged: (value){
+                          onChanged: (value)async{
+                            //await ref.read(barbershopRepositoryProvider).changeShopVisibility(shopId,value);
+                            //ref.read(visibleProvider.notifier).state=value;
 
                           },
                         )
@@ -87,10 +93,10 @@ class adminScreen extends ConsumerWidget {
                       ),
                     ),
                     ListTile(
-                      leading: Icon(Icons.bookmark),
-                      title: Text('Item A'),
+                      leading: Icon(Icons.settings),
+                      title: Text('Üzlet beállítások'),
                       selected: _selectedDestination == 3,
-                      //onTap: () => selectDestination(3),
+                      onTap: () {ref.read(pageProvider.notifier).state=3;},
                     ),
                   ],
                 ),

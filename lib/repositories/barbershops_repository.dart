@@ -163,7 +163,19 @@ class BarbershopRepository implements BaseBarbershopRepository{
 
       //return snap.docs.map((doc) => Barbershop.fromDocument(doc)).toList();
     } on FirebaseException catch (e) {
-      developer.log("Failure during retrieving paginated barbershops" + e.message!);
+      developer.log("Failure during Creating barbershops" + e.message!);
+      throw CustomException(message: e.message);
+    }
+  }
+
+  Future<void> changeShopVisibility(String shopId,bool changeTo)async{
+    developer.log("[barbershops_repository.dart][BarbershopRepository][changeShopVisibility] - Changing Shop visiblity. . .");
+    try{
+       await _read(firebaseFirestoreProvider).collection('barbershops')
+           .doc(shopId)
+           .update({"isVisible":changeTo});
+    }on FirebaseException catch(e){
+      developer.log("[barbershops_repository.dart][BarbershopRepository][changeShopVisibility] - Exceőtion during visibility change. . .");
       throw CustomException(message: e.message);
     }
   }
