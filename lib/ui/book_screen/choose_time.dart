@@ -8,6 +8,7 @@ import 'package:flutter_shopping_list/ui/book_screen/widgets/book_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:uuid/uuid.dart';
+import '../../controllers/service_controller/service_providers.dart';
 import '../../models/barbershop/barbershop_model.dart';
 import '../../models/booking/booking_model.dart';
 import '../../models/work_day_availability/work_day_availability_model.dart';
@@ -16,6 +17,8 @@ import 'widgets/custom_chip.dart';
 
 StateProvider<DateTime> selectedDate = StateProvider<DateTime>((_) => DateTime(2020));
 StateProvider<CustomChip?> selectedChip = StateProvider<CustomChip?>((_) => null);
+StateProvider<String?> selectedServiceProvider = StateProvider<String?>((_) => "");
+
 
 class chooseTime extends ConsumerStatefulWidget {
   const chooseTime({Key? key, required this.barberId,required this.barbershop}) : super(key: key);
@@ -45,12 +48,18 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
     final workDayAvailabilityListContent =
         ref.watch(WorkDayAvailabilityListContentProvider(widget.barberId));
     final chipSelected = ref.watch(selectedChip);
+    final services = ref.watch(servicesForShopProvider(widget.barbershop.id!));
+    final selectedService = ref.watch(selectedServiceProvider);
 
     return Scaffold(
         body: workDayAvailabilityListState.when(data: (data) {
       prepareBlackoutDates(data);
       return ListView(children: [
+        SizedBox(height: 20,),
+        Text("Válassz dátumot!"),
         SfDateRangePicker(
+          backgroundColor: Theme.of(context).cardColor,
+          selectionColor: Theme.of(context).primaryColor,
           showNavigationArrow: true,
           initialSelectedDate:
               DateTime.parse(workDayAvailabilityListContent.id!),
@@ -60,14 +69,48 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
           enableMultiView: false,
           monthViewSettings: DateRangePickerMonthViewSettings(
             firstDayOfWeek: 7,
-            numberOfWeeksInView: 1,
+            numberOfWeeksInView: 2,
             blackoutDates: [
               ...list,
             ],
           ),
           onSelectionChanged: onCalendarSelectionChangedCallback
         ),
-        buildChipChoicesGridView(context, workDayAvailabilityListContent),//TODO itt dobja a render errort, majd később foglalkozok vele
+        SizedBox(height: 30,),
+        Text("Válassz az elérhető időpontok közül!"),
+        SizedBox(height: 30,),
+        Container(color:Theme.of(context).cardColor,child: buildChipChoicesGridView(context, workDayAvailabilityListContent)),//TODO itt dobja a render errort, majd később foglalkozok vele
+        SizedBox(height: 30,),
+        Text("Szolgáltatások"),
+        SizedBox(height: 30,),
+        services.when(
+            data: (servicesForShop){
+              return servicesForShop.isEmpty
+                  ?  Text("Az üzletnek nincsenek szolgáltatásai")
+                  :Column(
+                children: [
+                  ...servicesForShop.map((e) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        onTap: (){
+                          ref.read(selectedServiceProvider.notifier).state = e.id;
+                        },
+                        selectedColor: Theme.of(context).primaryColor,
+                        tileColor: Theme.of(context).cardColor,
+                        title: Text(e.serviceTitle!),
+                        subtitle: Text(e.serviceDescription!),
+                        trailing: Text(e.servicePrice!.toString()),
+                        selected: e.id==selectedService,
+                      ),
+                    );
+                  }).toList()
+                ],
+              );
+            },
+            error: (e,_){return Text("error a szolgáltatások betöltése közben");},
+            loading: (){return CircularProgressIndicator();}
+        ),
         Center(
           child: ElevatedButton(
             child: Text("BOOK NOW",),
@@ -166,6 +209,7 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
 
           ),
         ),
+        SizedBox(height: 100,)
         //TODO IDE MÉG A SZOLGÁLTATÁSOKAT
       ]);
     }, error: (e, _) {
@@ -271,6 +315,7 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
     updateDateSelected(arg, ref);
     displayNewChips(arg);
     ref.read(selectedChip.notifier).state=null;
+    ref.read(selectedServiceProvider.notifier).state=null;
   }
 
 }

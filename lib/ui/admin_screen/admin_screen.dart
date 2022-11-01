@@ -121,12 +121,6 @@ class adminScreen extends ConsumerWidget {
     );
 
   }
-
-/*  void selectDestination(int index) {
-    setState(() {
-      _selectedDestination = index;
-    });
-  }*/
 }
 
 

@@ -136,7 +136,7 @@ class BottomNavBar extends StatelessWidget {
       //   return false;
       // },
       //endregion
-      // hideNavigationBar: _hideNavBar,
+       hideNavigationBar: MediaQuery.of(context).size.width>900,
       decoration: NavBarDecoration(
           colorBehindNavBar: Colors.indigo,
           borderRadius: BorderRadius.circular(20.0)

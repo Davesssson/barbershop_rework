@@ -16,7 +16,7 @@ class BookNowButton extends ConsumerWidget {
     final authControllerState = ref.watch(authControllerProvider);
     return
       authControllerState!=null
-          ? TextButton(
+          ? ElevatedButton(
           style:ButtonStyle(
             backgroundColor:  MaterialStatePropertyAll<Color>(Theme.of(context).primaryColor),
             textStyle: MaterialStatePropertyAll<TextStyle>(Theme.of(context).textTheme.titleMedium!),
@@ -28,8 +28,8 @@ class BookNowButton extends ConsumerWidget {
               screen: chooseBarber(),
             );
           },
-          child: Text("kattints ram")
-      ):TextButton(
+          child: Text("FOGLALJ IDŐPONTOT MOST")
+      ):ElevatedButton(
           onPressed: (){
             final snackBar = SnackBar(
               content: const Text('JELENTKEZZ BE KÖCSÖG'),

@@ -11,7 +11,9 @@ import '../../../controllers/barbershop_controller/barbershop_providers.dart';
 import 'dart:developer' as developer;
 import '../../../controllers/service_controller/service_providers.dart';
 import '../../profile_screen/profile_screen.dart';
+import '../widgets/servicesList_mobile.dart';
 import '../widgets/shopTile3.dart';
+import '../widgets/shopTile4.dart';
 import 'list_screen_mobile_pagination_mine.dart';
 import 'list_screen_mobile_services.dart';
 
@@ -166,7 +168,7 @@ class ListScreen_mobile_final extends HookConsumerWidget {
                   )
               ),
             ),
-            ServicesList(),
+            ServicesListMobile(),
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
@@ -226,42 +228,7 @@ class ListScreen_mobile_final extends HookConsumerWidget {
   }
 }
 
-class ServicesList extends ConsumerWidget {
-  const ServicesList({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context,WidgetRef ref) {
-   final tags =  ref.watch(serviceTagsProvider);
-    return tags.when(
-        data: (tags){
-          return SingleChildScrollView(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ...tags.map((e) =>
-                    Container(
-                      child:
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CircleAvatar(radius: 45,backgroundColor: Colors.red,),
-                          ),
-                          Text(e.toString())
-                        ],
-                      ),
-
-                    )
-                  ).toList(),
-              ],
-            ),
-          );
-        },
-        error: (e,_){return Text("service List error");},
-        loading: (){return CircularProgressIndicator();}
-    );
-  }
-}
 
 
 class HorizontalList extends ConsumerWidget{

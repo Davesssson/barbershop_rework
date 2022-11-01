@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/details_screen_mobile.dart';
+import 'package:flutter_shopping_list/ui/details_screen/variants/web/details_screen_web.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -16,15 +17,7 @@ class DetailsScreen extends ConsumerWidget {
         data: (data){
           return       ScreenTypeLayout(
             mobile: DetailsScreen_mobile(barbershop: data,),
-            desktop: Scaffold(
-                appBar: AppBar(
-                  backgroundColor: Colors.green,
-                ),
-                body: Container(
-                  color: Colors.pink,
-                  child: Text("Details Screen Desktop"),
-                )
-            ),
+            desktop: DetailsScreen_web(barbershop:data)
           );
         },
         error: (e,_){return Text("faszom");},

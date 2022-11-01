@@ -24,7 +24,7 @@ class CustomChip extends ConsumerWidget {
         onSelected: (selected){
           ref.read(selectedChip.notifier).state=this;
         },
-        selectedColor: Colors.brown,
+        selectedColor: Theme.of(context).primaryColor,
         label: Text("${start.hour}:${start.minute}"));
   }
 }

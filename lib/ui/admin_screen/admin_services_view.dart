@@ -18,7 +18,7 @@ class adminServiceView extends HookConsumerWidget {
         body: Container(
             margin: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width / 8),
-            color: Colors.grey,
+            color: Theme.of(context).cardColor,
             child: serviceListState.when(
                 data: (data) => data.isEmpty
                     ? const Center(
