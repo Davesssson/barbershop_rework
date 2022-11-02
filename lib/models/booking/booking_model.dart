@@ -14,7 +14,8 @@ class Booking with _$Booking{
     String? barberId,
     int? start,
     int? end,
-    String? userReserverId
+    String? userReserverId,
+    String? serviceId
   })= _Booking;
 
   factory Booking.fromDocument(DocumentSnapshot doc) {

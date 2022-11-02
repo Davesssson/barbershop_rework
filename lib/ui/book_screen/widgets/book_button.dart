@@ -1,3 +1,4 @@
+/*
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
@@ -48,7 +49,8 @@ class BookButton extends ConsumerWidget {
               uId: uuid.v4(),
               barberId: barberId!,
               start:int.parse(startt),
-              userReserverId: user!.uid
+              userReserverId: user!.uid,
+
           );
 
           ref.read(barberListForShopStateProvider.notifier).addBooking(
@@ -96,3 +98,4 @@ class BookButton extends ConsumerWidget {
   }
 }
 
+*/

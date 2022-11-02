@@ -26,6 +26,7 @@ mixin _$Booking {
   int? get start => throw _privateConstructorUsedError;
   int? get end => throw _privateConstructorUsedError;
   String? get userReserverId => throw _privateConstructorUsedError;
+  String? get serviceId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -42,7 +43,8 @@ abstract class $BookingCopyWith<$Res> {
       String? barberId,
       int? start,
       int? end,
-      String? userReserverId});
+      String? userReserverId,
+      String? serviceId});
 }
 
 /// @nodoc
@@ -61,6 +63,7 @@ class _$BookingCopyWithImpl<$Res> implements $BookingCopyWith<$Res> {
     Object? start = freezed,
     Object? end = freezed,
     Object? userReserverId = freezed,
+    Object? serviceId = freezed,
   }) {
     return _then(_value.copyWith(
       dateId: dateId == freezed
@@ -87,6 +90,10 @@ class _$BookingCopyWithImpl<$Res> implements $BookingCopyWith<$Res> {
           ? _value.userReserverId
           : userReserverId // ignore: cast_nullable_to_non_nullable
               as String?,
+      serviceId: serviceId == freezed
+          ? _value.serviceId
+          : serviceId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -103,7 +110,8 @@ abstract class _$$_BookingCopyWith<$Res> implements $BookingCopyWith<$Res> {
       String? barberId,
       int? start,
       int? end,
-      String? userReserverId});
+      String? userReserverId,
+      String? serviceId});
 }
 
 /// @nodoc
@@ -123,6 +131,7 @@ class __$$_BookingCopyWithImpl<$Res> extends _$BookingCopyWithImpl<$Res>
     Object? start = freezed,
     Object? end = freezed,
     Object? userReserverId = freezed,
+    Object? serviceId = freezed,
   }) {
     return _then(_$_Booking(
       dateId: dateId == freezed
@@ -149,6 +158,10 @@ class __$$_BookingCopyWithImpl<$Res> extends _$BookingCopyWithImpl<$Res>
           ? _value.userReserverId
           : userReserverId // ignore: cast_nullable_to_non_nullable
               as String?,
+      serviceId: serviceId == freezed
+          ? _value.serviceId
+          : serviceId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -162,7 +175,8 @@ class _$_Booking extends _Booking {
       this.barberId,
       this.start,
       this.end,
-      this.userReserverId})
+      this.userReserverId,
+      this.serviceId})
       : super._();
 
   factory _$_Booking.fromJson(Map<String, dynamic> json) =>
@@ -180,10 +194,12 @@ class _$_Booking extends _Booking {
   final int? end;
   @override
   final String? userReserverId;
+  @override
+  final String? serviceId;
 
   @override
   String toString() {
-    return 'Booking(dateId: $dateId, uId: $uId, barberId: $barberId, start: $start, end: $end, userReserverId: $userReserverId)';
+    return 'Booking(dateId: $dateId, uId: $uId, barberId: $barberId, start: $start, end: $end, userReserverId: $userReserverId, serviceId: $serviceId)';
   }
 
   @override
@@ -197,7 +213,8 @@ class _$_Booking extends _Booking {
             const DeepCollectionEquality().equals(other.start, start) &&
             const DeepCollectionEquality().equals(other.end, end) &&
             const DeepCollectionEquality()
-                .equals(other.userReserverId, userReserverId));
+                .equals(other.userReserverId, userReserverId) &&
+            const DeepCollectionEquality().equals(other.serviceId, serviceId));
   }
 
   @JsonKey(ignore: true)
@@ -209,7 +226,8 @@ class _$_Booking extends _Booking {
       const DeepCollectionEquality().hash(barberId),
       const DeepCollectionEquality().hash(start),
       const DeepCollectionEquality().hash(end),
-      const DeepCollectionEquality().hash(userReserverId));
+      const DeepCollectionEquality().hash(userReserverId),
+      const DeepCollectionEquality().hash(serviceId));
 
   @JsonKey(ignore: true)
   @override
@@ -231,7 +249,8 @@ abstract class _Booking extends Booking {
       final String? barberId,
       final int? start,
       final int? end,
-      final String? userReserverId}) = _$_Booking;
+      final String? userReserverId,
+      final String? serviceId}) = _$_Booking;
   _Booking._() : super._();
 
   factory _Booking.fromJson(Map<String, dynamic> json) = _$_Booking.fromJson;
@@ -248,6 +267,8 @@ abstract class _Booking extends Booking {
   int? get end;
   @override
   String? get userReserverId;
+  @override
+  String? get serviceId;
   @override
   @JsonKey(ignore: true)
   _$$_BookingCopyWith<_$_Booking> get copyWith =>

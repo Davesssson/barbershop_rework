@@ -5,11 +5,12 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../../controllers/barbershop_controller/barbershop_providers.dart';
 import 'admin_barber_view.dart';
+import 'admin_dashboard.dart';
 import 'admin_resource_view.dart';
 import 'admin_services_view.dart';
 import 'admin_shop_settings.dart';
 
-final pageProvider = StateProvider<int>((_) => 0);
+final pageProvider = StateProvider<int>((_) => 4);
 final visibleProvider = StateProvider<bool>((_) => false);
 
 class adminScreen extends ConsumerWidget {
@@ -22,6 +23,7 @@ class adminScreen extends ConsumerWidget {
       calendarView(shopId: shopId),
       adminServiceView(shopId: shopId,),
       adminShopSettingsScreen(shopId:shopId),
+      adminDashboardScreen(),
     ];
   }
 
@@ -97,6 +99,12 @@ class adminScreen extends ConsumerWidget {
                       title: Text('Üzlet beállítások'),
                       selected: _selectedDestination == 3,
                       onTap: () {ref.read(pageProvider.notifier).state=3;},
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.settings),
+                      title: Text('Dashboard'),
+                      selected: _selectedDestination == 4,
+                      onTap: () {ref.read(pageProvider.notifier).state=4;},
                     ),
                   ],
                 ),

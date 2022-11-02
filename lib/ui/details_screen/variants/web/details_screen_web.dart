@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../../models/barbershop/barbershop_model.dart';
+import '../mobile/widgets/about.dart';
+import '../mobile/widgets/reviews_tab.dart';
+import '../mobile/widgets/serviceList.dart';
+import '../mobile/widgets/works_tab.dart';
 
 class DetailsScreen_web extends StatelessWidget {
   final Barbershop barbershop;
@@ -15,9 +19,10 @@ class DetailsScreen_web extends StatelessWidget {
         flexibleSpace: Column(
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width*0.65,
+              width: MediaQuery.of(context).size.width*0.8,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
                       width: MediaQuery.of(context).size.width/2,
@@ -91,10 +96,10 @@ class DetailsScreen_web extends StatelessWidget {
           body: TabBarView(
             physics: NeverScrollableScrollPhysics(),
             children: [
-              Container(color:Colors.red),
-              Container(color:Colors.black26),
-              Container(color:Colors.green),
-              Container(color:Colors.white),
+              Container(margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/5),child: About(placesId: barbershop.places_id,)),
+              Container(margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/5), child: Services(barbershopId: barbershop.id,)),
+              Container(margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/5), child: Reviews(placesId: barbershop.places_id,)),
+              Container(margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/5), child: Works(barbershopId:barbershop.id)),
             ],
           ),
         ),

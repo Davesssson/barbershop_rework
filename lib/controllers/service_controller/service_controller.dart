@@ -94,4 +94,31 @@ class ServiceListStateController extends StateNotifier<AsyncValue<List<Service>>
       // _read(itemListExceptionProvider).state = e;
     }
   }
+  Future<void> updateTags({required Service service,required List<String> tags}) async {
+    try {
+      developer.log("[service_controller.dart][ServiceListStateController][addService] - addService ");
+      Map<String,bool> newTags ={};
+
+      tags.forEach((element) {
+        newTags.addAll({element:true});
+      });
+      Service newService = service.copyWith(tags: newTags);
+
+      await _read(serviceRepositoryProvider)
+          .updateService(serviceId:newService.id!, service:newService);
+
+      state.whenData((services) {
+        state = AsyncValue.data([
+          for (final service in services)
+            if (service.id == newService.id)newService else service
+        ]);
+      });
+
+    } on CustomException catch (e) {
+      developer.log("[service_controller.dart][ServiceListStateController][addService] - addService Exception ");
+
+      // _read(itemListExceptionProvider).state = e;
+    }
+  }
+
 }

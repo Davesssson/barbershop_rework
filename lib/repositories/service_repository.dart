@@ -102,5 +102,19 @@ class ServiceRepository implements BaseServiceRepository{
     }
   }
 
+  Future<Service> retrieveSingleService({
+    required String serviceId,
+  }) async {
+    developer.log("[service_repository.dart][ServiceRepository][deleteService] - Get Single service");
+    try {
+      return await _read(firebaseFirestoreProvider)
+          .collection('services')
+          .doc(serviceId).get().then((value) => Service.fromDocument(value));
+    } on FirebaseException catch (e) {
+      developer.log("[service_repository.dart][ServiceRepository][deleteService] - Get single Service exception");
+      throw CustomException(message: e.message);
+    }
+  }
+
 
 }

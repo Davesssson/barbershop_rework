@@ -5,6 +5,10 @@ import 'dart:developer' as developer;
 
 import '../../models/service/service_model.dart';
 
+final singleServiceProvider = FutureProvider.family<Service,String>((ref,id) async {
+  return await ref.read(serviceRepositoryProvider).retrieveSingleService(serviceId:id);
+});
+
 
 final serviceTagsProvider = FutureProvider<List<String>>((ref) async {
   return await ref.read(serviceRepositoryProvider).retrieveServiceTags();

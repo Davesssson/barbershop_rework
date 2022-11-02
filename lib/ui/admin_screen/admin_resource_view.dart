@@ -3,6 +3,7 @@ import 'package:flutter_shopping_list/controllers/auth_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../../controllers/resource_view_controller/resource_view_providers.dart';
+import '../../controllers/service_controller/service_providers.dart';
 import '../../models/resource_view_model/resource_view_model.dart';
 
 class calendarView extends ConsumerWidget {
@@ -107,6 +108,12 @@ DataSource _getCalendarDataSource(AsyncValue<List<ResourceViewModel>> state, Wid
                           error: (e,_){return "faszomat márr";},
                           loading: (){return "loading";}
                       ),
+                      notes: oneBooking.serviceId=="" ? ref.watch(singleServiceProvider(oneBooking.serviceId!)).when(
+                          data: (data){return data.serviceTitle!;},
+                          error: (e,_){return "Error a szolgáltatás beszedésnél";},
+                          loading: (){return "loading";}
+                      ):"asd"
+                      ,
                       color: Colors.purple,
                       resourceIds: <Object>[resource.barber!.id!],
                     ),

@@ -141,7 +141,7 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
                   ),
                 );
               }
-              else {
+              else if(selectedService!="") {
                 final date = chipSelected.start.toString().split(" ")[0];
                 final time = chipSelected.start.toString().split(" ")[1];
                 final date_split = date.split("-");
@@ -157,12 +157,14 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
                 print(int.parse(startt));
                 Uuid uuid = Uuid();
 
+
                 Booking b = Booking(
                     dateId: date,
                     uId: uuid.v4(),
                     barberId: widget.barberId!,
                     start: int.parse(startt),
-                    userReserverId: user!.uid
+                    userReserverId: user!.uid,
+                    serviceId: selectedService
                 );
 
                 ref.read(barberListForShopStateProvider.notifier).addBooking(
@@ -171,7 +173,8 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
                     barberId: widget.barberId,
                     start: b.start!,
                     end: 2000,
-                    userReserverId: user!.uid
+                    userReserverId: user!.uid,
+                    serviceId: selectedService!
                 );
                 ref.read(userRepositoryProvider).addBookingToUser(user, b.uId!);
                 ref.read(BookingRepositoryProvider).addBooking(booking: b);

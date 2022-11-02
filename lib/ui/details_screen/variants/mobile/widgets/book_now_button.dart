@@ -36,7 +36,7 @@ class BookNowButton extends ConsumerWidget {
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           },
-          child: Text("nem vagy bejelentkezve")
+          child: Text("Az időpontfoglaláshoz be kell jelentkezned!")
       );
   }
 }

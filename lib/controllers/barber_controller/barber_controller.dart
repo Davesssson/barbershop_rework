@@ -171,7 +171,8 @@ class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
     required String barberId,
     required int start,
     required int end,
-    required String userReserverId
+    required String userReserverId,
+    required String serviceId
   }) async {
     try {
       developer.log("[barber_controller.dart][BarberListStateController][addBooking] - addBooking");
@@ -180,7 +181,8 @@ class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
         barberId: barberId,
         uId:uId,
         start: start,
-        userReserverId : userReserverId
+        userReserverId : userReserverId,
+        serviceId: serviceId
       );
        //TODO
     } on CustomException catch (e) {

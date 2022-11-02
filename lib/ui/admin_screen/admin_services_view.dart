@@ -71,6 +71,7 @@ class serviceList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final serviceListContent = ref.watch(serviceListForAdminStateProvider(shopId));
     final deleteSwitchOn = ref.watch(deleteSwitcherProvider);
+    final serviceTags = ref.watch(serviceTagsProvider);
 
     return serviceListContent.when(
         data: (services){
@@ -82,20 +83,33 @@ class serviceList extends ConsumerWidget {
               itemCount: services.length,
               itemBuilder: (BuildContext context, int index) {
                 final service = services[index];
-                return Padding(
+                return Container(
                   padding: const EdgeInsets.all(8.0),
-                  child: ListTile(
-                    hoverColor: Colors.black,
-                    onTap: (){EditServiceDialog.show(context, service);},
-                    title: Text(service.serviceTitle!),
-                    leading:deleteSwitchOn==true? IconButton(
-                      icon:Icon(Icons.delete),
-                      onPressed: (){
-                        ref.read(serviceListForShopStateProvider.notifier).deleteItem(serviceId: service.id!);
-                      },
-                    )
-                        :null,
-                    trailing: Text(service.servicePrice.toString() + " Ft"),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ListTile(
+                        hoverColor: Colors.black,
+                        onTap: (){EditServiceDialog.show(context, service);},
+                        title: Text(service.serviceTitle!),
+                        subtitle: Text(service.serviceDescription!),
+                        leading:deleteSwitchOn==true? IconButton(
+                          icon:Icon(Icons.delete),
+                          onPressed: (){
+                            ref.read(serviceListForShopStateProvider.notifier).deleteItem(serviceId: service.id!);
+                          },
+                        )
+                            :null,
+                        trailing: Text(service.servicePrice.toString() + " Ft"),
+                      ),
+                      serviceTags.when(
+                          data: (data){
+                            return serviceTagsList(service: service, tags: data,shopId:shopId);
+                          },
+                          error: (e,_){return Text("hiba");},
+                          loading:(){return CircularProgressIndicator();}
+                      )
+                    ],
                   ),
                 );
               }
@@ -105,5 +119,45 @@ class serviceList extends ConsumerWidget {
         loading: (){return CircularProgressIndicator();}
     );
 
+  }
+}
+
+class serviceTagsList extends ConsumerWidget {
+  final String shopId;
+  final List<String> tags;
+  final Service service;
+  serviceTagsList({Key? key,required this.service, required this.tags, required this.shopId}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    print(service.tags);
+    return Row(
+      children: [
+        ...tags.map((e) => ChoiceChip(
+            label: Text(e),
+            onSelected: (bool){
+              if(bool) {
+                List<String> updatingtags = [];
+                service.tags!.forEach((key, value) {
+                  updatingtags.add(key);
+                });
+                ref.read(serviceListForAdminStateProvider(shopId).notifier)
+                    .updateTags(service: service, tags: [...updatingtags, e]);
+              }else{
+                List<String> removeTags = [];
+                service.tags!.forEach((key, value) {
+                  removeTags.add(key);
+                });
+                ref.read(serviceListForAdminStateProvider(shopId).notifier)
+                    .updateTags(service: service, tags: [...removeTags..remove(e)]);
+              }
+              //service.tags!.addAll({e:value});
+            },
+            selectedColor: Theme.of(context).primaryColor,
+            selected: service.tags==null? false : service.tags!.keys.contains(e),
+          )
+        ).toList()
+      ],
+    );
   }
 }

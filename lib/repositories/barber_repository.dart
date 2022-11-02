@@ -172,7 +172,7 @@ class BarberRepository implements BaseBarberRepository{
     }
   }
 
-  Future<void> addBooking({required String barberId, required String dateId, required int start, required String uId, required String userReserverId}) async {
+  Future<void> addBooking({required String barberId, required String dateId, required int start, required String uId, required String userReserverId, required String serviceId}) async {
     developer.log("[barber_repository.dart][BarberRepository][addBooking] - Adding Booking for barber ${barberId}...");
     try {
 
@@ -181,7 +181,7 @@ class BarberRepository implements BaseBarberRepository{
           .doc(barberId)
           .collection('bookings')
           .doc(dateId)
-          .set({uId:{"barberId":barberId, "dateId":dateId,"start":start,"end":start+30,"uId":uId,"userReserverId":userReserverId}})
+          .set({uId:{"barberId":barberId, "dateId":dateId,"start":start,"end":start+30,"uId":uId,"userReserverId":userReserverId, "serviceId":serviceId}})
           //ide kell egy csekk, hogyha létezik akkor update, hogyha nem létezik akkor set
           .then((value) => developer.log("New availability successfully added to ${dateId} start:${start} end: "));
     } on FirebaseException catch (e) {
