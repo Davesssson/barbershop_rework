@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/controllers/barbershop_controller/barbershop_providers.dart';
 import 'package:flutter_shopping_list/controllers/barbershop_controller/barbershop_providers.dart';
+import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/ui/list_screen/widgets/servicesList_desktop.dart';
 import 'package:flutter_shopping_list/ui/map_screen/map_screen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import '../../../controllers/barber_controller/barber_providers.dart';
 import '../../../controllers/barbershop_controller/barbershop_providers.dart';
 import '../../../controllers/service_controller/service_providers.dart';
+import '../widgets/shopTile3.dart';
+import 'list_screen_mobile_services.dart';
 
 
 //https://www.etsy.com/?ref=lgo
@@ -36,8 +41,26 @@ class ListScreen_web extends ConsumerWidget {
             child: ListView(
               shrinkWrap: true,
               children: [
-                Container(color:Colors.red, height: 300,child: Center(child: ServicesListDesktop()),),
-                Text("Featured shops for you"),
+                Stack(
+                    children:[
+                      Container(height: 300, width:MediaQuery.of(context).size.width, child:Image.asset("hair-spies-TNhm6uVurpU-unsplash.jpg",fit: BoxFit.fitWidth,)),
+                      Center(child: ServicesListDesktop())
+                    ]
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Near You shops for you", style: TextStyle(fontSize: 40,fontFamily: "Roboto"),),
+                ),
+                TextButton(
+                    onPressed: (){
+                      pushNewScreenWithRouteSettings(
+                        context,
+                        settings: RouteSettings( name: '/services'),
+                        screen: ListScreen_mobile_services(),
+                      );
+                    },
+                    child: Text("sea all")
+                ),
                 HorizontalListWeb()
 
               ],
@@ -51,7 +74,11 @@ class ListScreen_web extends ConsumerWidget {
 
    return Scaffold(
       appBar: AppBar(
-        leading: Icon(Icons.hail_rounded),
+        leading: Padding(
+          padding: const EdgeInsets.fromLTRB(30,0,0,8),
+          child: SvgPicture.asset("cdsgraphics-Barber-Shop-Pole.svg", color: Colors.white,),
+        ),
+        //leading: Icon(Icons.hail_rounded),
         toolbarHeight: 100,
         flexibleSpace: Column(
           children: [
@@ -61,9 +88,17 @@ class ListScreen_web extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
+                      padding: EdgeInsets.all(8),
                       width: MediaQuery.of(context).size.width/2,
                       child: TextFormField(
-
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                        ),
                       )
                   ),
                   Text("sign in")
@@ -135,33 +170,8 @@ class HorizontalListWeb extends ConsumerWidget{
                   },
                   itemBuilder: (context, index) {
                     final barbershop = contentProvider[index];
-                    return InkWell(
-                      onTap: (){
-                        ref.read(barberListForShopStateProvider.notifier).retrieveBarbersFromShop2(barbershop.id!);
-                        ref.read(barberListStateProvider.notifier).retrieveBarbersFromShop2(barbershop.id!);
-                        ref.read(serviceListForShopStateProvider.notifier).retrieveServicesFromShop(barbershop.id!);
-                        GoRouter.of(context).go("/details/${barbershop.id}");
-                      },
-                      child: Container(
-                        color: Colors.blue,
-                        height: MediaQuery.of(context).size.width/6,
-                        width: MediaQuery.of(context).size.width/6,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              color: Colors.red,
-                              height: MediaQuery.of(context).size.width/8.5,
-                              width: MediaQuery.of(context).size.width/8.5,
-                              child: Image.network(barbershop.main_image!,fit: BoxFit.fitHeight,),
-                            ),
-                            Text(barbershop.name!),
-                            Text(barbershop.city!),
-
-                          ],
-                        ),
-                      ),
-                    );
+                    return ShopTileWebBig(barbershop: barbershop);
+                    //return ShopTileWebSmall(barbershop: barbershop);
                   },
                 ),
               );
@@ -171,4 +181,97 @@ class HorizontalListWeb extends ConsumerWidget{
     );
   }
 
+}
+
+class ShopTileWebBig extends ConsumerWidget {
+  const ShopTileWebBig({
+    Key? key,
+    required this.barbershop,
+  }) : super(key: key);
+
+  final Barbershop barbershop;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return InkWell(
+      onTap: (){
+        ref.read(barberListForShopStateProvider.notifier).retrieveBarbersFromShop2(barbershop.id!);
+        ref.read(barberListStateProvider.notifier).retrieveBarbersFromShop2(barbershop.id!);
+        ref.read(serviceListForShopStateProvider.notifier).retrieveServicesFromShop(barbershop.id!);
+        GoRouter.of(context).go("/details/${barbershop.id}");
+      },
+      child: Container(
+        color: Theme.of(context).cardColor,
+        height: MediaQuery.of(context).size.width/4,
+        width: MediaQuery.of(context).size.width/3,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Container(
+              color: Colors.red,
+              height: MediaQuery.of(context).size.width/8,
+              width: MediaQuery.of(context).size.width/3,
+              child: Image.network(barbershop.main_image!,fit: BoxFit.fitWidth,),
+            ),
+            Row(
+              mainAxisAlignment:MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Column(
+                  children: [
+                    Text(barbershop.name!,style: TextStyle(fontSize: 25),),
+                    Text(barbershop.city!,style: TextStyle(fontSize: 15)),
+                  ],
+                ),
+                Text("KIEMELT")
+              ],
+            )
+
+
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ShopTileWebSmall extends ConsumerWidget {
+  const ShopTileWebSmall({
+    Key? key,
+    required this.barbershop,
+  }) : super(key: key);
+
+  final Barbershop barbershop;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return InkWell(
+      onTap: (){
+        ref.read(barberListForShopStateProvider.notifier).retrieveBarbersFromShop2(barbershop.id!);
+        ref.read(barberListStateProvider.notifier).retrieveBarbersFromShop2(barbershop.id!);
+        ref.read(serviceListForShopStateProvider.notifier).retrieveServicesFromShop(barbershop.id!);
+        GoRouter.of(context).go("/details/${barbershop.id}");
+      },
+      child: Container(
+        color: Colors.blue,
+        height: MediaQuery.of(context).size.width/6,
+        width: MediaQuery.of(context).size.width/6,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              color: Colors.red,
+              height: MediaQuery.of(context).size.width/8.5,
+              width: MediaQuery.of(context).size.width/8.5,
+              child: Image.network(barbershop.main_image!,fit: BoxFit.fitHeight,),
+            ),
+            Text(barbershop.name!),
+            Text(barbershop.city!),
+
+          ],
+        ),
+      ),
+    );
+  }
 }

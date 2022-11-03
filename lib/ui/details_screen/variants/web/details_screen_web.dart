@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import '../../../../models/barbershop/barbershop_model.dart';
+import '../../../book_screen/choose_barber.dart';
 import '../mobile/widgets/about.dart';
+import '../mobile/widgets/barberList.dart';
 import '../mobile/widgets/reviews_tab.dart';
 import '../mobile/widgets/serviceList.dart';
 import '../mobile/widgets/works_tab.dart';
@@ -14,7 +18,10 @@ class DetailsScreen_web extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(Icons.hail_rounded),
+        leading: Padding(
+          padding: const EdgeInsets.fromLTRB(30,0,0,8),
+          child: SvgPicture.asset("cdsgraphics-Barber-Shop-Pole.svg", color: Colors.white,),
+        ),
         toolbarHeight: 100,
         flexibleSpace: Column(
           children: [
@@ -79,6 +86,10 @@ class DetailsScreen_web extends StatelessWidget {
                         height: 300,
                         child: Image.network(barbershop.main_image!,fit: BoxFit.cover,),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: BarberList(),
+                      ),
                       TabBar(
                         tabs: [
                           Tab(child:Text('General')),
@@ -103,7 +114,19 @@ class DetailsScreen_web extends StatelessWidget {
             ],
           ),
         ),
-      )
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        //extendedPadding:EdgeInsets.fromLTRB(0, 0, 0,50),
+        label: Text("FOGLALJ IDŐPONTOT MOST", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+        onPressed: (){
+          pushNewScreenWithRouteSettings(
+            context,
+            settings: RouteSettings(name: '/book', arguments: barbershop),
+            screen: chooseBarber(),
+          );
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
     );
   }
 }
