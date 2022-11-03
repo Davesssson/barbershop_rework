@@ -21,7 +21,7 @@ class ListScreen_mobile5 extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final queryState = ref.watch(queryStateProvider);
-    final optionsState = ref.watch(cityListStateProvider);
+    //final optionsState = ref.watch(cityListStateProvider);
 
     final query = queryState.withConverter<Barbershop>(
         fromFirestore: (snapshots,_)=>Barbershop.fromDocument(snapshots),

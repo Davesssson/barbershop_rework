@@ -34,7 +34,7 @@ class MapScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final optionsState = ref.watch(cityListStateProvider);
+    //final optionsState = ref.watch(/*cityListStateProvider*/);
     final markersState = ref.watch(markerListStateProvider);
     final markersContent = ref.watch(markerListContentProvider);
     //final show = ref.watch(itemListFilterProvider);
@@ -63,7 +63,7 @@ class MapScreen extends ConsumerWidget {
                   ),
                   //infoWindow(),
                   //buildBottomPart(show, ref),
-                  AutoComplete(optionsState, ref),
+                  //AutoComplete(optionsState, ref),
                   Container(
                     width: 100,
                     height: 100,

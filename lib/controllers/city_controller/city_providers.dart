@@ -1,13 +1,14 @@
 import 'package:riverpod/riverpod.dart';
 import 'dart:developer' as developer;
+import '../../models/city/city_model.dart';
 import 'city_controller.dart';
 
 final cityListFilterProvider = StateProvider<String>((_) => "");
 
-final cityListContentProvider = Provider<List<String>>((ref) {
+/*final cityListContentProvider = Provider<List<String>>((ref) {
   developer.log("[city_providers.dart][-][cityListContentProvider] - cityListContentProvider.");
   final itemListFilterState = ref.watch(cityListFilterProvider);
-  final itemListState = ref.watch(cityListStateProvider);
+  //final itemListState = ref.watch(cityListStateProvider);
   return itemListState.maybeWhen(
     data: (items) {
       switch (itemListFilterState) {
@@ -19,10 +20,16 @@ final cityListContentProvider = Provider<List<String>>((ref) {
     },
     orElse: () => [],
   );
-});
+});*/
 
-final cityListStateProvider = StateNotifierProvider<CityListStateController, AsyncValue<List<String>>>((ref) {
+/*final cityListStateProvider = StateNotifierProvider<CityListStateController, AsyncValue<List<String>>>((ref) {
   developer.log("[city_providers.dart][-][cityListStateProvider] - cityListStateProvider");
   return CityListStateController(ref.read);
+},
+);*/
+
+final cityListStateProvider2 = StateNotifierProvider<CityListStateController, AsyncValue<List<City>>>((ref) {
+  developer.log("[city_providers.dart][-][cityListStateProvider] - cityListStateProvider");
+  return CityListStateController.forModel(ref.read);
 },
 );

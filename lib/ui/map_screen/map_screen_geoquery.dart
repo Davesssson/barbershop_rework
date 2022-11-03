@@ -1,3 +1,4 @@
+/*
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class MapScreen_geoquery extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final optionsState = ref.watch(cityListStateProvider);
+    //final optionsState = ref.watch(cityListStateProvider);
     final markersState = ref.watch(markerListStateProvider);
     final markersContent = ref.watch(markerListContentProvider);
 
@@ -232,3 +233,4 @@ class MapScreen_geoquery extends ConsumerWidget {
   }
 
 }
+*/

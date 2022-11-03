@@ -8,6 +8,7 @@ import '../../controllers/city_controller/city_providers.dart';
 import '../../controllers/item_list_controller.dart';
 import '../../controllers/marker_controller/marker_providers.dart';
 import '../../models/barbershop/barbershop_model.dart';
+import '../../models/city/city_model.dart';
 import 'info_window.dart';
 
 //https://blog.bal.al/how-to-fix-cors-error-for-your-flutter-web-app
@@ -16,6 +17,7 @@ import 'info_window.dart';
 
 final cityFilterStateForMap = StateProvider<String>((_) => "");
 final radiusProvider = StateProvider<double>((_) => 20);
+final locationProvider = StateProvider<City>((_) => City.Budapet());
 
 class MapScreenFinal extends ConsumerWidget {
   final _controller = Completer();
@@ -34,7 +36,7 @@ class MapScreenFinal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final optionsState = ref.watch(cityListStateProvider);
+    final cities = ref.watch(cityListStateProvider2);
     final markersState = ref.watch(markerProvider);
     final markersContent = ref.watch(markerProvider);
     //final show = ref.watch(itemListFilterProvider);
@@ -63,7 +65,7 @@ class MapScreenFinal extends ConsumerWidget {
             ),
             //infoWindow(),
             //buildBottomPart(show, ref),
-            AutoComplete(optionsState, ref),
+            AutoComplete2(cities, ref),
             Container(
               width: 100,
               height: 100,
@@ -86,21 +88,136 @@ class MapScreenFinal extends ConsumerWidget {
     );
   }
 
-  Padding AutoComplete(AsyncValue<List<String>> optionsState, WidgetRef ref) {
+  Padding AutoComplete2(AsyncValue<List<City>> optionsState, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(100, 30, 100, 0),
-      child: Autocomplete<String>(optionsBuilder:
-          (textEditingValue) async {
+      child: Autocomplete<City>(
+          optionsBuilder: (textEditingValue) async {
+            if (textEditingValue.text == '') {
+              return const Iterable<City>.empty();
+            }
+            return optionsState.when(
+                data: (data) {
+              return data.where((City option) {
+                return option.cityName!.contains(textEditingValue.text.trim());
+              });
+
+                },
+/*            data: (data) {
+              List<String> asd = data.map((e) => e.cityName!).toList();
+              return asd.where((String option) {
+                return option.contains(textEditingValue.text
+                    .trim()); //TODO CASE INSENSITIVITY
+              });
+            },*/
+                error: (error, _) => const Iterable<City>.empty(),
+                loading: () => const Iterable<City>.empty());
+          }, optionsViewBuilder:
+          (context, Function(City) onSelected, options) {
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(4.0)),
+            ),
+            elevation: 4,
+            child: Container(
+              color: Colors.grey,
+              width: MediaQuery.of(context).size.width * 0.5,
+              child: ListView.separated(
+                padding: EdgeInsets.zero,
+                separatorBuilder: (context, index) => Divider(),
+                itemCount: options.length,
+                shrinkWrap: false,
+                itemBuilder: (context, index) {
+                  final option = options.elementAt(index);
+
+                  return ListTile(
+                    tileColor: Colors.transparent,
+                    title: Text(option.toString()),
+                    subtitle: Text("This is subtitle"),
+                    onTap: () {
+                      print("asdasd");
+                      ref.read(cityprovider.notifier).state=option.cityName!;
+
+                      ref.read(locationProvider.notifier).state=option;
+                      //onSelected(option!.cityName!.toString());
+                    },
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      }, fieldViewBuilder:
+          (context, controller, focusNode, onEditingComplete) {
+        controller = controller;
+        return TextField(
+          controller: controller,
+          focusNode: focusNode,
+          onEditingComplete: onEditingComplete,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.grey,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.grey[300]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.grey[300]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.grey[300]!),
+            ),
+            hintText: "Search Something",
+            prefixIcon: Icon(Icons.search),
+          ),
+        );
+      }, onSelected: (City selected) async {
+            print("asdasd");
+            ref.read(locationProvider.notifier).state=selected;
+            ref.read(cityprovider.notifier).state=selected.cityName!;
+
+        _goToCity(
+            GeoPoint(selected.location!.latitude,selected.location!.longitude));
+      }),
+    );
+  }
+
+/*
+  Padding AutoComplete(AsyncValue<List<City>> optionsState, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(100, 30, 100, 0),
+      child: Autocomplete<String>(
+          optionsBuilder: (textEditingValue) async {
         if (textEditingValue.text == '') {
           return const Iterable<String>.empty();
         }
         return optionsState.when(
             data: (data) {
-              return data.where((String option) {
+*/
+/*              return data.where((City option) {
+                return option.cityName!.contains(textEditingValue.text.trim());
+              });*//*
+
+
+              List<String> asd = data.map((e) => e.cityName!).toList();
+              return asd.where((String option) {
+                return option.contains(textEditingValue.text.trim()); //TODO CASE INSENSITIVITY
+              });
+            },
+*/
+/*            data: (data) {
+              List<String> asd = data.map((e) => e.cityName!).toList();
+              return asd.where((String option) {
                 return option.contains(textEditingValue.text
                     .trim()); //TODO CASE INSENSITIVITY
               });
-            },
+            },*//*
+
             error: (error, _) => const Iterable<String>.empty(),
             loading: () => const Iterable<String>.empty());
       }, optionsViewBuilder:
@@ -175,6 +292,7 @@ class MapScreenFinal extends ConsumerWidget {
       }),
     );
   }
+*/
 
   Future<void> _goToTheLake() async {
     final GoogleMapController controller = await _controller.future;

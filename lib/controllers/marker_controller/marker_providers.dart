@@ -3,16 +3,23 @@ import 'dart:developer' as developer;
 import 'package:flutter_shopping_list/repositories/cities_repository.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:riverpod/riverpod.dart';
+import '../../models/city/city_model.dart';
 import '../../models/responses/marker_response_item.dart';
 import '../../ui/map_screen/map_screen.dart';
 import '../city_controller/city_providers.dart';
 import 'marker_controller.dart';
-final radius = StateProvider<double>((ref) => 200);
+final radius = StateProvider<double>((ref) => 100);
 final cityprovider = StateProvider<String>((ref) => "");
+final locationProvider = StateProvider<City>((ref) => City.Budapet());
+
 final markerProvider = StreamProvider<Set<MarkerResponseItem>>((ref) {
   final r = ref.watch(radius);
   final city = ref.watch(cityprovider);
-  return ref.read(citiesRepositoryProvider).retrieveCityMarkersGeoLocation2(LatLng(47.497913, 19.040236), r,city: city);
+  final center = ref.watch(locationProvider).location;
+  print(r.toString());
+  print(city.toString());
+  print(center.toString());
+  return ref.read(citiesRepositoryProvider).retrieveCityMarkersGeoLocation2( LatLng(center!.latitude,center.longitude), r,city: city);
 });
 
 

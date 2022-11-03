@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/controllers/city_controller/city_controller.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
@@ -20,7 +21,7 @@ class ListScreen_mobile4 extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final chipList = ref.watch(serviceTagsFilterProvider);
-    final optionsState = ref.watch(cityListStateProvider);
+    //final optionsState = ref.watch(cityListStateProvider);
     final barbershopsState = ref.watch(barbershopListStateProvider);
     final barbershopsContent = ref.watch(barbershopListContentProvider);
     //region options
@@ -109,6 +110,7 @@ class ShopTile extends HookConsumerWidget {
     return InkWell(
       onTap: (){
         //Navigator.pushNamed(context, '/details', arguments: barbershop.id!.toString());
+*/
 /*        Navigator.push(
           context,
           MaterialPageRoute(
@@ -117,7 +119,8 @@ class ShopTile extends HookConsumerWidget {
               arguments: barbershop.id,// TODO ez igy ebben a formában jo a materialRoutepage-el????
             ),
           ),
-        );*/
+        );*//*
+
       }, //TODO ITT KELL MEGADNI HOGY MILYEN APARMÉTERT ADUNK ÁT ÉS ARRA KELL FETCHELNI A DETAILSBAN
       child: ListTile(
         key: ValueKey(barbershop.id), //ez nemtudom mit csinal
@@ -126,4 +129,4 @@ class ShopTile extends HookConsumerWidget {
       ),
     );
   }
-}
+}*/

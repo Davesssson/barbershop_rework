@@ -17,7 +17,7 @@ class ListScreen_mobile3 extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    final optionsState = ref.watch(cityListStateProvider);
+    //final optionsState = ref.watch(cityListStateProvider);
     final barbershopsState = ref.watch(barbershopListStateProvider);
     final barbershopsContent = ref.watch(barbershopListContentProvider);
 

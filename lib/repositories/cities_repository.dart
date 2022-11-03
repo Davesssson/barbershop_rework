@@ -6,6 +6,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../general_providers.dart';
+import '../models/city/city_model.dart';
 import 'custom_exception.dart';
 import 'dart:developer' as developer;
 
@@ -29,6 +30,20 @@ class CitiesRepository implements BaseCitiesRepository {
     try {
       final snap = await _read(firebaseFirestoreProvider).collection('barbershops').get();
       final cities =  snap.docs.map((doc) => doc['city'].toString()).toSet().toList();
+      developer.log("[cities = " + cities.toString());
+      return cities;
+    } on FirebaseException catch (e) {
+      developer.log("Failure during retrieving cities" + e.message!);
+      throw CustomException(message: e.message);
+    }
+  }
+
+  @override
+  Future<List<City>> retrieveCities2()async {
+    developer.log("[cities_repository.dart][CitiesRepository][retrieveCities] - Retrieving cities. . .");
+    try {
+      final snap = await _read(firebaseFirestoreProvider).collection('cities').get();
+      final cities =  snap.docs.map((doc) => City.fromDocument(doc)).toList();
       developer.log("[cities = " + cities.toString());
       return cities;
     } on FirebaseException catch (e) {
@@ -124,6 +139,7 @@ class CitiesRepository implements BaseCitiesRepository {
     Geoflutterfire geo = Geoflutterfire();
     //GeoFirePoint center = geo.point(latitude: 47.497913, longitude:19.040236);
     GeoFirePoint center = geo.point(latitude:middlePoint.latitude, longitude: middlePoint.longitude);
+    print("Current center = " +center.toString());
     try {
       Query<Map<String, dynamic>> collectionReference;
       if(city=="") {
