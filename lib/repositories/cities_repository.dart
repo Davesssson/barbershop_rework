@@ -119,19 +119,29 @@ class CitiesRepository implements BaseCitiesRepository {
     }
   }
 
-  Stream<Set<MarkerResponseItem>> retrieveCityMarkersGeoLocation2(LatLng middlePoint, double radius)async* {
+  Stream<Set<MarkerResponseItem>> retrieveCityMarkersGeoLocation2(LatLng middlePoint, double radius,{String city=""})async* {
     developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkersGeoLocation] - Retrieving City Markers for geolocation. . .");
     Geoflutterfire geo = Geoflutterfire();
-    GeoFirePoint center = geo.point(latitude: 47.497913, longitude:19.040236);
-    //GeoFirePoint center = geo.point(latitude:middlePoint.latitude, longitude: middlePoint.longitude);
+    //GeoFirePoint center = geo.point(latitude: 47.497913, longitude:19.040236);
+    GeoFirePoint center = geo.point(latitude:middlePoint.latitude, longitude: middlePoint.longitude);
     try {
-      final collectionReference = await _read(firebaseFirestoreProvider).collection('barbershops');
+      Query<Map<String, dynamic>> collectionReference;
+      if(city=="") {
+        collectionReference =
+        await _read(firebaseFirestoreProvider).collection('barbershops');
+        print(" üresen fut le");
+      }else {
+        collectionReference =
+        await _read(firebaseFirestoreProvider).collection('barbershops').where(
+            "city", isEqualTo: city);
+      }
+
       //final r = _read(radiusProvider);
       print("r=" + radius.toString());
       //double radius = 10;
       String field = 'point';
-      Stream<List<DocumentSnapshot>> stream = geo
-          .collection(collectionRef: collectionReference)
+      Stream<List<DocumentSnapshot>> stream =
+      geo.collection(collectionRef: collectionReference)
           .within(
             center: center,
             radius: radius,

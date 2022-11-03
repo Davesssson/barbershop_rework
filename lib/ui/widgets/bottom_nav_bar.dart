@@ -7,7 +7,9 @@ import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import '../item_list_screen/item_list_screen.dart';
 import '../list_screen/list_screen.dart';
 import '../map_screen/geoquery_example_mine.dart';
+import '../map_screen/mapScreenMine.dart';
 import '../map_screen/map_screen.dart';
+import '../map_screen/mapsScreenFinal.dart';
 import '../proba.dart';
 
 class BottomNavBar extends StatelessWidget {
@@ -27,7 +29,9 @@ class BottomNavBar extends StatelessWidget {
       ItemListScreen(),
       //Container(color:Colors.yellow)
       ListScreen(),
-      GeoQueryExampleMine(),
+      MapScreenFinal(),
+      //mapScreenMine(),
+      //GeoQueryExampleMine(),
       //MapScreen(),
       ExplorerScreen()
       //MainScreen(
