@@ -19,12 +19,13 @@ class CustomChip extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selected = ref.watch(selectedChip);
+    final hourDisplay = start.hour.toString().length==2? start.hour : "0"+start.hour.toString();
     return ChoiceChip(
         selected: selected?.start==this.start,
         onSelected: (selected){
           ref.read(selectedChip.notifier).state=this;
         },
         selectedColor: Theme.of(context).primaryColor,
-        label: Text("${start.hour}:${start.minute}"));
+        label: Text("${hourDisplay}:${start.minute}"));
   }
 }

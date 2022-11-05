@@ -239,8 +239,17 @@ class editView extends HookConsumerWidget {
           ?{print("ures vagyok")}
           :data.forEach((workDayAvailability) {
             final List<String> date_split = workDayAvailability.id!.split("-");
-            final int start_hour = int.parse(workDayAvailability.start.toString().substring(0,2));
-            final int start_min = int.parse(workDayAvailability.start.toString().substring(2));
+            final int start_hour;
+            final int start_min;
+            if(workDayAvailability.start.toString().length==3){
+              start_hour = int.parse(workDayAvailability.start.toString()[0]);
+              start_min = int.parse(workDayAvailability.start.toString().substring(1));
+            }else{
+              start_hour = int.parse(workDayAvailability.start.toString().substring(0,2));
+              start_min = int.parse(workDayAvailability.start.toString().substring(2));
+            }
+
+
             final int end_hour = int.parse(workDayAvailability.end.toString().substring(0,2));
             final int end_min = int.parse(workDayAvailability.end.toString().substring(2));
             final asd =  Appointment(
@@ -283,7 +292,11 @@ class editView extends HookConsumerWidget {
     String year = details.date!.year.toString();
     String month = details.date!.month.toString();
     String day = details.date!.day.toString();
+    if(day.length<2){
+      day="0"+day;
+    }
     String id = year + "-" + month + "-" + day;
+
     return id;
   }
 

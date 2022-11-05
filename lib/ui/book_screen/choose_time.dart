@@ -61,8 +61,7 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
           backgroundColor: Theme.of(context).cardColor,
           selectionColor: Theme.of(context).primaryColor,
           showNavigationArrow: true,
-          initialSelectedDate:
-              DateTime.parse(workDayAvailabilityListContent.id!),
+          initialSelectedDate: null,
           maxDate: DateTime.now().add(Duration(days: 30)),
           enablePastDates: false,
           allowViewNavigation: true,
@@ -289,12 +288,29 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
     if (availability.id != null) {
       List<Widget> temp = [];
       List<String> splitDate = availability.id!.split("-");
-      DateTime start = DateTime(
+      DateTime start ;
+      if(availability.start.toString().length==3){
+        final hour = int.parse(availability.start.toString()[0]);
+        final minute = int.parse(availability.start.toString().substring(1));
+        start = DateTime(
           int.parse(splitDate[0]),
           int.parse(splitDate[1]),
           int.parse(splitDate[2]),
-          int.parse(availability.start.toString().substring(0, 2)),
-          int.parse(availability.start.toString().substring(2)));
+          hour,
+          minute
+        );
+      }else{
+        final hour = int.parse(availability.start.toString().substring(0,1));
+        final minute = int.parse(availability.start.toString().substring(2));
+        start = DateTime(
+            int.parse(splitDate[0]),
+            int.parse(splitDate[1]),
+            int.parse(splitDate[2]),
+            hour,
+            minute
+        );
+      }
+      print("ezt kell nezni start = "+start.toString());
       DateTime end = DateTime(
           int.parse(splitDate[0]),
           int.parse(splitDate[1]),

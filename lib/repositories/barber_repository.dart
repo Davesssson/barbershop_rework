@@ -28,6 +28,37 @@ class BarberRepository implements BaseBarberRepository{
   const BarberRepository(this._read);
 
   @override
+  Future<List<Barber>> retrieveBarbersForPagination() async {
+    developer.log("[barber_repository.dart][BarberRepository][retrieveBarbers] - Retrieving barbers. . .");
+    try {
+      final snap =
+      await _read(firebaseFirestoreProvider).collection('barbers').where('isDeleted',isEqualTo: false).limit(3).get();
+      return snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
+    } on FirebaseException catch (e) {
+      developer.log("Barbers retrieve exception.");
+      throw CustomException(message: e.message);
+    }
+  }
+
+  Future<List<Barber>> retrieveMoreBarbersForPagination(Barber? b) async {
+    developer.log("[barber_repository.dart][BarberRepository][retrieveBarbers] - Retrieving barbers. . .");
+    try {
+      final previoussSnap = await  _read(firebaseFirestoreProvider).collection('barbers').doc(b!.id).get();
+      final snap =
+      await _read(firebaseFirestoreProvider)
+          .collection('barbers')
+          .startAfterDocument(previoussSnap)
+          .where('isDeleted',isEqualTo: false)
+          .limit(3)
+          .get();
+      return snap.docs.map((doc) => Barber.fromDocument(doc)).toList();
+    } on FirebaseException catch (e) {
+      developer.log("Barbers retrieve exception.");
+      throw CustomException(message: e.message);
+    }
+  }
+
+  @override
   Future<List<Barber>> retrieveBarbers() async {
     developer.log("[barber_repository.dart][BarberRepository][retrieveBarbers] - Retrieving barbers. . .");
     try {
@@ -320,4 +351,6 @@ class BarberRepository implements BaseBarberRepository{
       throw CustomException(message: e.message);
     }
   }
+
+
 }
