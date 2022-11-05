@@ -9,9 +9,11 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
+import '../../../controllers/auth_controller.dart';
 import '../../../controllers/barber_controller/barber_providers.dart';
 import '../../../controllers/barbershop_controller/barbershop_providers.dart';
 import '../../../controllers/service_controller/service_providers.dart';
+import '../../profile_screen/profile_screen.dart';
 import '../widgets/shopTile3.dart';
 import 'list_screen_mobile_services.dart';
 
@@ -27,6 +29,7 @@ class ListScreen_web extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final authControllerState = ref.watch(authControllerProvider);
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final page = ref.watch(homePageProvider);
@@ -101,7 +104,37 @@ class ListScreen_web extends ConsumerWidget {
                         ),
                       )
                   ),
-                  Text("sign in")
+                  authControllerState != null?
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_)=>profileScreen(),
+
+                          ),
+                        );
+                        /*                     pushNewScreenWithRouteSettings(
+
+                        context,
+                        settings: RouteSettings(name: '/profile'),
+                        screen: profileScreen(),
+                      );*/
+                      },
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.green,
+                      ),
+                    ),
+                  ):TextButton(
+                      onPressed: () {
+                        GoRouter.of(context).go("/login");
+                      },
+                      child: Text("Sign In!")
+                  )
+
                 ],
               ),
             ),

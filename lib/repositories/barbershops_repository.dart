@@ -6,6 +6,8 @@ import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/repositories/auth_repository.dart';
 import 'package:flutter_shopping_list/repositories/service_repository.dart';
 import 'package:flutter_shopping_list/utils/logger.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../general_providers.dart';
 import 'custom_exception.dart';
@@ -176,6 +178,47 @@ class BarbershopRepository implements BaseBarbershopRepository{
            .update({"isVisible":changeTo});
     }on FirebaseException catch(e){
       developer.log("[barbershops_repository.dart][BarbershopRepository][changeShopVisibility] - Exceőtion during visibility change. . .");
+      throw CustomException(message: e.message);
+    }
+  }
+
+  Stream<List<Barbershop>> retrieveBarbershopsGeoLocation2(LatLng middlePoint, double radius,{String city=""})async* {
+    developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkersGeoLocation] - Retrieving City Markers for geolocation. . .");
+    Geoflutterfire geo = Geoflutterfire();
+    //GeoFirePoint center = geo.point(latitude: 47.497913, longitude:19.040236);
+    GeoFirePoint center = geo.point(latitude:middlePoint.latitude, longitude: middlePoint.longitude);
+    print("Current center = " +center.toString());
+    try {
+      Query<Map<String, dynamic>> collectionReference;
+      if(city=="") {
+        collectionReference =
+        await _read(firebaseFirestoreProvider).collection('barbershops');
+        print(" üresen fut le");
+      }else {
+        collectionReference =
+        await _read(firebaseFirestoreProvider).collection('barbershops').where(
+            "city", isEqualTo: city);
+      }
+
+      //final r = _read(radiusProvider);
+      print("r=" + radius.toString());
+      //double radius = 10;
+      String field = 'point';
+      Stream<List<DocumentSnapshot>> stream =
+      geo.collection(collectionRef: collectionReference)
+          .within(
+          center: center,
+          radius: radius,
+          field: field
+      );
+
+      yield* stream.map((List<DocumentSnapshot> documentList) {
+        return documentList.map((doc)   {
+          return Barbershop.fromDocument(doc);
+        }).toList();
+      });
+    } on FirebaseException catch (e) {
+      developer.log("[cities_repository.dart][CitiesRepository][retrieveCityMarkersGeoLocation] - Failure during retrieving city markers for geolaction.");
       throw CustomException(message: e.message);
     }
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/ui/admin_screen/widgets/addNewServiceTagDialog.dart';
 import 'package:flutter_shopping_list/ui/admin_screen/widgets/editServiceDialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../../controllers/serviceTags_controller/serviceTags_providers.dart';
 import '../../controllers/service_controller/service_providers.dart';
 import '../../models/service/service_model.dart';
 
@@ -71,7 +73,7 @@ class serviceList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final serviceListContent = ref.watch(serviceListForAdminStateProvider(shopId));
     final deleteSwitchOn = ref.watch(deleteSwitcherProvider);
-    final serviceTags = ref.watch(serviceTagsProvider);
+    final serviceTags = ref.watch(ServiceTagsListStateControllerProvider);
 
     return serviceListContent.when(
         data: (services){
@@ -104,7 +106,9 @@ class serviceList extends ConsumerWidget {
                       ),
                       serviceTags.when(
                           data: (data){
-                            return serviceTagsList(service: service, tags: data,shopId:shopId);
+                            return
+                              serviceTagsList(service: service, tags: data,shopId:shopId);
+
                           },
                           error: (e,_){return Text("hiba");},
                           loading:(){return CircularProgressIndicator();}
@@ -156,7 +160,14 @@ class serviceTagsList extends ConsumerWidget {
             selectedColor: Theme.of(context).primaryColor,
             selected: service.tags==null? false : service.tags!.keys.contains(e),
           )
-        ).toList()
+        ).toList(),
+        ChoiceChip(
+          label: Text("Add new"),
+          selected:false,
+          onSelected: (selected){
+            addNewServiceTagDialog.show(context, service);
+          }
+        )
       ],
     );
   }

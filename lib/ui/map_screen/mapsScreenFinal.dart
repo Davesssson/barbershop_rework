@@ -176,7 +176,7 @@ class MapScreenFinal extends ConsumerWidget {
             prefixIcon: Icon(Icons.search),
           ),
         );
-      }, onSelected: (City selected) async {
+      }, onSelected: (City selected) {
             print("asdasd");
             ref.read(locationProvider.notifier).state=selected;
             ref.read(cityprovider.notifier).state=selected.cityName!;

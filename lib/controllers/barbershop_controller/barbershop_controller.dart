@@ -1,10 +1,22 @@
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/utils/logger.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../repositories/barbershops_repository.dart';
 import '../../repositories/custom_exception.dart';
 import 'dart:developer' as developer;
 
+import '../marker_controller/marker_providers.dart';
+
+final barbershopGeoqueryProvider = StreamProvider<List<Barbershop>>((ref) {
+  final r = ref.watch(radius);
+  final city = ref.watch(cityprovider);
+  final center = ref.watch(locationProvider).location;
+  print(r.toString());
+  print(city.toString());
+  print(center.toString());
+  return ref.read(barbershopRepositoryProvider).retrieveBarbershopsGeoLocation2( LatLng(center!.latitude,center.longitude), r,city: city);
+});
 
 class BarbershopListStateController extends StateNotifier<AsyncValue<List<Barbershop>>>{
   final Reader _read;

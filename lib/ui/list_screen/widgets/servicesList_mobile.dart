@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' ;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../controllers/serviceTags_controller/serviceTags_providers.dart';
 import '../../../controllers/service_controller/service_providers.dart';
 
 class ServicesListMobile extends ConsumerWidget {
@@ -8,7 +9,7 @@ class ServicesListMobile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context,WidgetRef ref) {
-    final tags =  ref.watch(serviceTagsProvider);
+    final tags =  ref.watch(ServiceTagsListStateControllerProvider);
     return tags.when(
         data: (tags){
           return SingleChildScrollView(

@@ -8,7 +8,7 @@ import '../choose_time.dart';
 class bookBarberTile extends StatelessWidget {
   final Barber existingBarber;
   final barbershop;
-  const bookBarberTile({
+   bookBarberTile({
     required this.existingBarber,
     required this.barbershop,
     Key? key,
@@ -28,7 +28,12 @@ class bookBarberTile extends StatelessWidget {
         height: 50,
         width: 50,
         color: Colors.black,
-        child: Text(existingBarber.name!),
+        child: Stack(
+          children: [
+            Image.network(existingBarber.prof_pic!,fit: BoxFit.fill),
+            Text(existingBarber.name!)
+          ],
+        ),
       ),
     );
   }
