@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
-import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_5.dart';
 import '../../pagination/providers.dart';
-
+import '../widgets/shopTile.dart';
 final currentShop2 = Provider<Barbershop>((_) {
   throw UnimplementedError();
 });
@@ -159,7 +158,7 @@ class ItemsListBuilder extends ConsumerWidget {
       delegate: SliverChildBuilderDelegate((context, index) {
           return ProviderScope(
               overrides: [currentShop2.overrideWithValue(items[index])],
-              child: ShopTile()
+              child: Text("asd"),
           );
 
           // return Container(

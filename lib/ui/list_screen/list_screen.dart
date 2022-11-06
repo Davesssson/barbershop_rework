@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_3.dart';
-import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_final.dart';
-import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_final_proto.dart';
+import 'package:flutter_shopping_list/ui/list_screen/variants/mobile/list_screen_mobile_final.dart';
 import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_pagination_mine.dart';
 import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_services.dart';
 import 'package:flutter_shopping_list/ui/list_screen/variants/web/list_screen_web.dart';
