@@ -15,6 +15,10 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../../../general_providers.dart';
 import '../../../models/barber/barber_model.dart';
 import 'package:flutter_shopping_list/ui/admin_screen/admin_edit_barber_screen/widgets/editWorkdayDialog.dart';
+
+import 'widgets/barberWorksGridView.dart';
+import 'widgets/editNameAndDescription.dart';
+import 'widgets/updateCalendarButton.dart';
 //https://stackoverflow.com/questions/68369473/how-to-split-two-times-using-frequency-in-dart
 
 class editView extends HookConsumerWidget {
@@ -91,7 +95,6 @@ class editView extends HookConsumerWidget {
 
                       onTap: (CalendarTapDetails details){
                         String dateId = getDateId(details);
-
                         if(!hasAppointmentWithId(dateId)) {
                           DateTime start = getStartTime(details);
                           DateTime end = getEndTime(details, 8);
@@ -116,82 +119,12 @@ class editView extends HookConsumerWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
-                      ),
-                      child: Text("Updateld a calendart!",style: TextStyle(color:Colors.black),),
-                      onPressed: () async{
-                        SnackBar sb_updated ;
-                        SnackBar sb_added;
-                        bool didUpdate = await ref.read(WorkDayAvailabilityListStateProvider(barberUnderEdit!.id!).notifier).updateBarberWorkDayAvailability(changes: changedElements, barberId: barberUnderEdit!.id!);
-                        if(didUpdate){
-                          changedElements.clear();
-                          sb_updated = SnackBar(
-                            content: const Text("Working hours updated"),
-                          );
-                        } else {
-                          sb_updated = SnackBar(content: const Text("No modifications took place"));
-                        }
-                        ScaffoldMessenger.of(context).showSnackBar(sb_updated);
-                        print("vale of the change "+ didUpdate.toString());
-                        bool didAdd = await ref.read(WorkDayAvailabilityListStateProvider(barberUnderEdit!.id!).notifier).addBarberWorkDayAvailability(addedAppointments: addedElements, barberId: barberUnderEdit!.id!);
-                        if(didAdd){
-                          addedElements.clear();
-                          sb_added = SnackBar(
-                            content: const Text("New Working hour updated"),
-                          );
-                        }else {
-                          sb_added = SnackBar(content: const Text("No addition took place"));
-                        }
-                        ScaffoldMessenger.of(context).showSnackBar(sb_added);
-                      }
-                  ),
+                updateCalendarButton(
+                    barberUnderEdit: barberUnderEdit,
+                    changedElements: changedElements,
+                    addedElements: addedElements
                 ),
-                GridView.count(
-                  shrinkWrap: true,
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 20,
-                  crossAxisCount: (MediaQuery.of(context).size.width / 350).toInt(),
-                  children: [
-                    if(barberUnderEdit!=null)
-                    ...barberUnderEdit!.works!.map((picture) {
-                      return Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: InkWell(
-                          onTap: () => showDialog<String>(
-                            context: context,
-                            builder: (BuildContext context) => showConfirmationDialog(context, ref, picture),
-                          ),
-                          child: Image.network(picture),
-                        ),
-                      );
-                    }).toList(),
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: DottedBorder(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                        dashPattern: [5, 5],
-                        child: Center(
-                          child: Container(
-                            height: 100,
-                            width: 100,
-                            color: Colors.transparent,
-                            child: Column(
-                              children: [
-                                Text("Tölts fel új képet"),
-                                Icon(Icons.add)
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                barberWorksGridView(barberUnderEdit: barberUnderEdit,),
 /*                TextButton( // TODO EZ MOBILON ELTÖRI A DOLGOKAT
                     onPressed: ()async {
                       Uint8List? bytesFromPicker = await ImagePickerWeb.getImageAsBytes();
@@ -213,24 +146,8 @@ class editView extends HookConsumerWidget {
     );
   }
 
-  AlertDialog showConfirmationDialog(BuildContext context, WidgetRef ref, String picture) {
-    return AlertDialog(
-      title: const Text('Biztosan meg szeretnéd változtatni a barber profil képét?'),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.pop(context, 'No'),
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () {
-            ref.read(barberListForShopStateProvider.notifier) // TODO KICSERÉLNI SIMA ASYNC-ra
-                .updateBarberProfPic(barberId: barberUnderEdit!.id!, profPictureLink: picture);
-            Navigator.pop(context, 'Yes');
-          },
-          child: const Text('OK'),
-        ),
-      ],
-    );
+  void _calendarOnTapCallback(CalendarTapDetails details){
+
   }
 
   _AppointmentDataSource _getCalendarDataSource2(AsyncValue<List<WorkDayAvailability>> state/*, WorkDayAvailability content*/) {
@@ -297,7 +214,6 @@ class editView extends HookConsumerWidget {
       day="0"+day;
     }
     String id = year + "-" + month + "-" + day;
-
     return id;
   }
 
@@ -327,126 +243,7 @@ class editView extends HookConsumerWidget {
 
 }
 
-class editNameAndDescription extends ConsumerWidget {
-  const editNameAndDescription({
-    Key? key,
-    required this.textNameController,
-    required this.textDescriptionController,
-    required this.barberUnderEdit,
-  }) : super(key: key);
 
-  final TextEditingController textNameController;
-  final TextEditingController textDescriptionController;
-  final Barber? barberUnderEdit;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Row(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Név",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                padding: EdgeInsets.all(8),
-                width: MediaQuery.of(context).size.width/3,
-                child: TextFormField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder()
-                    ),
-                    controller: textNameController
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Description",
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                padding: EdgeInsets.all(8),
-                width: MediaQuery.of(context).size.width/3,
-                child: TextFormField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder()
-                    ),
-                    controller: textDescriptionController
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
-                  ),
-                  onPressed: () {
-                    barberUnderEdit != null
-                        ? {
-                      print("nem vagyok nulla, tudok updatelődni"),
-                      ref.read(barberListForShopStateProvider.notifier)
-                          .updateBarber(
-                          updatedBarber: barberUnderEdit!.copyWith(
-                              name: textNameController.text.trim(),
-                              description: textDescriptionController
-                                  .text
-                                  .trim()
-                          )
-                      )
-                    }
-                        : {
-                      print("nulla vagyok, nem tudok updatelődni"),
-                      ref.read(barberListForShopStateProvider.notifier)
-                          .addBarber(
-                          name: textNameController.text.trim(),
-                          description:textDescriptionController.text.trim(),
-                          shopId: '7HTJ8DF8hFwUnrL566Wc'
-                      )
-                    };
-                  },
-                  child: barberUnderEdit == null
-                      ? Text("Hozz Létre és adj hozzá egy fodrászt",style: TextStyle(color:Colors.black))
-                      : Text("Mentsd el a fodrász változtatásait",style: TextStyle(color:Colors.black))),
-            ),
-          ],
-        ),
-        Column(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height/4,
-              width: MediaQuery.of(context).size.width/2.5,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black
-                )
-              ),
-              child: barberUnderEdit==null?Icon(Icons.no_accounts): barberUnderEdit!.prof_pic==null?Icon(Icons.no_accounts):Image.network(barberUnderEdit!.prof_pic!,fit: BoxFit.cover,)
-            )
-          ],
-        )
-      ],
-    );
-  }
-}
 
 class _AppointmentDataSource extends CalendarDataSource {
   _AppointmentDataSource(List<Appointment> source) {
