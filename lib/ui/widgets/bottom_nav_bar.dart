@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping_list/main.dart';
-import 'package:flutter_shopping_list/ui/details_screen/details_screen.dart';
-import 'package:flutter_shopping_list/ui/explorer_screen/variants/explorer_screen_mobile.dart';
-import 'package:flutter_shopping_list/ui/profile_screen/profile_screen.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import '../explorer_screen/explorer_screen.dart';
 import '../item_list_screen/item_list_screen.dart';
 import '../list_screen/list_screen.dart';
-import '../map_screen/geoquery_example_mine.dart';
-import '../map_screen/mapScreenMine.dart';
-import '../map_screen/map_screen.dart';
-import '../map_screen/mapsScreenFinal.dart';
 import '../map_screen/mapsScreenFinal2.dart';
 import '../proba.dart';
 
