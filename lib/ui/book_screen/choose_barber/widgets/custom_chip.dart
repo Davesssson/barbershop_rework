@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../choose_time.dart';
+import '../../choose_time/choose_time.dart';
+
 
 class CustomChip extends ConsumerWidget {
   const CustomChip({

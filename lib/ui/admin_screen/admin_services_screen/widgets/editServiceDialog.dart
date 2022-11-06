@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../controllers/service_controller/service_providers.dart';
-import '../../../models/service/service_model.dart';
+import '../../../../controllers/service_controller/service_providers.dart';
+import '../../../../models/service/service_model.dart';
 
 
 class EditServiceDialog extends HookConsumerWidget {

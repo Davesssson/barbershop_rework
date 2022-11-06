@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
-import 'package:flutter_shopping_list/ui/book_screen/choose_barber.dart';
+import 'package:flutter_shopping_list/ui/book_screen/choose_barber/choose_barber.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/about.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/barberList.dart';
 import 'package:flutter_shopping_list/ui/details_screen/variants/mobile/widgets/book_now_button.dart';

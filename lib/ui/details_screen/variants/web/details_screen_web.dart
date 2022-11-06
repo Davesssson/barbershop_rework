@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import '../../../../models/barbershop/barbershop_model.dart';
-import '../../../book_screen/choose_barber.dart';
+import '../../../book_screen/choose_barber/choose_barber.dart';
 import '../mobile/widgets/about.dart';
 import '../mobile/widgets/barberList.dart';
 import '../mobile/widgets/reviews_tab.dart';

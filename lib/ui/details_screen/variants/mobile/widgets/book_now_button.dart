@@ -5,7 +5,7 @@ import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import '../../../../../controllers/auth_controller.dart';
 import '../../../../../models/barbershop/barbershop_model.dart';
-import '../../../../book_screen/choose_barber.dart';
+import '../../../../book_screen/choose_barber/choose_barber.dart';
 
 class BookNowButton extends ConsumerWidget {
   final Barbershop bs;

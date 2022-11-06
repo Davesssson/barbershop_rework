@@ -4,16 +4,16 @@ import 'package:flutter_shopping_list/controllers/auth_controller.dart';
 import 'package:flutter_shopping_list/controllers/barber_controller/barber_providers.dart';
 import 'package:flutter_shopping_list/controllers/work_day_availability_controller/work_day_availability_providers.dart';
 import 'package:flutter_shopping_list/repositories/user_repository.dart';
-import 'package:flutter_shopping_list/ui/book_screen/widgets/book_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:uuid/uuid.dart';
-import '../../controllers/service_controller/service_providers.dart';
-import '../../models/barbershop/barbershop_model.dart';
-import '../../models/booking/booking_model.dart';
-import '../../models/work_day_availability/work_day_availability_model.dart';
-import '../../repositories/booking_repository.dart';
-import 'widgets/custom_chip.dart';
+import '../../../controllers/service_controller/service_providers.dart';
+import '../../../models/barbershop/barbershop_model.dart';
+import '../../../models/booking/booking_model.dart';
+import '../../../models/work_day_availability/work_day_availability_model.dart';
+import '../../../repositories/booking_repository.dart';
+import '../choose_barber/widgets/custom_chip.dart';
+import 'widgets/servicesList.dart';
 
 StateProvider<DateTime> selectedDate = StateProvider<DateTime>((_) => DateTime(2020));
 StateProvider<CustomChip?> selectedChip = StateProvider<CustomChip?>((_) => null);
@@ -82,34 +82,7 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
         SizedBox(height: 30,),
         Text("Szolgáltatások"),
         SizedBox(height: 30,),
-        services.when(
-            data: (servicesForShop){
-              return servicesForShop.isEmpty
-                  ?  Text("Az üzletnek nincsenek szolgáltatásai")
-                  :Column(
-                children: [
-                  ...servicesForShop.map((e) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListTile(
-                        onTap: (){
-                          ref.read(selectedServiceProvider.notifier).state = e.id;
-                        },
-                        selectedColor: Theme.of(context).primaryColor,
-                        tileColor: Theme.of(context).cardColor,
-                        title: Text(e.serviceTitle!),
-                        subtitle: Text(e.serviceDescription!),
-                        trailing: Text(e.servicePrice!.toString()),
-                        selected: e.id==selectedService,
-                      ),
-                    );
-                  }).toList()
-                ],
-              );
-            },
-            error: (e,_){return Text("error a szolgáltatások betöltése közben");},
-            loading: (){return CircularProgressIndicator();}
-        ),
+        servicesList(barbershopId: widget.barbershop.id!),
         Center(
           child: ElevatedButton(
             child: Text("BOOK NOW",),
@@ -338,3 +311,4 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
   }
 
 }
+

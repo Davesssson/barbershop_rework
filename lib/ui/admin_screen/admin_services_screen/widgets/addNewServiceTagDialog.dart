@@ -4,9 +4,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_shopping_list/controllers/serviceTags_controller/serviceTags_providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../controllers/serviceTags_controller/serviceTags_controller.dart';
-import '../../../controllers/service_controller/service_providers.dart';
-import '../../../models/service/service_model.dart';
+import '../../../../controllers/serviceTags_controller/serviceTags_controller.dart';
+import '../../../../controllers/service_controller/service_providers.dart';
+import '../../../../models/service/service_model.dart';
 
 
 class addNewServiceTagDialog extends HookConsumerWidget {
