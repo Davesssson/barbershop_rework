@@ -49,7 +49,7 @@ class profileScreen extends ConsumerWidget {
                         title: Text("beállítások"),
                         tiles: [
                           SettingsTile(
-                            title:Text("asd"),
+                            title:Text("asd",style: TextStyle(color: Theme.of(context).textTheme.bodySmall!.color!),),
                             enabled: true,
                           ),
                           SettingsTile.switchTile(
@@ -58,10 +58,10 @@ class profileScreen extends ConsumerWidget {
                                 print("heloka");
                                 ref.read(ThemeModeFilterProvider.notifier).state==ThemeModeFilter.dark ? ref.read(ThemeModeFilterProvider.notifier).state=ThemeModeFilter.light : ref.read(ThemeModeFilterProvider.notifier).state=ThemeModeFilter.dark;
                               },
-                              title: Text("Dark mode")
+                              title: Text("Dark mode",style: TextStyle(color: Theme.of(context).textTheme.bodySmall!.color!),)
                           ),
                           SettingsTile.navigation(
-                              title: Text("foglalasaim : TODO"),
+                              title: Text("Foglalásaim",style: TextStyle(color: Theme.of(context).textTheme.bodySmall!.color!),),
                               onPressed: (context) {
                                 Navigator.push(
                                   context,
@@ -70,7 +70,7 @@ class profileScreen extends ConsumerWidget {
                               },
                           ),
                           SettingsTile(
-                            title:Text("Sign out"),
+                            title:Text("Sign out",style: TextStyle(color: Theme.of(context).textTheme.bodySmall!.color!),),
                             enabled: true,
                             onPressed: (context){
                               ref.read(authControllerProvider.notifier).signOut();

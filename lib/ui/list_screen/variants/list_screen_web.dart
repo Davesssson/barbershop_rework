@@ -13,6 +13,10 @@ import '../../../controllers/auth_controller.dart';
 import '../../../controllers/barber_controller/barber_providers.dart';
 import '../../../controllers/barbershop_controller/barbershop_providers.dart';
 import '../../../controllers/service_controller/service_providers.dart';
+import '../../admin_screen/admin_register.dart';
+import '../../explorer_screen/variants/explorer_screen_mobile.dart';
+import '../../explorer_screen/variants/explorer_screen_web.dart';
+import '../../explorer_screen/variants/explorer_screen_web_2.dart';
 import '../../profile_screen/profile_screen.dart';
 import '../widgets/shopTile3.dart';
 import 'list_screen_mobile_services.dart';
@@ -64,13 +68,14 @@ class ListScreen_web extends ConsumerWidget {
                     },
                     child: Text("sea all")
                 ),
-                HorizontalListWeb()
-
+                HorizontalListWeb(),
               ],
             ),
           ),
         ),
-        MapScreen()
+        MapScreen(),
+        ExplorerScreen_web2(),
+        adminRegisterScreen()
 
       ];
     }
@@ -155,11 +160,11 @@ class ListScreen_web extends ConsumerWidget {
                         child: Text("Nézd meg térképen")
                     ),
                     TextButton(
-                        onPressed: (){},
+                        onPressed: (){ref.read(homePageProvider.notifier).state=2;},
                         child: Text("Fedezd fel!")
                     ),
                     TextButton(
-                        onPressed: (){},
+                        onPressed: (){ref.read(homePageProvider.notifier).state=3;},
                         child: Text("Légy partner!")
                     ),
                   ],

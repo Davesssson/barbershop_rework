@@ -11,6 +11,7 @@ import '../map_screen/geoquery_example_mine.dart';
 import '../map_screen/mapScreenMine.dart';
 import '../map_screen/map_screen.dart';
 import '../map_screen/mapsScreenFinal.dart';
+import '../map_screen/mapsScreenFinal2.dart';
 import '../proba.dart';
 
 class BottomNavBar extends StatelessWidget {
@@ -30,7 +31,7 @@ class BottomNavBar extends StatelessWidget {
       ItemListScreen(),
       //Container(color:Colors.yellow)
       ListScreen(),
-      MapScreenFinal(),
+      MapScreenFinal2(),
       //mapScreenMine(),
       //GeoQueryExampleMine(),
       //MapScreen(),
