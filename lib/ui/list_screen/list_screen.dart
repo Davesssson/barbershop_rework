@@ -4,7 +4,7 @@ import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile
 import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_final_proto.dart';
 import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_pagination_mine.dart';
 import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_mobile_services.dart';
-import 'package:flutter_shopping_list/ui/list_screen/variants/list_screen_web.dart';
+import 'package:flutter_shopping_list/ui/list_screen/variants/web/list_screen_web.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
