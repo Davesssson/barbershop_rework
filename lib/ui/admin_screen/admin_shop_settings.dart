@@ -14,7 +14,8 @@ class adminShopSettingsScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentShop = ref.watch(shopProvider(shopId));
-    final cityTextfieldController = useTextEditingController();
+    final cityTextfieldController = useTextEditingController(text: currentShop.when(data: (data){return data.city??"hiba";}, error: (e,_){return "error";}, loading: (){return "loading";}));
+    final nameTextfieldController = useTextEditingController(text: currentShop.when(data: (data){return data.name??"hiba";}, error: (e,_){return "error";}, loading: (){return "loading";}));
     return Scaffold(
         body: Container(
             margin: EdgeInsets.symmetric(
@@ -25,15 +26,31 @@ class adminShopSettingsScreen extends HookConsumerWidget {
                   return SingleChildScrollView(
                       child: Column(
                         children: [
-                          ListTile(
-                            title: Text("city"),
-                            trailing: SizedBox(
-                              width: MediaQuery.of(context).size.width/10,
-                              child: TextFormField(
-                                initialValue: data.city,
-                                controller: cityTextfieldController,
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("city"),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width/5,
+                                child: TextFormField(
+                                  controller: cityTextfieldController,
+                                ),
                               ),
-                            ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Name"),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width/5,
+                                child: TextFormField(
+                                  controller: nameTextfieldController,
+                                ),
+                              ),
+                            ],
                           ),
                           ListTile(),
                           ListTile(),

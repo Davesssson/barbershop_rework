@@ -38,6 +38,9 @@ class adminScreen extends ConsumerWidget {
 
     return currentShop.when(
         data: (data){
+          Future.delayed(Duration.zero,(){ // ez nagyon fontos!!!!!
+            ref.read(visibleProvider.notifier).state=data.isVisible!;
+          });
           return Row(
             children: [
               Drawer(
@@ -59,8 +62,8 @@ class adminScreen extends ConsumerWidget {
                           value: visible,
                           activeColor: Colors.blueAccent,
                           onChanged: (value)async{
-                            //await ref.read(barbershopRepositoryProvider).changeShopVisibility(shopId,value);
-                            //ref.read(visibleProvider.notifier).state=value;
+                            await ref.read(barbershopRepositoryProvider).changeShopVisibility(shopId,value);
+                            ref.read(visibleProvider.notifier).state=value;
 
                           },
                         )
