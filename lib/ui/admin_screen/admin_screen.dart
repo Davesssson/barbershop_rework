@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../../controllers/barbershop_controller/barbershop_providers.dart';
-import 'admin_barber_view.dart';
+import 'admin_barbers_screen/admin_barber_view.dart';
 import 'admin_dashboard.dart';
 import 'admin_resource_view.dart';
 import 'admin_services_view.dart';
