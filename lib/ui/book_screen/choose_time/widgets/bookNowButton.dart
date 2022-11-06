@@ -83,7 +83,7 @@ class bookNowButton extends ConsumerWidget {
                 serviceId: selectedService
             );
 
-            ref.read(barberListForShopStateProvider.notifier).addBooking(
+            ref.read(barberListForShopStateProvider(barbershop!.id!).notifier).addBooking(
                 dateId: b.dateId!,
                 uId: b.uId!,
                 barberId: barberId,

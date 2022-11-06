@@ -11,39 +11,21 @@ final retrieveBarbersWorks = FutureProvider.family<List<Barber>,String>((ref,sho
   return barbers;
 });
 
+
+//region majd később
 final retrieveSingleBarber = FutureProvider.family<Barber,String>((ref,barberId) async {
   final barber = await ref.read(barberRepositoryProvider).retrieveSingleBarbersFromShop(barberId);
   print("barbers.tostring"+barber.toString());
   return barber;
 });
-
-
-//ezt át lehetne írni úgy, hogy a barberListProviderből returnol egy listát, az alapján, hogy a shopId megegyezik e kért shoppal
-final barberListForShopContentProvider = Provider<List<Barber>>((ref) {
-  developer.log("[barber_providers.dart][-][barberListContentProvider] - barberListContentProvider.");
-  final barbersListState = ref.watch(barberListForShopStateProvider);
-  return barbersListState.maybeWhen(
-    data: (barbers) {
-      switch ("asd") {
-        default:
-          return barbers;
-      }
-    },
-    orElse: () => [],
-  );
-});
+//endregion majd később
 
 final barberListStateProvider = StateNotifierProvider<BarberListStateController, AsyncValue<List<Barber>>>((ref) {
   developer.log("[barber_providers.dart][-][barberListStateProvider] - barberListStateProvider.");
   return BarberListStateController(ref.read);
 },);
 
-final barberListForShopStateProvider = StateNotifierProvider<BarberListStateController, AsyncValue<List<Barber>>>((ref) {
+final barberListForShopStateProvider = StateNotifierProvider.family<BarberListStateController, AsyncValue<List<Barber>>,String>((ref,id) {
   developer.log("[barber_providers.dart][-][barberListStateProvider] - barberListStateProvider.");
-  return BarberListStateController.forShop(ref.read);
-},);
-
-final barberListForAdminStateProvider = StateNotifierProvider.family<BarberListStateController, AsyncValue<List<Barber>>,String>((ref,id) {
-  developer.log("[barber_providers.dart][-][barberListStateProvider] - barberListStateProvider.");
-  return BarberListStateController.forAdmin(id,ref.read);
+  return BarberListStateController.forShop(ref.read,id);
 },);

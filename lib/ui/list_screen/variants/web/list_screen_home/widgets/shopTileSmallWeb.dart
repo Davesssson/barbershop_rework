@@ -19,7 +19,7 @@ class ShopTileWebSmall extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: (){
-        ref.read(barberListForShopStateProvider.notifier).retrieveBarbersFromShop2(barbershop.id!);
+        ref.read(barberListForShopStateProvider(barbershop.id!).notifier).retrieveBarbersFromShop2(barbershop.id!);
         ref.read(barberListStateProvider.notifier).retrieveBarbersFromShop2(barbershop.id!);
         ref.read(serviceListForShopStateProvider.notifier).retrieveServicesFromShop(barbershop.id!);
         GoRouter.of(context).go("/details/${barbershop.id}");

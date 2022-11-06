@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/constants/route_paths.dart';
 import 'package:go_router/go_router.dart';
@@ -20,11 +21,12 @@ class ShopTile4 extends HookConsumerWidget {
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: (){
-          ref.read(barberListForShopStateProvider.notifier).retrieveBarbersFromShop2(barbershop.id!);
+          ref.read(barberListForShopStateProvider(barbershop.id!).notifier).retrieveBarbersFromShop2(barbershop.id!);
           ref.read(barberListStateProvider.notifier).retrieveBarbersFromShop2(barbershop.id!);
           ref.read(serviceListForShopStateProvider.notifier).retrieveServicesFromShop(barbershop.id!);
           GoRouter.of(context).go("/details/${barbershop.id}");
-          /*          Navigator.push(
+          */
+/*          Navigator.push(
             context,
             MaterialPageRoute(
               builder: (_)=>DetailsScreen(),
@@ -32,7 +34,8 @@ class ShopTile4 extends HookConsumerWidget {
                 arguments: barbershop,// TODO ez igy ebben a formában jo a materialRoutepage-el????
               ),
             ),
-          );*/
+          );*//*
+
         },
         child: Card(
           clipBehavior: Clip.antiAlias,
@@ -58,4 +61,4 @@ class ShopTile4 extends HookConsumerWidget {
       ),
     );
   }
-}
+}*/

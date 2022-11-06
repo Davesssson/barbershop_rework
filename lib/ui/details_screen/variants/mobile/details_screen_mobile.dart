@@ -67,7 +67,7 @@ class DetailWidget_mobile extends ConsumerWidget {
                           child: Text("Ide jon még az elérhetőség"),
                         ),
                         buildCoworkersText(),
-                        BarberList(),
+                        BarberList(bs:bs),
                         BookNowButton(bs:bs),
                         TabBar(
                           tabs: [

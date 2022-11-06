@@ -80,7 +80,7 @@ class editNameAndDescription extends ConsumerWidget {
                     barberUnderEdit != null
                         ? {
                       print("nem vagyok nulla, tudok updatelődni"),
-                      ref.read(barberListForShopStateProvider.notifier)
+                      ref.read(barberListForShopStateProvider(barberUnderEdit!.barbershop_id!).notifier)
                           .updateBarber(
                           updatedBarber: barberUnderEdit!.copyWith(
                               name: textNameController.text.trim(),
@@ -92,11 +92,11 @@ class editNameAndDescription extends ConsumerWidget {
                     }
                         : {
                       print("nulla vagyok, nem tudok updatelődni"),
-                      ref.read(barberListForShopStateProvider.notifier)
+                      ref.read(barberListForShopStateProvider(barberUnderEdit!.barbershop_id!).notifier)
                           .addBarber(
                           name: textNameController.text.trim(),
                           description:textDescriptionController.text.trim(),
-                          shopId: '7HTJ8DF8hFwUnrL566Wc'
+                          shopId: barberUnderEdit!.barbershop_id!
                       )
                     };
                   },

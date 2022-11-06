@@ -4,7 +4,6 @@ import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/ui/list_screen/widgets/chipSelection.dart';
 
 import '../../pagination/providers.dart';
-import '../widgets/shopTile.dart';
 import '../widgets/shopTile3.dart';
 
 final currentShop3 = Provider<Barbershop>((_) {

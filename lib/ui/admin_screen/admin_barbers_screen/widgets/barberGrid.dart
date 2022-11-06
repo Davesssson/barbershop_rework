@@ -13,7 +13,7 @@ class barberGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final barberContent = ref.watch(barberListForAdminStateProvider(shopId));
+    final barberContent = ref.watch(barberListForShopStateProvider(shopId));
     return barberContent.when(
         data: (barbers){
           return barbers.isEmpty

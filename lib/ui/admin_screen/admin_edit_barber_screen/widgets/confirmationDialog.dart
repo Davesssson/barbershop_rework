@@ -35,7 +35,7 @@ class confirmationDialog extends ConsumerWidget {
         ),
         TextButton(
           onPressed: () {
-            ref.read(barberListForShopStateProvider.notifier) // TODO KICSERÉLNI SIMA ASYNC-ra
+            ref.read(barberListForShopStateProvider(barberUnderEdit!.barbershop_id!).notifier) // TODO KICSERÉLNI SIMA ASYNC-ra
                 .updateBarberProfPic(barberId: barberUnderEdit!.id!, profPictureLink: picture);
             Navigator.pop(context, 'Yes');
           },

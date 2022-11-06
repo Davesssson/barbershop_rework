@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_list/ui/map_screen/map_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -24,9 +25,10 @@ class infoWindow extends ConsumerWidget {
                 //left:0,
                 child: InkWell(
                   onTap: (){
-                    ref.read(barberListForShopStateProvider.notifier).retrieveBarbersFromShop2(shop.id!);
+                    //ref.read(barberListForShopStateProvider().notifier).retrieveBarbersFromShop2(shop.id!);
                     ref.read(barberListStateProvider.notifier).retrieveBarbersFromShop2(shop.id!);
                     ref.read(serviceListForShopStateProvider.notifier).retrieveServicesFromShop(shop.id!);
+*/
 /*                    Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -35,7 +37,8 @@ class infoWindow extends ConsumerWidget {
                           arguments: shop,// TODO ez igy ebben a formában jo a materialRoutepage-el????
                         ),
                       ),
-                    );*/
+                    );*//*
+
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(30.0),
@@ -75,4 +78,4 @@ class infoWindow extends ConsumerWidget {
         }
     );
   }
-}
+}*/

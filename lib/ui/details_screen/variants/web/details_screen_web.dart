@@ -35,7 +35,7 @@ class DetailsScreen_web extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: BarberList(),
+                        child: BarberList(bs:barbershop),
                       ),
                       TabBar(
                         tabs: [

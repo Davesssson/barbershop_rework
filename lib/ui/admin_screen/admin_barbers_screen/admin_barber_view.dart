@@ -15,7 +15,7 @@ class admin_barbers extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final barberState = ref.watch(barberListForAdminStateProvider(shopId));
+    final barberState = ref.watch(barberListForShopStateProvider(shopId));
     return barberState.when(
         data: (barbers) {
       return barbers.isEmpty

@@ -61,7 +61,7 @@ class editView extends HookConsumerWidget {
                 Text("Barber törlése"),
                 IconButton(
                     onPressed: (){
-                      ref.read(barberListForShopStateProvider.notifier) // TODO KICSERÉLNI SIMA ASYNC-ra
+                      ref.read(barberListForShopStateProvider(barberUnderEdit!.barbershop_id!).notifier) // TODO KICSERÉLNI SIMA ASYNC-ra
                           .deleteBarber(barberId: barberUnderEdit!.id!);
                     },
                     icon: Icon(Icons.delete_forever)

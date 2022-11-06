@@ -15,10 +15,9 @@ class BarberListStateController extends StateNotifier<AsyncValue<List<Barber>>>{
     retrieveBarbers();
   }
 
-  BarberListStateController.forShop( this._read):super(AsyncValue.loading()){
+  BarberListStateController.forShop( this._read,String id):super(AsyncValue.loading()){
     developer.log("[barber_controller.dart][BarberListStateController][BarberListStateController] - BarberListStateForShopController constructed.");
-    retrieveBarbersFromShop2("asd");
-    //retrieveBarbersFromShopOnlyForAdmin();
+      retrieveBarbersFromShop2(id);
   }
 
   BarberListStateController.forAdmin(String id ,this._read):super(AsyncValue.loading()){
