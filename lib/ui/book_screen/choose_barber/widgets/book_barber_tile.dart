@@ -31,7 +31,7 @@ class bookBarberTile extends StatelessWidget {
         color: Colors.black,
         child: Stack(
           children: [
-            Image.network(existingBarber.prof_pic!,fit: BoxFit.fill),
+            existingBarber.prof_pic!=null? Image.network(existingBarber.prof_pic!,fit: BoxFit.fill):SizedBox(),
             Text(existingBarber.name!)
           ],
         ),

@@ -88,17 +88,14 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
     }));
   }
 
-  Flexible buildChipChoicesGridView(BuildContext context, WorkDayAvailability workDayAvailabilityListContent) {
-    return Flexible(
-        //height: MediaQuery.of(context).size.height/5,
-        child: GridView.count(
-          shrinkWrap: true,
-          mainAxisSpacing: 5,
-          crossAxisSpacing: 5,
-          crossAxisCount: (MediaQuery.of(context).size.width / 70).toInt(),
-          children: prepareChipChoices(workDayAvailabilityListContent),
-        ),
-      );
+  GridView buildChipChoicesGridView(BuildContext context, WorkDayAvailability workDayAvailabilityListContent) {
+    return GridView.count(
+      shrinkWrap: true,
+      mainAxisSpacing: 5,
+      crossAxisSpacing: 5,
+      crossAxisCount: (MediaQuery.of(context).size.width / 70).toInt(),
+      children: prepareChipChoices(workDayAvailabilityListContent),
+    );
   }
 
   Container buildChipChoicesScrollView(BuildContext context, WorkDayAvailability workDayAvailabilityListContent) {

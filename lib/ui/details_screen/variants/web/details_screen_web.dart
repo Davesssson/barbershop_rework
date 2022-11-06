@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/ui/widgets/web_appBar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
@@ -17,61 +18,7 @@ class DetailsScreen_web extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.fromLTRB(30,0,0,8),
-          child: SvgPicture.asset("cdsgraphics-Barber-Shop-Pole.svg", color: Colors.white,),
-        ),
-        toolbarHeight: 100,
-        flexibleSpace: Column(
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width*0.8,
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                      width: MediaQuery.of(context).size.width/2,
-                      child: TextFormField(
-
-                      )
-                  ),
-                  Text("sign in")
-                ],
-              ),
-            ),
-            Positioned(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width/2,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    TextButton(
-                        onPressed: (){
-                          //ref.read(homePageProvider.notifier).state=0;
-                        },
-                        child: Text("Böngéssz üzletek között!")
-                    ),
-                    TextButton(
-                        onPressed: (){/*ref.read(homePageProvider.notifier).state=1;*/},
-                        child: Text("Nézd meg térképen")
-                    ),
-                    TextButton(
-                        onPressed: (){},
-                        child: Text("Fedezd fel!")
-                    ),
-                    TextButton(
-                        onPressed: (){},
-                        child: Text("Légy partner!")
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      appBar: webAppBar(),
       body: DefaultTabController(
         length: 4,
         child: NestedScrollView(
