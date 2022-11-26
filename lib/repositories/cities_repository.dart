@@ -1,3 +1,5 @@
+//import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_shopping_list/models/barbershop/barbershop_model.dart';
 import 'package:flutter_shopping_list/models/responses/marker_response_item.dart';
@@ -172,6 +174,10 @@ class CitiesRepository implements BaseCitiesRepository {
           return MarkerResponseItem(
               city : doc['city'],
               marker : Marker(
+                onTap: (){
+                  print(doc.id!);
+                },
+                consumeTapEvents: true,
                 markerId: MarkerId(doc.id),
                 position: LatLng(gp.latitude,gp.longitude),
               )

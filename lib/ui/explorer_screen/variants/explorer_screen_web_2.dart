@@ -132,11 +132,7 @@ class ItemsListBuilder extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
       final index = ref.watch(cindex);
       //final List<Barber>
-      if(index==items.length-2){
-        Future.delayed(Duration.zero,(){
-          ref.read(BarberPaginationNotifierProvider.notifier).fetchNextBatchMine();
-        });
-      }
+
       final List<Explorer_object> objects = [];
       items.forEach((barber) {
         if(barber.works!=null)
@@ -144,6 +140,11 @@ class ItemsListBuilder extends ConsumerWidget {
           objects.add(Explorer_object(barber_name: barber.name,barbershop_id: barber.barbershop_id,work_url: work));
         });
       });
+      if(index==objects.length-2){
+        Future.delayed(Duration.zero,(){
+          ref.read(BarberPaginationNotifierProvider.notifier).fetchNextBatchMine();
+        });
+      }
       return SliverToBoxAdapter(
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
@@ -160,7 +161,6 @@ class ItemsListBuilder extends ConsumerWidget {
                 final exp_obj = objects[index];
                 return Row(
                   children: [
-
                     ref.watch(shopProvider(exp_obj.barbershop_id!)).when(
                         data: (data){
                           return Container(
@@ -172,7 +172,6 @@ class ItemsListBuilder extends ConsumerWidget {
                         error: (e,_){return Text("error");},
                         loading: (){return Text("loading");}
                     ),
-
                     Container(
                       width: MediaQuery.of(context).size.width/2,
                       color: Colors.red,

@@ -11,6 +11,7 @@ import 'marker_controller.dart';
 final radius = StateProvider<double>((ref) => 100);
 final cityprovider = StateProvider<String>((ref) => "");
 final locationProvider = StateProvider<City>((ref) => City.Budapet());
+final selectedPin = StateProvider<String>((ref) => "");
 
 final markerProvider = StreamProvider<Set<MarkerResponseItem>>((ref) {
   final r = ref.watch(radius);

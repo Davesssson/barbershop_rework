@@ -1,9 +1,13 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_list/controllers/service_controller/service_providers.dart';
+import 'package:flutter_shopping_list/models/responses/marker_response_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:logger/logger.dart';
+import '../../controllers/barbershop_controller/barbershop_providers.dart';
 import '../../controllers/city_controller/city_providers.dart';
 import '../../controllers/item_list_controller.dart';
 import '../../controllers/marker_controller/marker_providers.dart';
@@ -18,6 +22,16 @@ import 'info_window.dart';
 final cityFilterStateForMap = StateProvider<String>((_) => "");
 final radiusProvider = StateProvider<double>((_) => 20);
 final locationProvider = StateProvider<City>((_) => City.Budapet());
+final selectedPinProvider = StateProvider<MarkerResponseItem?>((_) => null);
+
+/*
+class MapScreenFinal2 extends ConsumerStatefulWidget{
+  const MapScreenFinal2({Key? key, }) : super(key: key);
+
+  @override
+  ConsumerState<MapScreenFinal2> createState() => _MapScreenFinal2();
+}
+*/
 
 class MapScreenFinal2 extends ConsumerWidget {
   final _controller = Completer();
@@ -33,14 +47,14 @@ class MapScreenFinal2 extends ConsumerWidget {
       zoom: 19.151926040649414);
 
 
-
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context,WidgetRef ref) {
     final cities = ref.watch(cityListStateProvider2);
     final markersState = ref.watch(markerProvider);
     final markersContent = ref.watch(markerProvider);
     //final show = ref.watch(itemListFilterProvider);
     final show = ref.watch(cityFilterStateForMap);
+    final selectedPin = ref.watch(selectedPinProvider);
 
     late TextEditingController controller;
     double _currentSliderValue = ref.watch(radiusProvider);
@@ -48,29 +62,75 @@ class MapScreenFinal2 extends ConsumerWidget {
     return Scaffold(
       body:Stack(
           children: [
-            GoogleMap(
-              markers: markersState.when(
-                  data: (markers){
-                    return markers.map((e) => e.marker!).toSet();
-                  },
-                  error: (e,_){ return {Marker(markerId: MarkerId("asd"))};},
-                  loading: (){return {Marker(markerId: MarkerId("asd"))};}
+            Container(
+              height: MediaQuery.of(context).size.height - 50.0,
+              width: MediaQuery.of(context).size.width,
+              child: GoogleMap(
+                markers: markersState.when(
+                    data: (markers){
+                      return markers.map((markerResponseItem) {
+                        return Marker(
+                          consumeTapEvents: true,
+                          markerId:markerResponseItem.marker!.markerId!,
+                          onTap: (){
+                            ref.read(selectedPinProvider.notifier).state=markerResponseItem;
+                            print("hehehe");
+                          },
+                          position: LatLng(markerResponseItem.marker!.position!.latitude,markerResponseItem.marker!.position!.longitude),
+
+                        );
+                      }).toSet();
+                    },
+                    error: (e,_){ return {Marker(markerId: MarkerId("asd"))};},
+                    loading: (){return {Marker(markerId: MarkerId("asd"))};}
+                ),
+                mapType: MapType.hybrid,
+                initialCameraPosition: _kGooglePlex,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                },
               ),
-              mapType: MapType.hybrid,
-              initialCameraPosition: _kGooglePlex,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-              },
             ),
             //infoWindow(),
             //buildBottomPart(show, ref),
             AutoComplete2(cities, ref),
-            Container(
-              width: 100,
-              height: 100,
-              color: Colors.yellow,
-              child: Text(_currentSliderValue.toString()),
-            )
+            Positioned(
+              bottom: 100,
+              left: MediaQuery.of(context).size.width/2-(MediaQuery.of(context).size.width/2/2),
+              child: Container(
+                width: MediaQuery.of(context).size.width/2,
+                height: MediaQuery.of(context).size.height/5,
+                color: Colors.yellow,
+                child: selectedPin==null
+                    ?Text(_currentSliderValue.toString())
+                    : ref.watch(shopProvider(selectedPin.marker!.markerId!.value)).when(
+                    data: (data){
+                      return InkWell(
+                        onTap: (){},
+                        child: Row(
+                          children: [
+                            Container(width: MediaQuery.of(context).size.width/6,child: Image.network(data.main_image!,fit: BoxFit.fitWidth,)),
+                            Column(
+                              children: [
+                                Text(data.name!),
+                                Text(data.city!),
+                              ],
+                            ),
+                            IconButton(
+                                onPressed: (){
+                                  ref.read(selectedPinProvider.notifier).state=null;
+                                },
+                                icon: Icon(Icons.cancel)
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                    error: (e,_){return Text("hiba");},
+                    loading: (){return CircularProgressIndicator();}
+                )
+              ),
+            ),
           ]
       ),
       floatingActionButton: FloatingActionButton.extended(

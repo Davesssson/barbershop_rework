@@ -113,20 +113,20 @@ class ListScreen_mobile_final extends HookConsumerWidget {
             HorizontalList2(
                 shopToWatch: nearYouShop
             ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-                padding: EdgeInsets.all(8),
-                child: Text(
-                  "Featured Barbers",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                  ),
-                )
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Text(
+                    "Featured Barbers",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),
+                  )
+              ),
             ),
-          ),
-          SizedBox(height: 300,)
+            SizedBox(height: 300,)
           ],
         ),
     );

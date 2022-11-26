@@ -20,11 +20,11 @@ class BarberPaginationNotifier extends StateNotifier<PaginationState<Barber>> {
   Timer _timer = Timer(const Duration(milliseconds: 0), () {});
   bool noMoreItems = false;
 
-  void init() {
+/*  void init() {
     if (items.isEmpty) {
       fetchFirstBatch();
     }
-  }
+  }*/
 
   Future<void> fetchFirstBatchMine() async {
     try {

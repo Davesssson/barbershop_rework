@@ -62,7 +62,7 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
           enableMultiView: false,
           monthViewSettings: DateRangePickerMonthViewSettings(
             firstDayOfWeek: 7,
-            numberOfWeeksInView: 2,
+            numberOfWeeksInView: 4,
             blackoutDates: [
               ...list,
             ],
@@ -72,7 +72,7 @@ class _chooseTimeState extends ConsumerState<chooseTime> {
         SizedBox(height: 30,),
         Text("Válassz az elérhető időpontok közül!"),
         SizedBox(height: 30,),
-        Container(color:Theme.of(context).cardColor,child: buildChipChoicesGridView(context, workDayAvailabilityListContent)),//TODO itt dobja a render errort, majd később foglalkozok vele
+        Container(color:Theme.of(context).cardColor,child: buildChipChoicesGridView(context, workDayAvailabilityListContent)),
         SizedBox(height: 30,),
         Text("Szolgáltatások"),
         SizedBox(height: 30,),

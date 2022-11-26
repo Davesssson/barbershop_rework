@@ -70,7 +70,7 @@ class DetailWidget_mobile extends ConsumerWidget {
                         BarberList(bs:bs),
                         BookNowButton(bs:bs),
                         TabBar(
-                          tabs: [
+                           tabs: [
                             Tab(child:Text('General')),
                             Tab(child:Text('Szolgáltatások')),
                             Tab(child:Text('Reviews')),

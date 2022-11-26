@@ -19,16 +19,16 @@ class barberGrid extends ConsumerWidget {
           return barbers.isEmpty
               ?Text("hát..itt nincsenek barberek")
               :GridView.count(
-            mainAxisSpacing: 20,
-            crossAxisSpacing: 20,
-            crossAxisCount: (MediaQuery.of(context).size.width / 350).toInt(),
-            children: [
-              ...barbers.map((existingBarber) {
-                return BarberTile(existingBarber: existingBarber);
-              }).toList(),
-              addNewBarberTile(),
-            ],
-          );
+                mainAxisSpacing: 20,
+                crossAxisSpacing: 20,
+                crossAxisCount: (MediaQuery.of(context).size.width / 350).toInt(),
+                children: [
+                  ...barbers.map((existingBarber) {
+                    return BarberTile(existingBarber: existingBarber);
+                  }).toList(),
+                  addNewBarberTile(),
+                ],
+              );
         },
         error: (e,_){return Text("nem tudjuk a barbereket behuzni, sorry");},
         loading: (){return CircularProgressIndicator();}

@@ -17,11 +17,11 @@ class PaginationNotifierMine extends StateNotifier<PaginationState<Barbershop>> 
   Timer _timer = Timer(const Duration(milliseconds: 0), () {});
   bool noMoreItems = false;
   
-  void init() {
+/*  void init() {
     if (items.isEmpty) {
       fetchFirstBatch();
     }
-  }
+  }*/
 
   Future<void> fetchFirstBatchMine() async {
     try {
@@ -65,7 +65,7 @@ class PaginationNotifierMine extends StateNotifier<PaginationState<Barbershop>> 
   }
   
   
-
+  // TODO elv ezt se kéne használni
   Future<void> fetchFirstBatch() async {
     try {
       state = const PaginationState.loading();
@@ -94,7 +94,7 @@ class PaginationNotifierMine extends StateNotifier<PaginationState<Barbershop>> 
 
 
 
-  Future<void> fetchNextBatch() async {
+/*  Future<void> fetchNextBatch() async {
     if (_timer.isActive && items.isNotEmpty) {
       return;
     }
@@ -122,5 +122,5 @@ class PaginationNotifierMine extends StateNotifier<PaginationState<Barbershop>> 
       log("Error fetching next page", error: e, stackTrace: stk);
       state = PaginationState.onGoingError(items, e, stk);
     }
-  }
+  }*/
 }

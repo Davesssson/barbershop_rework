@@ -16,8 +16,8 @@ class serviceTagsList extends ConsumerWidget {
     print(service.tags);
     return Row(
       children: [
-        ...tags.map((e) => ChoiceChip(
-          label: Text(e),
+        ...tags.map((tag) => ChoiceChip(
+          label: Text(tag),
           onSelected: (bool){
             if(bool) {
               List<String> updatingtags = [];
@@ -25,19 +25,19 @@ class serviceTagsList extends ConsumerWidget {
                 updatingtags.add(key);
               });
               ref.read(serviceListForAdminStateProvider(shopId).notifier)
-                  .updateTags(service: service, tags: [...updatingtags, e]);
+                  .updateTags(service: service, tags: [...updatingtags, tag]);
             }else{
               List<String> removeTags = [];
               service.tags!.forEach((key, value) {
                 removeTags.add(key);
               });
               ref.read(serviceListForAdminStateProvider(shopId).notifier)
-                  .updateTags(service: service, tags: [...removeTags..remove(e)]);
+                  .updateTags(service: service, tags: [...removeTags..remove(tag)]);
             }
             //service.tags!.addAll({e:value});
           },
           selectedColor: Theme.of(context).primaryColor,
-          selected: service.tags==null? false : service.tags!.keys.contains(e),
+          selected: service.tags==null? false : service.tags!.keys.contains(tag),
         )
         ).toList(),
         ChoiceChip(
